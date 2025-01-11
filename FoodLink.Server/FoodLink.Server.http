@@ -1,0 +1,6 @@
+@FoodLink.Server_HostAddress = http://localhost:5186
+
+GET {{FoodLink.Server_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
