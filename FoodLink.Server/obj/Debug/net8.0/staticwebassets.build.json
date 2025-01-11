@@ -1,0 +1,24 @@
+{
+  "Version": 1,
+  "Hash": "ejBAMsUDI3zeI2mjDD7n/q21tYQCjznZTfUh9Q3DImg=",
+  "Source": "FoodLink.Server",
+  "BasePath": "_content/FoodLink.Server",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [
+    {
+      "Identity": "C:\\Users\\prevs\\OneDrive\\Documentos\\GitHub\\FoodLink\\foodlink.client\\foodlink.client.esproj",
+      "Version": 2,
+      "Source": "foodlink.client",
+      "GetPublishAssetsTargets": "GetCurrentProjectPublishStaticWebAssetItems",
+      "AdditionalPublishProperties": "Configuration=Debug;Platform=AnyCPU",
+      "AdditionalPublishPropertiesToRemove": "WebPublishProfileFile;TargetFramework",
+      "GetBuildAssetsTargets": "GetCurrentProjectBuildStaticWebAssetItems",
+      "AdditionalBuildProperties": "Configuration=Debug;Platform=AnyCPU",
+      "AdditionalBuildPropertiesToRemove": "WebPublishProfileFile;TargetFramework"
+    }
+  ],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}
