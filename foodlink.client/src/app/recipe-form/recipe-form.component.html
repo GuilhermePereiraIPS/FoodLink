@@ -1,0 +1,22 @@
+<div class="container">
+  <h2>Create a New Recipe</h2>
+  <form [formGroup]="recipeForm" (ngSubmit)="onSubmit()">
+    <div>
+      <label for="name">Name:</label>
+      <input id="name" formControlName="name" required />
+    </div>
+    <div>
+      <label for="description">Description:</label>
+      <textarea id="description" formControlName="description" required></textarea>
+    </div>
+    <div>
+      <label for="stepByStep">Step By Step:</label>
+      <textarea id="stepByStep" formControlName="stepByStep" required></textarea>
+    </div>
+    <div>
+      <label for="ingredients">Ingredients:</label>
+      <textarea id="ingredients" formControlName="ingredients" required></textarea>
+    </div>
+    <button type="submit" [disabled]="recipeForm.invalid">Submit</button>
+  </form>
+</div>

@@ -16,12 +16,12 @@ namespace FoodLink.Server.Data
 
         public DbSet<Recipe> Recipe { get; set; } = default!;
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        /*protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Configuração inicial (seeding) de dados 
             modelBuilder.Entity<Recipe>().HasData(
-                new Recipe { Id = 1 }
+                new Recipe { Id = 1, Name="name1", Description="desc1", Ingredients="ing1", StepByStep="step1" }
             );
-        }
+        }*/
     }
 }
