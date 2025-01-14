@@ -37,6 +37,7 @@ namespace FoodLink.Server.Controllers
             var user = new AppUser
             {
                 UserName = registerDto.Username,
+                Email = registerDto.Email,
                 PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password)),
                 PasswordSalt = hmac.Key
             };
@@ -55,7 +56,8 @@ namespace FoodLink.Server.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
         {
-            var user = await _context.Users.SingleOrDefaultAsync(x => x.UserName == loginDto.Username);
+            //Allows username or email 
+            var user = await _context.Users.SingleOrDefaultAsync(x => x.UserName == loginDto.Username || x.Email == loginDto.Email);
 
             if (user == null)
                 return Unauthorized("Invalid username");
