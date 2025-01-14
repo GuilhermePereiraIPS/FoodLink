@@ -14,7 +14,8 @@ namespace FoodLink.Server.Data
         {
         }
 
-        public DbSet<Recipe> Recipe { get; set; } = default!;
+        public DbSet<Recipe> Recipes { get; set; } = default!;
+        public DbSet<AppUser> Users { get; set; } = default!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

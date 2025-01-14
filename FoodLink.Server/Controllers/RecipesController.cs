@@ -26,14 +26,14 @@ namespace FoodLink.Server.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Recipe>>> GetRecipes()
         {
-            return await _context.Recipe.ToListAsync();
+            return await _context.Recipes.ToListAsync();
         }
 
         // GET: api/Recipes/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Recipe>> GetRecipe(int id)
         {
-            var Recipe = await _context.Recipe.FindAsync(id);
+            var Recipe = await _context.Recipes.FindAsync(id);
 
             if (Recipe == null)
             {
@@ -79,7 +79,7 @@ namespace FoodLink.Server.Controllers
         [HttpPost]
         public async Task<ActionResult<Recipe>> PostRecipe(Recipe Recipe)
         {
-            _context.Recipe.Add(Recipe);
+            _context.Recipes.Add(Recipe);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetRecipe", new { id = Recipe.Id }, Recipe);
@@ -89,13 +89,13 @@ namespace FoodLink.Server.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteRecipe(int id)
         {
-            var Recipe = await _context.Recipe.FindAsync(id);
+            var Recipe = await _context.Recipes.FindAsync(id);
             if (Recipe == null)
             {
                 return NotFound();
             }
 
-            _context.Recipe.Remove(Recipe);
+            _context.Recipes.Remove(Recipe);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -103,7 +103,7 @@ namespace FoodLink.Server.Controllers
 
         private bool RecipeExists(int id)
         {
-            return _context.Recipe.Any(e => e.Id == id);
+            return _context.Recipes.Any(e => e.Id == id);
         }
     }
 }

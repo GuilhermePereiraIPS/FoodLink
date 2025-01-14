@@ -1,13 +1,13 @@
 {
   "Version": 1,
-  "Hash": "ejBAMsUDI3zeI2mjDD7n/q21tYQCjznZTfUh9Q3DImg=",
+  "Hash": "qBFS3K9/HW6416wC6mU6O422kQCATLJOzB5syjotsMg=",
   "Source": "FoodLink.Server",
   "BasePath": "_content/FoodLink.Server",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [
     {
-      "Identity": "C:\\Users\\prevs\\OneDrive\\Documentos\\GitHub\\FoodLink\\foodlink.client\\foodlink.client.esproj",
+      "Identity": "D:\\GIT\\FoodLink\\foodlink.client\\foodlink.client.esproj",
       "Version": 2,
       "Source": "foodlink.client",
       "GetPublishAssetsTargets": "GetCurrentProjectPublishStaticWebAssetItems",

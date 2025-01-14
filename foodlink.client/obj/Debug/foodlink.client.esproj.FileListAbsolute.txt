@@ -1,1 +1,2 @@
 C:\Users\prevs\OneDrive\Documentos\GitHub\FoodLink\foodlink.client\obj\Debug\foodlink.client.esproj.CoreCompileInputs.cache
+D:\GIT\FoodLink\foodlink.client\obj\Debug\foodlink.client.esproj.CoreCompileInputs.cache

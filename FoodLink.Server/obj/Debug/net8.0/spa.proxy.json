@@ -3,7 +3,7 @@
 "ServerUrl": "https://localhost:62599",
 "RedirectUrl": "",
 "LaunchCommand": "npm start",
-"WorkingDirectory": "C:\\Users\\prevs\\OneDrive\\Documentos\\GitHub\\FoodLink\\FoodLink.Server\\..\\foodlink.client",
+"WorkingDirectory": "D:\\GIT\\FoodLink\\FoodLink.Server\\..\\foodlink.client",
 "MaxTimeoutInSeconds": "120",
 "KeepRunning": "false"
 }
