@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FoodLink.Server.Migrations
 {
     [DbContext(typeof(FoodLinkContext))]
-    [Migration("20250111151438_initial")]
+    [Migration("20250114121828_initial")]
     partial class initial
     {
         /// <inheritdoc />
@@ -32,6 +32,9 @@ namespace FoodLink.Server.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Recipe");
@@ -39,7 +42,8 @@ namespace FoodLink.Server.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1
+                            Id = 1,
+                            Title = "bruh"
                         });
                 });
 #pragma warning restore 612, 618

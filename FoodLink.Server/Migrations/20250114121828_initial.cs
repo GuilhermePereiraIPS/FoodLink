@@ -15,7 +15,8 @@ namespace FoodLink.Server.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1")
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -24,8 +25,8 @@ namespace FoodLink.Server.Migrations
 
             migrationBuilder.InsertData(
                 table: "Recipe",
-                column: "Id",
-                value: 1);
+                columns: new[] { "Id", "Title" },
+                values: new object[] { 1, "bruh" });
         }
 
         /// <inheritdoc />

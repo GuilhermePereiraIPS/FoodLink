@@ -1,0 +1,16 @@
+<p *ngIf="!recipes"><em>Loading...</em></p>
+
+<table *ngIf="recipes">
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Title</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let recipe of recipes">
+      <td>{{ recipe.id }}</td>
+      <td>{{ recipe.title }}</td> <!-- Use recipe.title here -->
+    </tr>
+  </tbody>
+</table>

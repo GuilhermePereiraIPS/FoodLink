@@ -20,7 +20,7 @@ namespace FoodLink.Server.Data
         {
             // Configuração inicial (seeding) de dados 
             modelBuilder.Entity<Recipe>().HasData(
-                new Recipe { Id = 1 }
+                new Recipe { Id = 1, Title = "bruh"}
             );
         }
     }

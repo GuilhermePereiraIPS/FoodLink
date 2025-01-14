@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FoodLink.Server")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ea02fbc4bfbc3068e9b291cc0c705374c56d29e7")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4ebcea0cd3f3d7167e57ad386a5f8bf544bb0c53")]
 [assembly: System.Reflection.AssemblyProductAttribute("FoodLink.Server")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FoodLink.Server")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
