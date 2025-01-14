@@ -20,5 +20,9 @@ namespace FoodLink.Server.Models
 
         [Required]
         public string Ingredients { get; set; }
+
+        // Binary data for storing the image
+       // public byte[] ImageData { get; set; }
     }
+
 }

@@ -10,6 +10,7 @@ bower_components/
 # IDEs and editors
 /.idea
 /.vs
+FoodLink/FoodLink.Server/bin/
 .vscode
 .project
 .classpath
@@ -79,3 +80,6 @@ AlbumViewer.publishsettings
 src/AlbumViewerBusiness/project.lock.json
 src/AlbumViewerNetCore/project.lock.json
 src/Westwind.Utilitities/project.lock.json
+/FoodLink.Server/obj
+/FoodLink.Server/bin
+/FoodLink.Server/obj

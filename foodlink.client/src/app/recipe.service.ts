@@ -14,7 +14,7 @@ export interface Recipe {
   providedIn: 'root',
 })
 export class RecipeService {
-  private apiUrl = 'http://localhost:5000/api/Recipes'; // Atualize conforme necessário
+  private apiUrl = 'api/Recipes'; // Atualize conforme necessário
 
   constructor(private http: HttpClient) { }
 
@@ -25,4 +25,6 @@ export class RecipeService {
   createRecipe(recipe: Recipe): Observable<Recipe> {
     return this.http.post<Recipe>(this.apiUrl, recipe);
   }
+
+
 }
