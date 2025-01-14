@@ -350,3 +350,4 @@ D:\GIT\FoodLink\FoodLink.Server\obj\Debug\net8.0\refint\FoodLink.Server.dll
 D:\GIT\FoodLink\FoodLink.Server\obj\Debug\net8.0\FoodLink.Server.pdb
 D:\GIT\FoodLink\FoodLink.Server\obj\Debug\net8.0\FoodLink.Server.genruntimeconfig.cache
 D:\GIT\FoodLink\FoodLink.Server\obj\Debug\net8.0\ref\FoodLink.Server.dll
+D:\GIT\FoodLink\FoodLink.Server\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll

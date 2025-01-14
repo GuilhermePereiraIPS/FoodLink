@@ -1,7 +1,9 @@
 ﻿using Azure.Identity;
 using FoodLink.Server.Data;
 using FoodLink.Server.DTOs;
+using FoodLink.Server.Interfaces;
 using FoodLink.Server.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
@@ -14,14 +16,16 @@ namespace FoodLink.Server.Controllers
     public class AccountController : ControllerBase
     {
         private readonly FoodLinkContext _context;
+        private readonly ITokenService _tokenService;
 
-        public AccountController(FoodLinkContext context)
+        public AccountController(FoodLinkContext context, ITokenService tokenService)
         {
             _context = context;
+            _tokenService = tokenService;   
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult<AppUser>> Register(RegisterDto registerDto)
+        public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
         {
             if (await AppUserExists(registerDto.Username))
                 return BadRequest("Username is taken");
@@ -41,10 +45,15 @@ namespace FoodLink.Server.Controllers
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            return user;
+            return new UserDto
+            {
+                Username = user.UserName,
+                Token = _tokenService.CreateToken(user)
+            };
         }
+
         [HttpPost("login")]
-        public async Task<ActionResult<AppUser>> Login(LoginDto loginDto)
+        public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
         {
             var user = await _context.Users.SingleOrDefaultAsync(x => x.UserName == loginDto.Username);
 
@@ -60,10 +69,15 @@ namespace FoodLink.Server.Controllers
             }
 
 
-            return user;
+            return new UserDto
+            {
+                Username = user.UserName,
+                Token = _tokenService.CreateToken(user)
+            };
         }
 
         // GET: api/Account
+        [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AppUser>>> GetAccount()
         {
@@ -71,6 +85,7 @@ namespace FoodLink.Server.Controllers
         }
 
         // GET: api/Account/5
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<AppUser>> GetAppUser(int id)
         {
