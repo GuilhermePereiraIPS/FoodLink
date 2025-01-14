@@ -1,11 +1,10 @@
-﻿namespace FoodLink.Server.Models
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace FoodLink.Server.Models
 {
-    public class AppUser
+    public class AppUser : IdentityUser
     {
-        public int Id { get; set; }
-        public string UserName  { get; set; }
-        public string Email { get; set; }
-        public byte[] PasswordHash { get; set; }
-        public byte[] PasswordSalt  { get; set; }
+        [PersonalData]
+        public string Name { get; set; }
     }
 }

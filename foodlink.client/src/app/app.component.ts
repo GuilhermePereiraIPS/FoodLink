@@ -8,13 +8,14 @@ import { Component, OnInit } from '@angular/core';
   standalone: false,
   styleUrl: './app.component.css'
 })
-export class AppComponent implements OnInit {
-
-  constructor(private http: HttpClient) {}
-
-  ngOnInit() {
-  }
-
-
+export class AppComponent {
   title = 'foodlink.client';
+
+  //constructor(private http: HttpClient) {}
+
+  //ngOnInit() {
+  //}
+
+
+  //title = 'foodlink.client';
 }
