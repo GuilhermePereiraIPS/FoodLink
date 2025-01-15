@@ -22,4 +22,8 @@ export class RecipesService {
     return this.http.get<Recipe>('api/recipes/' + id);
   }
 
+  createRecipe(recipe: Recipe) :Observable<Recipe>{
+    return this.http.post<Recipe>('api/recipes', recipe);
+  }
+
 }

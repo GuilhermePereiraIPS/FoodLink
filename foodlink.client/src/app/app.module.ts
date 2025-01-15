@@ -13,6 +13,7 @@ import { AuthInterceptor } from './api-authorization/authorize.interceptor';
 import { AuthGuard } from './api-authorization/authorize.guard';
 import { AuthorizeService } from './api-authorization/authorize.service';
 import { RecipeDetailsComponent } from './recipe-details/recipe-details.component';
+import { RecipeCreateComponent } from './recipe-create/recipe-create.component';
 
 
 @NgModule({
@@ -21,6 +22,7 @@ import { RecipeDetailsComponent } from './recipe-details/recipe-details.componen
     RecipeListComponent,
     NavMenuComponent,
     RecipeDetailsComponent,
+    RecipeCreateComponent,
   ],
   imports: [
     BrowserModule, HttpClientModule,
