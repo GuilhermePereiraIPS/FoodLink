@@ -43,7 +43,8 @@ export class SigninComponent implements OnInit {
           this.router.navigateByUrl("/");
         }
       }).catch(
-        _ => {
+        (error) => {
+          console.log(error);
           this.authFailed = true;
         });
   }
