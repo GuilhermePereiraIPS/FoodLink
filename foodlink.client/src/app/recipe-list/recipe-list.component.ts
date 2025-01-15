@@ -1,10 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 
-export interface Recipe {
-  id: number;
-  title: string;
-}
+import { Recipe } from '../services/recipes.service';
 
 @Component({
   selector: 'app-recipe-list',
