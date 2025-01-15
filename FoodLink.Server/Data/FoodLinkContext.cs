@@ -20,6 +20,8 @@ namespace FoodLink.Server.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             // Configuração inicial (seeding) de dados 
             modelBuilder.Entity<Recipe>().HasData(
                 new Recipe { Id = 1, Title = "bruh"}
