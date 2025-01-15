@@ -19,7 +19,7 @@ export class RecipeCreateComponent {
     if (form.valid) {
       this.recipesService.createRecipe(form.value as Recipe).subscribe(res => {
         console.log('Recipe created successfully!');
-        this.router.navigateByUrl('recipes/{res.id}');
+        this.router.navigateByUrl(`recipes/${res.id}`);
       });
     }
   }
