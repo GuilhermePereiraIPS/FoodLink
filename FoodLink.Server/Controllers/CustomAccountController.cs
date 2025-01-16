@@ -25,7 +25,7 @@ namespace FoodLink.Server.Controllers
             _configuration = configuration;
         }
 
-        [HttpPost("login")]
+        [HttpPost("login2")]
         public async Task<IActionResult> Login([FromBody] LoginRequest model)
         {
             var user = await _userManager.FindByNameAsync(model.Email);

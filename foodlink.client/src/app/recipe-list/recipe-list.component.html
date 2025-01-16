@@ -11,6 +11,7 @@
       <td>{{ recipe.id }}</td>
       <td>{{ recipe.title }}</td> <!-- Use recipe.title here -->
       <td><a [routerLink]="['/recipes', recipe.id]">View Recipe</a></td> <!-- Use recipe.title here -->
+      <td><a href="#" (click)="deleteRecipe(recipe.id)">Delete</a></td>
     </tr>
   </tbody>
 </table>

@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 
-import { Recipe } from '../services/recipes.service';
+import { Recipe, RecipesService } from '../services/recipes.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-recipe-list',
@@ -13,14 +14,15 @@ import { Recipe } from '../services/recipes.service';
 export class RecipeListComponent implements OnInit{
   public recipes: Recipe[] = [];
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private recipesService: RecipesService, private router: Router) { }
 
   ngOnInit() {
     this.getRecipes();
   }
 
   getRecipes() {
-    this.http.get<Recipe[]>('api/Recipes').subscribe(
+
+    this.recipesService.getRecipes().subscribe(
       (result) => {
         console.log('Recipes fetched:', result);
         this.recipes = result;
@@ -29,5 +31,13 @@ export class RecipeListComponent implements OnInit{
         console.error(error);
       }
     );
+  }
+
+  deleteRecipe(id: number) {
+    this.recipesService.deleteRecipe(id).subscribe(
+      () => {
+        this.router.navigate(["/recipes"])
+      }
+    )
   }
 }
