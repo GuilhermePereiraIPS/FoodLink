@@ -58,7 +58,7 @@ describe('RecipeListComponent', () => {
 
   it('should delete a recipe and navigate to recipes', () => {
     const navigateSpy = spyOn(router, 'navigate');
-    recipesService.deleteRecipe.and.returnValue(of(null));
+    recipesService.deleteRecipe.and.returnValue(of(mockRecipes[0]));
 
     component.deleteRecipe(1);
 
