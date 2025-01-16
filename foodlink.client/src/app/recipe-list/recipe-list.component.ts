@@ -47,10 +47,17 @@ export class RecipeListComponent implements OnInit{
   }
 
   deleteRecipe(id: number) {
-    this.recipesService.deleteRecipe(id).subscribe(
-      () => {
-        this.router.navigate(["/recipes"])
-      }
-    )
+    const confirmDelete = confirm('Are you sure you want to delete this recipe?');
+    if (confirmDelete) {
+      this.recipesService.deleteRecipe(id).subscribe(
+        () => {
+          console.log(`Recipe with ID ${id} deleted successfully.`);
+          this.router.navigate(["/recipes"]);
+        },
+        (error) => {
+          console.error(`Error deleting recipe with ID ${id}:`, error);
+        }
+      );
+    }
   }
 }
