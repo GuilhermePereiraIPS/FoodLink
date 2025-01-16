@@ -18,6 +18,10 @@ export class RecipesService {
     return this.http.get<Recipe[]>('api/recipes');
   }
 
+  getRecipesSearch(search: String): Observable<Recipe[]> {
+    return this.http.get<Recipe[]>('api/recipes/search?title=' + search);
+  }
+
   getRecipe(id: number): Observable<Recipe> {
     return this.http.get<Recipe>('api/recipes/' + id);
   }

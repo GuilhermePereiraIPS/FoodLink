@@ -24,9 +24,25 @@ namespace FoodLink.Server.Controllers
 
         // GET: api/Recipes
         [HttpGet]
+        
         public async Task<ActionResult<IEnumerable<Recipe>>> GetRecipes()
         {
             return await _context.Recipes.ToListAsync();
+        }
+
+        // GET: api/Recipes?title="search"
+        [HttpGet("search")]
+        public async Task<ActionResult<IEnumerable<Recipe>>> GetRecipesSearch([FromQuery] string title = "")
+        {
+            //query vazia
+            if (string.IsNullOrWhiteSpace(title))
+                return await _context.Recipes.ToListAsync();
+
+            // Apply search filters
+            var recipes = _context.Recipes.Where(r => r.Title.Contains(title));
+
+
+            return await recipes.ToListAsync();
         }
 
         // GET: api/Recipes/5

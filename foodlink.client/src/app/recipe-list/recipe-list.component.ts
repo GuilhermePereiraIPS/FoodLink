@@ -13,6 +13,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class RecipeListComponent implements OnInit{
   public recipes: Recipe[] = [];
+  public searchTerm: string = '';
 
   constructor(private http: HttpClient, private recipesService: RecipesService, private router: Router) { }
 
@@ -23,6 +24,18 @@ export class RecipeListComponent implements OnInit{
   getRecipes() {
 
     this.recipesService.getRecipes().subscribe(
+      (result) => {
+        console.log('Recipes fetched:', result);
+        this.recipes = result;
+      },
+      (error) => {
+        console.error(error);
+      }
+    );
+  }
+
+  getRecipesSearch() {
+    this.recipesService.getRecipesSearch(this.searchTerm).subscribe(
       (result) => {
         console.log('Recipes fetched:', result);
         this.recipes = result;

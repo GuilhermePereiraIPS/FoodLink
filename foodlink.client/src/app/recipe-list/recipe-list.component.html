@@ -1,4 +1,12 @@
 <p *ngIf="!recipes"><em>Loading...</em></p>
+<div class="search-bar">
+  <input type="text"
+         [(ngModel)]="searchTerm"
+         placeholder="Search recipes by title..."
+         class="search-input" />
+  <button (click)="getRecipesSearch()" class="search-button">Search</button>
+</div>
+
 <table *ngIf="recipes">
   <thead>
     <tr>
