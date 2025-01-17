@@ -4,10 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using FoodLink.Server.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+
 
 namespace FoodLink.Server.Data
 {
-    public class FoodLinkContext : DbContext
+    public class FoodLinkContext : IdentityDbContext<AppUser>
     {
         public FoodLinkContext(DbContextOptions<FoodLinkContext> options)
             : base(options)
@@ -15,10 +17,11 @@ namespace FoodLink.Server.Data
         }
 
         public DbSet<Recipe> Recipes { get; set; } = default!;
-        public DbSet<AppUser> Users { get; set; } = default!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             // Configuração inicial (seeding) de dados 
             modelBuilder.Entity<Recipe>().HasData(
                 new Recipe { Id = 1, Title = "bruh"}

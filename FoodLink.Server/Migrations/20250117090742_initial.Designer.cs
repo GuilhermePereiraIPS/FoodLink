@@ -4,6 +4,7 @@ using FoodLink.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FoodLink.Server.Migrations
 {
     [DbContext(typeof(FoodLinkContext))]
-    partial class FoodLinkContextModelSnapshot : ModelSnapshot
+    [Migration("20250117090742_initial")]
+    partial class initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -123,7 +126,7 @@ namespace FoodLink.Server.Migrations
                         new
                         {
                             Id = 1,
-                            CreateDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreateDate = new DateTime(2025, 1, 17, 9, 7, 42, 292, DateTimeKind.Local).AddTicks(9875),
                             Title = "bruh"
                         });
                 });

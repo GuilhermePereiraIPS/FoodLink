@@ -29,6 +29,25 @@ namespace FoodLink.Server.Controllers
             return await _context.Recipes.ToListAsync();
         }
 
+        // GET: api/Recipes/search?title="search"&orderRecent=false
+        [HttpGet("search")]
+        public async Task<ActionResult<IEnumerable<Recipe>>> GetRecipesSearch(
+            [FromQuery] string title = "",
+            [FromQuery] bool orderRecent = false
+        )
+        {
+            // Apply search filters
+            var recipes = _context.Recipes.AsQueryable();
+            //query vazia
+            if (!string.IsNullOrWhiteSpace(title))
+                recipes = recipes.Where(r => r.Title.Contains(title));
+
+            if (orderRecent) 
+                recipes = recipes.OrderByDescending(recipe => recipe.CreateDate);
+
+            return await recipes.ToListAsync();
+        }
+
         // GET: api/Recipes/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Recipe>> GetRecipe(int id)

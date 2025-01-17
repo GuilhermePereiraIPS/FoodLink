@@ -1,0 +1,29 @@
+<h4>Add Recipe</h4>
+
+<form #recipeForm="ngForm" (ngSubmit)="onSubmit(recipeForm)">
+  <div class="form-group">
+    <!--Title-->
+    <label for="title">Title:</label>
+    <input type="text" id="title" name="title" #title="ngModel" ngModel required minlength="2" class="form-control">
+    <div *ngIf="title.invalid && (title.dirty || title.touched)">
+      <div *ngIf="title.errors?.['required']">
+        Title is required.
+      </div>
+      <div *ngIf="title.errors?.['minlength']">
+        Title must be at least {{ title.errors?.['minlength'].requiredLength }} characters long.
+      </div>
+    </div>
+    <!--Description-->
+    <label for="description">Description:</label>
+    <input type="text" id="description" name="description" #title="ngModel" ngModel class="form-control">
+    <!--Ingredients-->
+    <label for="ingredients">Ingredients:</label>
+    <input type="text" id="ingredients" name="ingredients" #title="ngModel" ngModel class="form-control">
+    <!--Instructions-->
+    <label for="instructions">Instructions:</label>
+    <input type="text" id="instructions" name="instructions" #title="ngModel" ngModel class="form-control">
+
+  </div>
+  <button type="submit" class="btn btn-primary spaced-button" [disabled]="!recipeForm.form.valid">Create</button>
+  <a routerLink="/recipes" class="btn btn-primary">Cancel</a>
+</form>

@@ -1,23 +1,68 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { RecipeListComponent } from './recipe-list.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { RecipesService } from '../services/recipes.service';
+import { RouterTestingModule } from '@angular/router/testing';
+import { of, throwError } from 'rxjs';
+import { Router } from '@angular/router';
+import { Recipe } from '../services/recipes.service'
 
 describe('RecipeListComponent', () => {
   let component: RecipeListComponent;
   let fixture: ComponentFixture<RecipeListComponent>;
+  let recipesService: jasmine.SpyObj<RecipesService>;
+  let router: Router;
+
+  const mockRecipes: Recipe[] = [
+    { id: 1, title: 'Recipe 1' },
+    { id: 2, title: 'Recipe 2' },
+  ];
 
   beforeEach(async () => {
+    const recipesServiceSpy = jasmine.createSpyObj('RecipesService', ['getRecipes', 'deleteRecipe']);
+
     await TestBed.configureTestingModule({
-      declarations: [RecipeListComponent]
-    })
-    .compileComponents();
+      declarations: [RecipeListComponent],
+      imports: [HttpClientTestingModule, RouterTestingModule],
+      providers: [{ provide: RecipesService, useValue: recipesServiceSpy }],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(RecipeListComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+    recipesService = TestBed.inject(RecipesService) as jasmine.SpyObj<RecipesService>;
+    router = TestBed.inject(Router);
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should fetch recipes on init', () => {
+    recipesService.getRecipes.and.returnValue(of(mockRecipes));
+
+    component.ngOnInit();
+
+    expect(recipesService.getRecipes).toHaveBeenCalled();
+    expect(component.recipes).toEqual(mockRecipes);
+  });
+
+  it('should handle error when fetching recipes', () => {
+    const consoleErrorSpy = spyOn(console, 'error');
+    recipesService.getRecipes.and.returnValue(throwError(() => new Error('Error fetching recipes')));
+
+    component.getRecipes();
+
+    expect(recipesService.getRecipes).toHaveBeenCalled();
+    expect(consoleErrorSpy).toHaveBeenCalledWith(jasmine.any(Error));
+  });
+
+  it('should delete a recipe and navigate to recipes', () => {
+    const navigateSpy = spyOn(router, 'navigate');
+    recipesService.deleteRecipe.and.returnValue(of(mockRecipes[0]));
+
+    component.deleteRecipe(1);
+
+    expect(recipesService.deleteRecipe).toHaveBeenCalledWith(1);
+    expect(navigateSpy).toHaveBeenCalledWith(['/recipes']);
   });
 });

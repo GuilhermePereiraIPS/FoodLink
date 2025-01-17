@@ -1,15 +1,38 @@
 <p *ngIf="!recipes"><em>Loading...</em></p>
+<div class="search-bar">
+  <input type="text"
+         [(ngModel)]="searchTerm"
+         placeholder="Search recipes by title..."
+         class="search-input" />
+  <button (click)="getRecipesSearch()" class="search-button">Search</button>
+</div>
+
+<button (click)="toggleOrderRecent()">
+  Order by: {{ orderRecent ? 'recent' : 'none' }}
+</button>
+
 <table *ngIf="recipes">
   <thead>
     <tr>
       <th>Id</th>
       <th>Title</th>
+      <th>Description</th>
+      <th>Ingredients</th>
+      <th>Instructions</th>
+      <th>Date Created</th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let recipe of recipes">
       <td>{{ recipe.id }}</td>
-      <td>{{ recipe.title }}</td> <!-- Use recipe.title here -->
+      <td>{{ recipe.title }}</td>
+      <td>{{ recipe.description }}</td>
+      <td>{{ recipe.ingredients }}</td>
+      <td>{{ recipe.instructions }}</td>
+      <td>{{ recipe.createDate | date:'short'}}</td>
+
+      <td><a [routerLink]="['/recipes', recipe.id]">View Recipe</a></td>
+      <td><a href="#" (click)="deleteRecipe(recipe.id)">Delete</a></td>
     </tr>
   </tbody>
 </table>

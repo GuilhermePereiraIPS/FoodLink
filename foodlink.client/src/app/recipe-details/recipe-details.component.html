@@ -1,0 +1,20 @@
+<table *ngIf="recipe">
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Title</th>
+      <th>Description</th>
+      <th>Ingredients</th>
+      <th>Instructions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>{{ recipe.id }}</td>
+      <td>{{ recipe.title }}</td>
+      <td>{{ recipe.description }}</td>
+      <td>{{ recipe.ingredients }}</td>
+      <td>{{ recipe.instructions }}</td>
+    </tr>
+  </tbody>
+</table>
