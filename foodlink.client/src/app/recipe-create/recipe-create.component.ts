@@ -17,7 +17,10 @@ export class RecipeCreateComponent {
 
   onSubmit(form: NgForm) {
     if (form.valid) {
-      this.recipesService.createRecipe(form.value as Recipe).subscribe(res => {
+      var recipe = form.value as Recipe;
+      recipe.createDate = new Date();
+
+      this.recipesService.createRecipe(recipe).subscribe(res => {
         console.log('Recipe created successfully!');
         this.router.navigateByUrl(`recipes/${res.id}`);
       });

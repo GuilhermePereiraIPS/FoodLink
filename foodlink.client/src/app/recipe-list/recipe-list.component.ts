@@ -14,6 +14,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class RecipeListComponent implements OnInit{
   public recipes: Recipe[] = [];
   public searchTerm: string = '';
+  public orderRecent: boolean = false;
 
   constructor(private http: HttpClient, private recipesService: RecipesService, private router: Router) { }
 
@@ -35,7 +36,7 @@ export class RecipeListComponent implements OnInit{
   }
 
   getRecipesSearch() {
-    this.recipesService.getRecipesSearch(this.searchTerm).subscribe(
+    this.recipesService.getRecipesSearch(this.searchTerm, this.orderRecent).subscribe(
       (result) => {
         console.log('Recipes fetched:', result);
         this.recipes = result;
@@ -59,5 +60,11 @@ export class RecipeListComponent implements OnInit{
         }
       );
     }
+  }
+
+  toggleOrderRecent() {
+    this.orderRecent = !this.orderRecent;
+    console.log('order: ' + this.orderRecent);
+    this.getRecipesSearch();
   }
 }

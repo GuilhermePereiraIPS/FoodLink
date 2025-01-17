@@ -5,6 +5,10 @@ import { Observable } from 'rxjs';
 export interface Recipe {
   id: number;
   title: string;
+  description: string;
+  ingredients: string;
+  instructions: string;
+  createDate: Date;
 }
 
 @Injectable({
@@ -18,8 +22,9 @@ export class RecipesService {
     return this.http.get<Recipe[]>('api/recipes');
   }
 
-  getRecipesSearch(search: String): Observable<Recipe[]> {
-    return this.http.get<Recipe[]>('api/recipes/search?title=' + search);
+  //search and orderby, by default orderrecent is false
+  getRecipesSearch(search: String, orderRecent: boolean = false): Observable<Recipe[]> {
+    return this.http.get<Recipe[]>(`api/recipes/search?title=${search}&orderRecent=${orderRecent.toString()}`);
   }
 
   getRecipe(id: number): Observable<Recipe> {
