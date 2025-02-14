@@ -5,6 +5,7 @@ import { AuthorizeService } from "../authorize.service";
 @Component({
   selector: 'app-register-component',
   templateUrl: './register.component.html',
+  styleUrls: ['./register.component.css'],
   standalone: false,
 })
 export class RegisterComponent implements OnInit {

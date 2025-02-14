@@ -1,34 +1,37 @@
 <div class="d-flex flex-column align-items-center justify-content-center" *ngIf="!signedIn && !registerSucceeded">
-  <div>Please create your user account to continue.</div>
+  <div class="register-container">
+    <div class="register-box">
+      <div class="logo"></div>
+      <p class="tagline">Register to start browsing recipes</p>
 
-  <form class="form w-50" [formGroup]="registerForm" (submit)="register($event)">
-    <div class="row m-3">
-      <label for="name">Name*</label>
-      <input class="col form-field" name="name" formControlName="name" />
+      <form class="form" [formGroup]="registerForm" (submit)="register($event)">
+        <div class="form-group">
+          <label for="email">Email address</label>
+          <input type="email" id="email" formControlName="email" placeholder="Enter email address" />
+        </div>
+
+        <div class="form-group">
+          <label for="name">Username</label>
+          <input type="text" id="name" formControlName="name" placeholder="Enter username" />
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password <span class="validation-error" *ngIf="registerForm.get('password')?.invalid">Must have at least 8 characters!</span></label>
+          <input type="password" id="password" formControlName="password" placeholder="Enter Password" />
+        </div>
+
+        <div class="form-group">
+          <label for="confirmPassword">Repeat Password</label>
+          <input type="password" id="confirmPassword" formControlName="confirmPassword" placeholder="Enter Password" />
+        </div>
+
+        <button class="btn-register" [disabled]="!registerForm.valid" type="submit">Register</button>
+      </form>
+
+      <p class="login-text">Already have an account? <a class="login-link" href="signin">Login</a></p>
     </div>
-    <div class="row m-3">
-      <label for="email">Email*</label>
-      <input class="col form-field" name="email" formControlName="email" />
-    </div>
-    <div class="row m-3">
-      <label for="password">Password*</label>
-      <input class="col form-field" type="password" name="password" formControlName="password" autocomplete="on" />
-    </div>
-    <div class="row m-3">
-      <label for="confirmPassword">Confirm password*</label>
-      <input class="col form-field" type="password" name="confirmPassword" formControlName="confirmPassword" autocomplete="on" />
-    </div>
-    <div class="row m-3" *ngIf="registerFailed">
-      <label style="color: red">Registration failed.</label>
-    </div>
-    <div class="row m-3" *ngFor="let error of errors">
-      <label style="color: red">{{error}}</label>
-    </div>
-    <div class="row m-3">
-      <button class="col btn btn-primary" [disabled]="!registerForm.valid" type="submit">Register</button>
-    </div>
-  </form>
-  <div>Already have an account? <a href="signin">Login</a>.</div>
+  </div>
+
 </div>
 
 <div *ngIf="registerSucceeded">

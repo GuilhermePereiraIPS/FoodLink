@@ -6,6 +6,7 @@ import { AuthorizeService } from "../authorize.service";
 @Component({
   selector: 'app-signin-component',
   templateUrl: './signin.component.html',
+  styleUrls: ['./signin.component.css'],
   standalone: false,
 })
 export class SigninComponent implements OnInit {
