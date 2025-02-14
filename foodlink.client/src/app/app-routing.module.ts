@@ -6,7 +6,7 @@ import { RecipeCreateComponent } from './recipe-create/recipe-create.component'
 import { SigninComponent } from './api-authorization/signin/signin.component';
 
 const routes: Routes = [
-  { path: '', component: RecipeListComponent, pathMatch: 'full' },
+  { path: '', redirectTo: 'signin', pathMatch: 'full' },
   { path: 'recipes/create', component: RecipeCreateComponent },
   { path: 'recipes', component: RecipeListComponent },
   { path: 'recipes/:id', component: RecipeDetailsComponent },

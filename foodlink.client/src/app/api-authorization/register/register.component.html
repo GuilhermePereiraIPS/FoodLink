@@ -1,5 +1,6 @@
 <div class="d-flex flex-column align-items-center justify-content-center" *ngIf="!signedIn && !registerSucceeded">
   <div>Please create your user account to continue.</div>
+
   <form class="form w-50" [formGroup]="registerForm" (submit)="register($event)">
     <div class="row m-3">
       <label for="name">Name*</label>
@@ -27,6 +28,7 @@
       <button class="col btn btn-primary" [disabled]="!registerForm.valid" type="submit">Register</button>
     </div>
   </form>
+  <div>Already have an account? <a href="signin">Login</a>.</div>
 </div>
 
 <div *ngIf="registerSucceeded">
