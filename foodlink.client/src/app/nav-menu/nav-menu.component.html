@@ -1,22 +1,26 @@
-<header>
- 
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-      <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-        <nav *ngIf="!isLoginOrRegisterPage()">
-          <ul class="navbar-nav flex-grow">
-            <li class="nav-item"
-                [routerLinkActive]="['link-active']"
-                [routerLinkActiveOptions]="{ exact: true }">
-              <a class="nav-link text-dark" [routerLink]="['/']">Home</a>
-            </li>
-            <li class="nav-item" [routerLinkActive]="['link-active']">
-              <a class="nav-link text-dark" [routerLink]="['/recipes']">Recipes</a>
-            </li>
-            <li class="nav-item" [routerLinkActive]="['link-active']">
-              <a class="nav-link text-dark" [routerLink]="['/recipes/create']">Create Recipe</a>
-            </li>
-          </ul>
-        </nav>
-      </div>
-    </nav>
-</header>
+<div class="header-background"></div>
+
+<nav class="navbar">
+  <div class="container">
+
+    <!-- Logo + Browse alinhado à esquerda -->
+    <div class="logo">
+      <a [routerLink]="['/']">
+        <img src="/assets/logo.png">
+      </a>
+      <ul class="nav-links">
+        <li><a [routerLink]="['/recipes']">Browse</a></li>
+      </ul>
+    </div>
+
+    <!-- Links à direita -->
+    <ul class="nav-links-right">
+      <li><a [routerLink]="['/books']">Books</a></li>
+      <li><a [routerLink]="['/recipes/create']">Create Recipe</a></li>
+      <li><a [routerLink]="['/profile']">Profile</a></li>
+    </ul>
+
+    <!-- Mobile -->
+    <div class="hamburger" (click)="toggleMenu()">☰</div>
+  </div>
+</nav>

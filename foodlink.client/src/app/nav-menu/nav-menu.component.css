@@ -1,0 +1,136 @@
+/* Reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Fundo verde cobrindo toda a parte superior da página */
+.header-background {
+  background-color: #7FFF00; /* Verde alface */
+  width: 100%;
+  height: 100px; /* Ajuste a altura conforme necessário */
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1; /* Mantém o fundo fixo atrás do conteúdo */
+}
+
+/* Navbar */
+.navbar {
+  background: transparent; /* Transparente para mostrar a faixa verde */
+  padding: 15px 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Container */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Logo */
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+  .logo img {
+    height: 40px;
+    margin-right: 10px; /* Dá um pequeno espaço entre a logo e o link "Browse" */
+  }
+
+/* Links principais */
+.nav-links {
+  display: flex;
+  list-style: none;
+  margin-left: 10px; /* Reduz a distância do Browse para a logo */
+}
+
+  .nav-links li {
+    margin: 0;
+  }
+
+  .nav-links a {
+    text-decoration: none;
+    color: #333;
+    font-size: 16px;
+    font-weight: 600;
+    transition: 0.3s;
+  }
+
+    .nav-links a:hover {
+      color: #fff;
+    }
+
+/* Links à direita */
+.nav-links-right {
+  display: flex;
+  list-style: none;
+  margin-left: auto;
+}
+
+  .nav-links-right li {
+    margin: 0 15px;
+  }
+
+  .nav-links-right a {
+    text-decoration: none;
+    color: #333;
+    font-size: 16px;
+    font-weight: 600;
+    transition: 0.3s;
+  }
+
+    .nav-links-right a:hover {
+      color: #fff;
+    }
+
+/* Menu Mobile */
+.hamburger {
+  font-size: 28px;
+  cursor: pointer;
+  display: none;
+}
+
+/* Mobile Menu */
+.mobile-menu {
+  display: none;
+  flex-direction: column;
+  position: absolute;
+  top: 60px;
+  right: 20px;
+  background: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+  .mobile-menu li {
+    padding: 15px;
+    text-align: center;
+  }
+
+  .mobile-menu.active {
+    display: flex;
+  }
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .nav-links {
+    display: none;
+  }
+
+  .nav-links-right {
+    display: none;
+  }
+
+  .hamburger {
+    display: block;
+  }
+}

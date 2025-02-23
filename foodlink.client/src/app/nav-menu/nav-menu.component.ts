@@ -9,11 +9,16 @@ import { Router } from '@angular/router';
   styleUrl: './nav-menu.component.css'
 })
 export class NavMenuComponent {
+  menuOpen: boolean = false;
+
   constructor(private router: Router) { }
 
   isLoginOrRegisterPage(): boolean {
     return this.router.url === '/signin' || this.router.url === '/new';
   }
 
+  toggleMenu() {
+    this.menuOpen = !this.menuOpen;
+  }
 
 }
