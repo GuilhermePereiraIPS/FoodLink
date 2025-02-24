@@ -1,98 +1,49 @@
-<div class="form-container" *ngIf="!signedIn && !registerSucceeded">
-  <h2 class="form-title">Create Your Account</h2>
-  <div class="form-description">Please create your user account to continue.</div>
+<div class="d-flex flex-column align-items-center justify-content-center" *ngIf="!signedIn && !registerSucceeded">
+  <div class="register-container">
+    <div class="register-box">
+      <div class="logo"></div>
+      <p class="tagline">Register to start browsing recipes</p>
 
-  <form class="form" [formGroup]="registerForm" (submit)="register()">
-    <!-- Name -->
-    <div class="form-group">
-      <label for="name">Name*</label>
-      <input id="name"
-             type="text"
-             class="form-control"
-             name="name"
-             formControlName="name" />
-      <div class="error-feedback" *ngIf="registerForm.get('name')?.hasError('required') && registerForm.get('name')?.touched">
-        Please enter your name.
-      </div>
-    </div>
+      <form class="form" [formGroup]="registerForm" (submit)="register()">
+        <div class="form-group">
+          <label for="email">Email address</label>
+          <input type="email" id="email" formControlName="email" placeholder="Enter email address" />
+        </div>
 
-    <!-- Email -->
-    <div class="form-group">
-      <label for="email">Email*</label>
-      <input id="email"
-             type="email"
-             class="form-control"
-             name="email"
-             formControlName="email" />
-      <div class="error-feedback" *ngIf="registerForm.get('email')?.hasError('required') && registerForm.get('email')?.touched">
-        Please enter your email.
-      </div>
-      <div class="error-feedback" *ngIf="registerForm.get('email')?.hasError('email') && registerForm.get('email')?.touched">
-        Please enter a valid email address.
-      </div>
-    </div>
+        <div class="form-group">
+          <label for="name">Username</label>
+          <input type="text" id="name" formControlName="name" placeholder="Enter username" />
+        </div>
 
-    <!-- Password -->
-    <div class="form-group">
-      <label for="password">Password*</label>
-      <input id="password"
-             type="password"
-             class="form-control"
-             name="password"
-             formControlName="password"
-             autocomplete="on" />
-      <div class="error-feedback" *ngIf="registerForm.get('password')?.hasError('required') && registerForm.get('password')?.touched">
-        Please enter your password.
-      </div>
-      <div class="error-feedback" *ngIf="registerForm.get('password')?.hasError('minlength') && registerForm.get('password')?.touched">
-        Password must be at least 6 characters long.
-      </div>
-      <div class="error-feedback" *ngIf="registerForm.get('password')?.hasError('pattern') && registerForm.get('password')?.touched">
-        Password must include at least one special character.
-      </div>
-    </div>
+        <div class="form-group">
+          <label for="password">Password <span class="validation-error" *ngIf="registerForm.get('password')?.invalid">Must have at least 8 characters!</span></label>
+          <input type="password" id="password" formControlName="password" placeholder="Enter Password" />
+        </div>
 
-    <!-- Confirm Password -->
-    <div class="form-group">
-      <label for="confirmPassword">Confirm Password*</label>
-      <input id="confirmPassword"
-             type="password"
-             class="form-control"
-             name="confirmPassword"
-             formControlName="confirmPassword"
-             autocomplete="on" />
-      <div class="error-feedback" *ngIf="registerForm.hasError('passwordMismatch') && registerForm.get('confirmPassword')?.touched">
-        Passwords do not match.
-      </div>
-    </div>
+        <div class="form-group">
+          <label for="confirmPassword">Repeat Password</label>
+          <input type="password" id="confirmPassword" formControlName="confirmPassword" placeholder="Enter Password" />
+        </div>
 
-    <!-- General Error Messages -->
-    <div class="form-errors" *ngIf="registerFailed">
-      <div class="error-feedback">Registration failed.</div>
-      <div class="error-feedback" *ngFor="let error of errors">{{ error }}</div>
-    </div>
+        <button class="btn-register" [disabled]="!registerForm.valid" type="submit">Register</button>
+      </form>
 
-    <!-- Submit Button -->
-    <div class="form-group">
-      <button class="btn btn-primary"
-              [disabled]="!registerForm.valid"
-              type="submit">
-        Register
-      </button>
+      <p class="login-text">Already have an account? <a class="login-link" href="signin">Login</a></p>
     </div>
-  </form>
+  </div>
+
 </div>
 
-<div *ngIf="registerSucceeded" class="success-message">
+<div *ngIf="registerSucceeded">
   <h4>Registration succeeded</h4>
-  <p>
+  <div>
     Please <a href="signin">sign in</a> to continue.
-  </p>
+  </div>
 </div>
 
-<div *ngIf="signedIn" class="info-message">
+<div *ngIf="signedIn">
   <h4>Signed in</h4>
-  <p>
+  <div>
     Please log out of your current session to create a new user account.
-  </p>
+  </div>
 </div>
