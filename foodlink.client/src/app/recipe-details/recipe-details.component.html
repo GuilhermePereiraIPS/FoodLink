@@ -5,13 +5,16 @@
 
   <!-- Informações do usuário -->
   <div class="recipe-user">
+    <!-- Informações do usuário -->
     <div class="user-info">
       <img src="assets/user-avatar.png" alt="User Avatar" class="user-avatar">
       <div>
         <p>By User</p>
-        <p class="recipe-date">Posted {{ recipe.createDate | date:'longDate' }}</p>
+        <p class="recipe-date">Created: {{ recipe.createDate | date:'longDate' }}</p>
       </div>
     </div>
+
+    <!-- Botões de ação (empilhados verticalmente) -->
     <div class="recipe-actions">
       <button class="skip-btn">Skip to recipe</button>
       <button class="add-btn">Add to book</button>
@@ -40,10 +43,23 @@
     <p>{{ recipe.instructions }}</p>
   </div>
 
-  <!-- Comentários -->
+  <!-- Seção de Comentários -->
   <div class="recipe-comments">
     <h3>Comments</h3>
-    <textarea placeholder="Leave a comment"></textarea>
-    <button class="comment-btn">Comment</button>
+
+    <!-- Caixa de comentário -->
+    <textarea [(ngModel)]="newComment" placeholder="Leave a comment"></textarea>
+    <button class="comment-btn" (click)="addComment()">Comment</button>
+
+    <!-- Lista de Comentários -->
+    <div class="comment-list" *ngIf="comments.length > 0">
+      <div class="comment-item" *ngFor="let comment of comments">
+        <p class="comment-text">{{ comment.commentText }}</p>
+        <p class="comment-date">Posted by User ID: {{ comment.userId }}</p>
+      </div>
+    </div>
+
+    <!-- Caso não haja comentários -->
+    <p *ngIf="comments.length === 0" class="no-comments">No comments yet. Be the first to comment!</p>
   </div>
 </div>
