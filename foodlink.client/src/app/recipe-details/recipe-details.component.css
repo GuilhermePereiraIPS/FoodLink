@@ -1,0 +1,156 @@
+/* Reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Container principal */
+.recipe-detail-container {
+  width: 90%;
+  max-width: 800px;
+  margin: auto;
+  text-align: center;
+  padding: 20px;
+}
+
+/* Título da Página (Agora sem fundo verde, alinhado com a navbar) */
+.recipe-title {
+  font-size: 28px;
+  font-weight: bold;
+  color: #000;
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+/* Informações do usuário */
+.recipe-user {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+/* Avatar do usuário */
+.user-info {
+  display: flex;
+  align-items: center;
+}
+
+.user-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.recipe-date {
+  font-size: 14px;
+  color: #666;
+}
+
+/* Botões de ação */
+.recipe-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.skip-btn, .add-btn {
+  padding: 8px 12px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  border-radius: 4px;
+}
+
+.skip-btn {
+  background-color: #ddd;
+}
+
+.add-btn {
+  background-color: #007BFF;
+  color: white;
+}
+
+  .add-btn:hover {
+    background-color: #0056b3;
+  }
+
+/* Descrição da Receita */
+.recipe-description {
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+/* Imagem da Receita */
+.recipe-image {
+  text-align: center;
+  margin: 20px 0;
+}
+
+  .recipe-image img {
+    width: 100%;
+    max-width: 500px;
+    border-radius: 8px;
+  }
+
+/* Seções da Receita */
+.recipe-section {
+  text-align: left;
+  margin-top: 20px;
+}
+
+  .recipe-section h3 {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+
+  .recipe-section p {
+    background: #f8f8f8;
+    padding: 8px;
+    border-radius: 4px;
+  }
+
+/* Comentários */
+.recipe-comments {
+  margin-top: 30px;
+  text-align: left;
+}
+
+  .recipe-comments textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+
+.comment-btn {
+  display: block;
+  margin-top: 10px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+  .comment-btn:hover {
+    background-color: #218838;
+  }
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .recipe-user {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .recipe-actions {
+    margin-top: 10px;
+  }
+}

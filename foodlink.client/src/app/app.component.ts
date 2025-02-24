@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -10,6 +11,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AppComponent {
   title = 'foodlink.client';
+  showFooter: boolean = true;
 
   //constructor(private http: HttpClient) {}
 
@@ -18,4 +20,11 @@ export class AppComponent {
 
 
   //title = 'foodlink.client';
+
+  constructor(private router: Router) {
+    this.router.events.subscribe(() => {
+      // Esconder o footer quando a página for /signin
+      this.showFooter = this.router.url !== '/signin';
+    });
+  }
 }

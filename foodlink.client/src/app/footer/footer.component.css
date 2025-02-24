@@ -1,0 +1,88 @@
+/* Reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Footer fixo na parte inferior da página */
+.footer {
+  background-color: #45D345; /* Cor verde */
+  width: 100%;
+  height: 60px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* 🔥 Mantém os elementos bem distribuídos */
+  padding: 0 20px;
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Container do footer */
+.footer-container {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Texto do footer */
+.footer p {
+  color: #333;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Área das redes sociais (alinhadas à direita) */
+.footer-social {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end; /* 🔥 Mantém os ícones colados à direita */
+  width: auto;
+}
+
+  /* Estilização dos ícones com background */
+  .footer-social .social-icon {
+    width: 30px; /* 🔥 Ajuste o tamanho conforme necessário */
+    height: 30px; /* 🔥 Mantém o tamanho quadrado */
+    background-size: contain; /* 🔥 Garante que a imagem se ajuste sem cortes */
+    background-position: center; /* 🔥 Mantém a imagem centralizada */
+    background-repeat: no-repeat;
+    display: block;
+    margin-left: 10px; /* 🔥 Espaço entre os ícones */
+  }
+
+  /* Ícone específico para Instagram */
+  .footer-social .logoInsta {
+    background-image: url('../../assets/Insta.png'); /* 🔥 Caminho da imagem */
+  }
+
+  /* Ícone específico para Twitter */
+  .footer-social .logoTwitter {
+    background-image: url('../../assets/Twitter.png'); /* 🔥 Caminho da imagem */
+  }
+
+/* Responsividade: Ajuste para telas menores */
+@media (max-width: 768px) {
+  .footer {
+    flex-direction: column;
+    height: auto;
+    padding: 10px;
+    text-align: center;
+  }
+
+  .footer-container {
+    flex-direction: column;
+  }
+
+  .footer p {
+    margin-bottom: 5px;
+  }
+
+  .footer-social {
+    justify-content: center; /* 🔥 Centraliza os ícones em telas pequenas */
+    margin-top: 5px;
+  }
+}

@@ -1,0 +1,181 @@
+/* Reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Container principal */
+.recipe-list-container {
+  width: 90%;
+  max-width: 1200px;
+  margin: auto;
+}
+
+/* Título da Página (agora alinhado com a search bar) */
+.recipe-page-title {
+  font-size: 26px;
+  font-weight: bold;
+  margin: 20px 0;
+  color: #000;
+  text-align: left; /* 🔥 Alinha o título à esquerda */
+  width: 600px; /* 🔥 Mesmo tamanho da search bar */
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Search Bar */
+.search-bar {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  max-width: 1000px;
+  width: 100%;
+  border: 2px solid #000; /* 🔥 Borda preta */
+  border-radius: 15px; /* 🔥 Mantém a curva nas laterais */
+  overflow: hidden; /* 🔥 Garante que os cantos fiquem uniformes */
+  background: #f8f8f8;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Input da Search Bar */
+.search-input {
+  flex-grow: 3; /* 🔥 Aumenta mais o input */
+  padding: 12px;
+  border: none;
+  font-size: 18px;
+  outline: none;
+  border-radius: 0;
+  width: 100%;
+}
+
+/* Botão de Pesquisa */
+.search-button {
+  padding: 12px 18px;
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  border-radius: 0;
+  white-space: nowrap;
+}
+
+  .search-button:hover {
+    background-color: #0056b3;
+  }
+
+
+/* Botão de Ordenação */
+.order-button {
+  display: block;
+  
+  margin: 0 auto 20px;
+  padding: 8px 12px;
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+  .order-button:hover {
+    background-color: #555;
+  }
+
+/* Grid de receitas */
+.recipe-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 15px;
+  margin-top: 20px;
+}
+
+/* Card da Receita */
+.recipe-card {
+  background-color: white;
+  border: 2px solid #333; /* 🔥 Adiciona um contorno */
+  padding: 15px;
+  border-radius: 8px; /* 🔥 Bordas arredondadas */
+  text-align: center;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out;
+}
+
+  .recipe-card:hover {
+    transform: scale(1.05);
+    border-color: #007BFF; /* 🔥 Muda a cor da borda ao passar o mouse */
+  }
+
+/* Informações da Receita */
+.recipe-info h3 {
+  font-size: 18px;
+  margin-bottom: 5px;
+}
+
+.recipe-date {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.recipe-description {
+  font-size: 14px;
+  color: #333;
+}
+
+/* Botões de Ação */
+.recipe-actions {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.view-recipe, .delete-recipe {
+  padding: 6px 12px;
+  text-decoration: none;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.view-recipe {
+  background-color: #28a745;
+  color: white;
+}
+
+  .view-recipe:hover {
+    background-color: #218838;
+  }
+
+.delete-recipe {
+  background-color: #dc3545;
+  color: white;
+}
+
+  .delete-recipe:hover {
+    background-color: #c82333;
+  }
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .search-bar {
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .search-input {
+    flex-grow: 1;
+  }
+
+  .search-input {
+    width: 100%;
+  }
+
+  .recipe-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+}

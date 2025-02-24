@@ -4,15 +4,13 @@
   <div class="container">
 
     <!-- Logo + Browse alinhado à esquerda -->
-    <div class="logo">
-      <a [routerLink]="['/']">
-        <img src="/assets/logo.png">
+    <div class="nav-left">
+      <a class="logo" [routerLink]="['/']">
       </a>
       <ul class="nav-links">
         <li><a [routerLink]="['/recipes']">Browse</a></li>
       </ul>
     </div>
-
     <!-- Links à direita -->
     <ul class="nav-links-right">
       <li><a [routerLink]="['/books']">Books</a></li>
@@ -23,4 +21,5 @@
     <!-- Mobile -->
     <div class="hamburger" (click)="toggleMenu()">☰</div>
   </div>
+
 </nav>

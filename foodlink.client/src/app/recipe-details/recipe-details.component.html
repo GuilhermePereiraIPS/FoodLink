@@ -1,20 +1,49 @@
-<table *ngIf="recipe">
-  <thead>
-    <tr>
-      <th>Id</th>
-      <th>Title</th>
-      <th>Description</th>
-      <th>Ingredients</th>
-      <th>Instructions</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>{{ recipe.id }}</td>
-      <td>{{ recipe.title }}</td>
-      <td>{{ recipe.description }}</td>
-      <td>{{ recipe.ingredients }}</td>
-      <td>{{ recipe.instructions }}</td>
-    </tr>
-  </tbody>
-</table>
+<div class="recipe-detail-container" *ngIf="recipe">
+
+  <!-- Título da Receita (Sem fundo verde, integrado na navbar) -->
+  <h1 class="recipe-title">{{ recipe.title }} by User</h1>
+
+  <!-- Informações do usuário -->
+  <div class="recipe-user">
+    <div class="user-info">
+      <img src="assets/user-avatar.png" alt="User Avatar" class="user-avatar">
+      <div>
+        <p>By User</p>
+        <p class="recipe-date">Posted {{ recipe.createDate | date:'longDate' }}</p>
+      </div>
+    </div>
+    <div class="recipe-actions">
+      <button class="skip-btn">Skip to recipe</button>
+      <button class="add-btn">Add to book</button>
+    </div>
+  </div>
+  <hr />
+  <!-- Imagem da receita (placeholder, pois não há imagens no BD) -->
+  <div class="recipe-image">
+    <img src="assets/placeholder-image.png" alt="Recipe Image">
+  </div>
+
+  <!-- Descrição -->
+  <p class="recipe-description">{{ recipe.description }}</p>
+
+  <hr />
+  <!-- Seção de Ingredientes -->
+  <h2>Recipe</h2>
+  <div class="recipe-section">
+    <h3>Ingredients</h3>
+    <p>{{ recipe.ingredients }}</p> <!-- 🔥 Agora tratado como texto, não lista -->
+  </div>
+
+  <!-- Seção de Instruções -->
+  <div class="recipe-section">
+    <h3>Preparation</h3>
+    <p>{{ recipe.instructions }}</p>
+  </div>
+
+  <!-- Comentários -->
+  <div class="recipe-comments">
+    <h3>Comments</h3>
+    <textarea placeholder="Leave a comment"></textarea>
+    <button class="comment-btn">Comment</button>
+  </div>
+</div>

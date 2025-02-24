@@ -15,6 +15,7 @@ import { AuthGuard } from './api-authorization/authorize.guard';
 import { AuthorizeService } from './api-authorization/authorize.service';
 import { RecipeDetailsComponent } from './recipe-details/recipe-details.component';
 import { RecipeCreateComponent } from './recipe-create/recipe-create.component';
+import { FooterComponent } from './footer/footer.component';
 
 
 @NgModule({
@@ -24,6 +25,7 @@ import { RecipeCreateComponent } from './recipe-create/recipe-create.component';
     NavMenuComponent,
     RecipeDetailsComponent,
     RecipeCreateComponent,
+    FooterComponent,
   ],
   imports: [
     BrowserModule, HttpClientModule,
