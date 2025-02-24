@@ -1,4 +1,4 @@
-import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject, catchError, map, of } from 'rxjs';
 import { UserInfo } from './authorize.dto';
@@ -7,88 +7,68 @@ import { UserInfo } from './authorize.dto';
 @Injectable({
   providedIn: 'root'
 })
-export class AuthorizeService {
-  constructor(private http: HttpClient) { }
+export class AuthorizeService {  
 
-  private _authStateChanged: Subject<boolean> = new BehaviorSubject<boolean>(false);
+  private _authStateChanged: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(this.hasToken());
+
+  constructor(private http: HttpClient) { }
 
   public onStateChanged() {
     return this._authStateChanged.asObservable();
   }
 
-  // cookie-based login
-  public signIn(email: string, password: string) {
-    return this.http.post('/login?useCookies=true', {
-      email: email,
-      password: password
-    }, {
-      observe: 'response',
-      responseType: 'text'
-    })
-      .pipe<boolean>(map((res: HttpResponse<string>) => {
-        this._authStateChanged.next(res.ok);
-        return res.ok;
-      }));
+  // Verifica se o token está presente no localStorage
+  private hasToken(): boolean {
+    return !!localStorage.getItem('authToken');
   }
 
-
-  // register new user
-  public registerCustom(name: string, email: string, password: string) {
-    return this.http.post('api/register', {
-      name: name,
-      email: email,
-      password: password
-    }, {
-      observe: 'response',
-      responseType: 'text'
-    })
-      .pipe<boolean>(map((res: HttpResponse<string>) => {
-        return res.ok;
-      }));
+  // Armazena o token no localStorage
+  private saveToken(token: string): void {
+    localStorage.setItem('authToken', token);
   }
 
-  // register new user - não funciona para um novo tipo de IdentityUser com propriedades extra
-  public register(email: string, password: string) {
-    return this.http.post('/register', {
-      email: email,
-      password: password
-    }, {
-      observe: 'response',
-      responseType: 'text'
-    })
-      .pipe<boolean>(map((res: HttpResponse<string>) => {
-        return res.ok;
-      }));
+  // Remove o token do localStorage
+  private clearToken(): void {
+    localStorage.removeItem('authToken');
   }
 
-  // sign out - não aparece como um serviço
-  public signOut() {
-    return this.http.post('/logout', {}, {
-      withCredentials: true,
-      observe: 'response',
-      responseType: 'text'
-    }).pipe<boolean>(map((res: HttpResponse<string>) => {
-      if (res.ok) {
-        this._authStateChanged.next(false);
-      }
-      return res.ok;
-    }));
+  // Login baseado em JWT
+  public signIn(email: string, password: string): Observable<boolean> {
+    return this.http.post<{ token: string }>('/api/signin', { email, password }).pipe(
+      map((response) => {
+        if (response && response.token) {
+          this.saveToken(response.token);
+          this._authStateChanged.next(true);
+          return true;
+        }
+        return false;
+      }),
+      catchError(() => {
+        return of(false);
+      })
+    );
   }
 
-  // logout
-  public signOutCustom() {
-    return this.http.post('/api/logout', {}, {
-      withCredentials: true,
-      observe: 'response',
-      responseType: 'text'
-    }).pipe<boolean>(map((res: HttpResponse<string>) => {
-      if (res.ok) {
-        this._authStateChanged.next(false);
-      }
-      return res.ok;
-    }));
+  // Registro de novo utilizador
+  public register(name: string, email: string, password: string): Observable<boolean> {
+    return this.http.post('api/signup', { name, email, password }, { observe: 'response' }).pipe(
+      map((res) => res.ok),
+      catchError(() => of(false))
+    );
   }
 
+  // Logout - Remove o token e notifica o estado
+  public signOut(): void {
+    this.clearToken();
+    this._authStateChanged.next(false);
+  }
+
+  // Verifica se o utilizador está autenticado
+  public isSignedIn(): boolean {
+    return this.hasToken();
+  }
+
+  
   // check if the user is authenticated. the endpoint is protected so 401 if not.
   public user() {
     return this.http.get<UserInfo>('/manage/info', {
@@ -99,15 +79,16 @@ export class AuthorizeService {
       }));
   }
 
-  // is signed in when the call completes without error and the user has an email
-  public isSignedIn(): Observable<boolean> {
-    return this.user().pipe(
-      map((userInfo) => {
-        const valid = !!(userInfo && userInfo.email && userInfo.email.length > 0);
-        return valid;
-      }),
-      catchError((_) => {
-        return of(false);
-      }));
+  // Obter informações do utilizador autenticado
+  public getUserInfo(): Observable<UserInfo> {
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+      return of({} as UserInfo);
+    }
+
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get<UserInfo>('/api/userinfo', { headers }).pipe(
+      catchError(() => of({} as UserInfo))
+    );
   }
 }

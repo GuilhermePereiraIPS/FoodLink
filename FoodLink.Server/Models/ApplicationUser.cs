@@ -2,7 +2,7 @@
 
 namespace FoodLink.Server.Models
 {
-    public class AppUser : IdentityUser
+    public class ApplicationUser : IdentityUser
     {
         [PersonalData]
         public string Name { get; set; }

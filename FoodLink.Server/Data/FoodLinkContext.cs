@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace FoodLink.Server.Data
 {
-    public class FoodLinkContext : IdentityDbContext<AppUser>
+    public class FoodLinkContext : IdentityDbContext<ApplicationUser>
     {
         public FoodLinkContext(DbContextOptions<FoodLinkContext> options)
             : base(options)

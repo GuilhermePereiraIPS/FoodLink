@@ -5,8 +5,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-login-menu',
   templateUrl: './login-menu.component.html',
-  styleUrls: ['./login-menu.component.css'],
-  standalone: false,
+  styleUrls: ['./login-menu.component.css']
 })
 export class LoginMenuComponent implements OnInit {
   public isSignedIn: boolean = false;
@@ -14,18 +13,15 @@ export class LoginMenuComponent implements OnInit {
   constructor(private auth: AuthorizeService, private router: Router) { }
 
   ngOnInit() {
-    this.auth.onStateChanged().forEach((state: any) => {
-      this.auth.isSignedIn().forEach((signedIn: boolean) => this.isSignedIn = signedIn);
+    this.auth.onStateChanged().subscribe((state: boolean) => {
+      this.isSignedIn = state;
     });
   }
 
   signOut() {
     if (this.isSignedIn) {
-      this.auth.signOutCustom().forEach(response => {
-        if (response) {
-          this.router.navigateByUrl('');
-        }
-      });
+      this.auth.signOut();
+      this.router.navigateByUrl('');
     }
   }
 }
