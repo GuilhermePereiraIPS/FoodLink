@@ -134,9 +134,9 @@
     resize: none;
   }
 
-/* Botão de Comentário (Agora na Direita) */
+/* Botão de Comentário (Agora alinhado corretamente) */
 .comment-btn {
-  display: block;
+  display: inline-block; /* 🔥 Faz o botão respeitar o fluxo da página */
   background-color: #28a745;
   color: white;
   border: none;
@@ -144,9 +144,10 @@
   border-radius: 4px;
   cursor: pointer;
   margin-top: 10px;
-  float: right; /* 🔥 Agora está alinhado à direita */
+  margin-left: auto; /* 🔥 Mantém alinhado à direita */
+  display: block;
+  width: fit-content;
 }
-
   .comment-btn:hover {
     background-color: #218838;
   }

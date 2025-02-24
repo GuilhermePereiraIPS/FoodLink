@@ -24,7 +24,7 @@ export class AppComponent {
   constructor(private router: Router) {
     this.router.events.subscribe(() => {
       // Esconder o footer quando a página for /signin
-      this.showFooter = this.router.url !== '/signin';
+      this.showFooter = !['/signin', '/new'].includes(this.router.url);
     });
   }
 }

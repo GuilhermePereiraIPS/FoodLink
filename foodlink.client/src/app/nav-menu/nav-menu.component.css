@@ -9,18 +9,31 @@
 .header-background {
   background-color: #45D345;
   width: 100%;
-  height: 100px; /* Ajuste a altura conforme necessário */
-  position: absolute;
+  height: 80px; /* 🔥 Ajuste conforme necessário */
+  position: fixed; /* 🔥 Mantém o fundo fixo junto com a navbar */
   top: 0;
   left: 0;
-  z-index: -1; /* Mantém o fundo fixo atrás do conteúdo */
+  z-index: 100; /* 🔥 Mantém atrás da navbar */
 }
 
-/* Navbar */
+/* Navbar fixa no topo */
 .navbar {
   background: transparent;
+  width: 100%;
+  height: 80px; /* 🔥 Ajuste conforme necessário */
+  position: fixed; /* 🔥 Mantém a navbar fixa no topo */
+  top: 0;
+  left: 0;
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  z-index: 1000; /* 🔥 Mantém a navbar acima de outros elementos */
+}
+
+/* Garante que o conteúdo da página não fique escondido atrás do header */
+.body-content {
+  padding-top: 100px; /* 🔥 Deve ser igual ou maior que a altura do header */
 }
 
 /* Container */
@@ -38,12 +51,11 @@
   background: url('../../assets/logo.png') no-repeat center center/cover;
   background-size: contain;
   margin-right: 10px;
-  display: block
+  display: block;
 }
 
   .logo img {
     height: 40px;
-    
   }
 
 .nav-left {

@@ -1,7 +1,15 @@
 <body>
-  <app-nav-menu></app-nav-menu>
-  <div class="container">
-    <router-outlet></router-outlet>
+  <div class="header-background"></div> <!-- Fundo verde fixo -->
+  <app-nav-menu *ngIf="showFooter"></app-nav-menu>
+  <div class="page-container">
+    <div class="content-wrap">
+      <router-outlet></router-outlet>
+    </div>
+    <div *ngIf="showFooter">
+      <div class="footer-background"></div>
+      <app-footer></app-footer>
+    </div>
   </div>
-  <app-footer *ngIf="showFooter"></app-footer>
+
+
 </body>

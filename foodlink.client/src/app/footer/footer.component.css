@@ -5,20 +5,57 @@
   box-sizing: border-box;
 }
 
-/* Footer fixo na parte inferior da página */
+/* Fundo verde fixo no final da página */
+.footer-background {
+  background-color: #45D345;
+  width: 100%;
+  height: 60px; /* 🔥 Ajuste conforme necessário */
+  position: fixed; /* 🔥 Mantém o fundo fixo na parte inferior */
+  bottom: 0;
+  left: 0;
+  z-index: 100; /* 🔥 Mantém atrás do conteúdo */
+}
+
+/* Footer fixo no final da página */
 .footer {
-  background-color: #45D345; /* Cor verde */
+  background-color: #45D345;
   width: 100%;
   height: 60px;
-  position: fixed;
+  position: fixed; /* 🔥 Mantém o footer fixo */
   bottom: 0;
   left: 0;
   display: flex;
   align-items: center;
-  justify-content: space-between; /* 🔥 Mantém os elementos bem distribuídos */
+  justify-content: space-between;
   padding: 0 20px;
-  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
 }
+
+/* Garante que o conteúdo da página não seja sobreposto pelo footer */
+.body-content {
+  padding-bottom: 100px; /* 🔥 Deve ser maior ou igual à altura do footer */
+}
+
+/* Remover margens e scroll lateral */
+body, html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+/* Garante que a página ocupe no mínimo toda a altura da tela */
+.page-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* 🔥 Faz o conteúdo ocupar pelo menos a altura total da tela */
+}
+
+/* Faz com que o conteúdo empurre o footer para baixo */
+.content-wrap {
+  flex: 1; /* 🔥 O conteúdo cresce e empurra o footer para o final */
+}
+
 
 /* Container do footer */
 .footer-container {
