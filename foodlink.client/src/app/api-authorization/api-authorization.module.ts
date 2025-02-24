@@ -1,28 +1,25 @@
 import { NgModule } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http'; // Import HttpClientModule
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
-
-
-import { SigninComponent } from './signin/signin.component';
-import { RegisterComponent } from './register/register.component';
 import { LoginMenuComponent } from './login-menu/login-menu.component';
-
+import { SignInComponent } from './signin/signin.component';
+import { RouterModule } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
+import { RegisterComponent } from './register/register.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   imports: [
     CommonModule,
-    HttpClientModule,
+    HttpClientModule,    
     ReactiveFormsModule,
     RouterModule.forChild(
       [
-        { path: 'signin', component: SigninComponent },
+        { path: 'signin', component: SignInComponent },
         { path: 'new', component: RegisterComponent },
       ]
     )
   ],
-  declarations: [LoginMenuComponent, SigninComponent, RegisterComponent],
-  exports: [LoginMenuComponent, SigninComponent, RegisterComponent],
+  declarations: [LoginMenuComponent, SignInComponent, RegisterComponent],
+  exports: [LoginMenuComponent, SignInComponent, RegisterComponent]
 })
 export class ApiAuthorizationModule { }

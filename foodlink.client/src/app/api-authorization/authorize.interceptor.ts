@@ -8,16 +8,27 @@ import { Observable, tap } from "rxjs";
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   constructor(private router: Router) { }
+
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    return next.handle(req).pipe(tap({
-      next: (event: HttpEvent<any>) => {
-        if (event instanceof HttpErrorResponse) {
-          if (event.status !== 401 || (event.url && event.url.indexOf("manage/info") >= 0)) {
-            return;
+    const token = localStorage.getItem('authToken'); // Obter token do localStorage
+    let authReq = req;
+
+    if (token) {
+      authReq = req.clone({
+        setHeaders: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+    }
+
+    return next.handle(authReq).pipe(
+      tap({
+        error: (event) => {
+          if (event instanceof HttpErrorResponse && event.status === 401) {
+            this.router.navigate(['signin']); // Redirecionar para o login
           }
-          this.router.navigate(['signin']);
-        }
-      }
-    }));
+        },
+      })
+    );
   }
 }

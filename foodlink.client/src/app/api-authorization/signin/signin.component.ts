@@ -5,10 +5,9 @@ import { AuthorizeService } from "../authorize.service";
 
 @Component({
   selector: 'app-signin-component',
-  templateUrl: './signin.component.html',
-  standalone: false,
+  templateUrl: './signin.component.html'
 })
-export class SigninComponent implements OnInit {
+export class SignInComponent implements OnInit {
   loginForm!: FormGroup;
   authFailed: boolean = false;
   signedIn: boolean = false;
@@ -16,10 +15,7 @@ export class SigninComponent implements OnInit {
   constructor(private authService: AuthorizeService,
     private formBuilder: FormBuilder,
     private router: Router) {
-    this.authService.isSignedIn().forEach(
-      isSignedIn => {
-        this.signedIn = isSignedIn;
-      });
+    this.signedIn = this.authService.isSignedIn();
   }
 
   ngOnInit(): void {
@@ -31,21 +27,24 @@ export class SigninComponent implements OnInit {
       });
   }
 
-  public signIn(_: any) {
+  public signIn(event: Event): void {
+    event.preventDefault(); // Previne o comportamento padrão do formulário
     if (!this.loginForm.valid) {
       return;
     }
-    const userName = this.loginForm.get('email')?.value;
+
+    const email = this.loginForm.get('email')?.value;
     const password = this.loginForm.get('password')?.value;
-    this.authService.signIn(userName, password).forEach(
-      response => {
+
+    this.authService.signIn(email, password).subscribe({
+      next: (response) => {
         if (response) {
-          this.router.navigateByUrl("/");
+          this.router.navigateByUrl("/"); // Redireciona para a página inicial
         }
-      }).catch(
-        (error) => {
-          console.log(error);
-          this.authFailed = true;
-        });
+      },
+      error: () => {
+        this.authFailed = true; // Mostra mensagem de erro se falhar
+      }
+    });
   }
 }
