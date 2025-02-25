@@ -1,0 +1,109 @@
+/* Estilização Geral */
+.title {
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  margin-top: 20px;
+}
+
+/* Container principal */
+.recipe-container {
+  display: flex;
+  justify-content: space-between;
+  max-width: 900px;
+  margin: auto;
+  padding: 20px;
+}
+
+/* Campos de entrada do formulário */
+.recipe-fields {
+  width: 60%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Ajustar os labels para ficarem alinhados com o campo */
+.form-group {
+  display: block; /* 🔥 Remove o flexbox que centralizava os labels */
+  margin-bottom: 15px;
+}
+
+label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  display: block; /* 🔥 Faz com que o label ocupe a largura total antes do input */
+  text-align: left; /* 🔥 Garante que o texto fique alinhado à esquerda */
+}
+
+input, textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  display: block; /* 🔥 Garante que cada campo ocupe uma linha separada */
+}
+
+textarea {
+  height: 100px;
+  resize: none;
+}
+
+/* Botão de Upload */
+.upload-btn {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+  .upload-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+
+/* Sidebar da receita */
+.recipe-sidebar {
+  width: 35%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.recipe-image {
+  width: 100%;
+  border-radius: 10px;
+}
+
+/* Seção de Tags */
+.tags-section {
+  margin-top: 15px;
+  text-align: center;
+}
+
+.tags-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tag {
+  background-color: orange;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  margin-right: 5px;
+}
+
+.add-tag {
+  border: none;
+  background-color: #eee;
+  border-radius: 50%;
+  width: 25px;
+  height: 25px;
+  font-size: 18px;
+  cursor: pointer;
+}

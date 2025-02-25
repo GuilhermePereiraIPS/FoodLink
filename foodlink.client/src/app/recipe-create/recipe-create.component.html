@@ -1,30 +1,52 @@
-<br /><br /><br /><br />
-<h4>Add Recipe</h4>
+<br /><br />
 
-<form #recipeForm="ngForm" (ngSubmit)="onSubmit(recipeForm)">
-  <div class="form-group">
-    <!--Title-->
-    <label for="title">Title:</label>
-    <input type="text" id="title" name="title" #title="ngModel" ngModel required minlength="2" class="form-control">
-    <div *ngIf="title.invalid && (title.dirty || title.touched)">
-      <div *ngIf="title.errors?.['required']">
-        Title is required.
+<h2 class="title">Create a recipe</h2>
+
+<form #recipeForm="ngForm" (ngSubmit)="onSubmit(recipeForm)" class="recipe-form">
+  <div class="recipe-container">
+
+    <!-- Esquerda: Campos de Entrada -->
+    <div class="recipe-fields">
+      <!-- Título -->
+      <div class="form-group">
+        <label for="title">Title (required)</label>
+        <input type="text" id="title" name="title" ngModel required minlength="2" placeholder="Enter title">
       </div>
-      <div *ngIf="title.errors?.['minlength']">
-        Title must be at least {{ title.errors?.['minlength'].requiredLength }} characters long.
+
+      <!-- Descrição -->
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea id="description" name="description" ngModel placeholder="Tell users about your recipe"></textarea>
+      </div>
+
+      <!-- Ingredientes -->
+      <div class="form-group">
+        <label for="ingredients">Ingredients</label>
+        <textarea id="ingredients" name="ingredients" ngModel placeholder="Ingredients"></textarea>
+      </div>
+
+      <!-- Instruções -->
+      <div class="form-group">
+        <label for="instructions">Preparation</label>
+        <textarea id="instructions" name="instructions" ngModel placeholder="Steps on how to make your recipe"></textarea>
+      </div>
+
+      <!-- Botão de Upload -->
+      <button type="submit" class="upload-btn" [disabled]="!recipeForm.form.valid">Upload Recipe</button>
+    </div>
+
+    <!-- Direita: Imagem e Tags -->
+    <div class="recipe-sidebar">
+      <img src="assets/default-recipe.jpg" alt="Recipe Image" class="recipe-image">
+
+      <div class="tags-section">
+        <label>Tags</label>
+        <div class="tags-container">
+          <span class="tag">Main</span>
+          <button type="button" class="add-tag">+</button>
+        </div>
       </div>
     </div>
-    <!--Description-->
-    <label for="description">Description:</label>
-    <input type="text" id="description" name="description" #title="ngModel" ngModel class="form-control">
-    <!--Ingredients-->
-    <label for="ingredients">Ingredients:</label>
-    <input type="text" id="ingredients" name="ingredients" #title="ngModel" ngModel class="form-control">
-    <!--Instructions-->
-    <label for="instructions">Instructions:</label>
-    <input type="text" id="instructions" name="instructions" #title="ngModel" ngModel class="form-control">
 
   </div>
-  <button type="submit" class="btn btn-primary spaced-button" [disabled]="!recipeForm.form.valid">Create</button>
-  <a routerLink="/recipes" class="btn btn-primary">Cancel</a>
 </form>
