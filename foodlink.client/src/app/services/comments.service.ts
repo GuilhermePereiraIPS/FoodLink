@@ -17,13 +17,18 @@ export class CommentsService {
 
   constructor(private http: HttpClient) { }
 
-  // 🔹 Obter comentários de uma receita
+  //Obter comentários de uma receita
   getComments(recipeId: number): Observable<Comment[]> {
     return this.http.get<Comment[]>(`${this.apiUrl}/${recipeId}`);
   }
 
-  // 🔹 Adicionar um novo comentário
+  //Adicionar um novo comentário
   addComment(comment: Comment): Observable<Comment> {
     return this.http.post<Comment>(this.apiUrl, comment);
+  }
+
+  //Delete comentário
+  deleteComment(commentId: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${commentId}`);
   }
 }

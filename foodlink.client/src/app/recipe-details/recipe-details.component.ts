@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Recipe, RecipesService } from '../services/recipes.service';
-import { CommentsService, Comment } from '../services/comments.service'; // 🔥 Importação do serviço de comentários
+import { CommentsService, Comment } from '../services/comments.service';
 
 @Component({
   selector: 'app-recipe-details',
@@ -12,24 +12,24 @@ import { CommentsService, Comment } from '../services/comments.service'; // 🔥
 export class RecipeDetailsComponent implements OnInit {
   public recipe: Recipe | undefined;
   public id: number | undefined;
-  public comments: Comment[] = []; // 🔥 Lista de comentários
-  public newComment: string = ''; // 🔥 Texto do novo comentário
+  public comments: Comment[] = []; // Lista de comentários
+  public newComment: string = ''; // Texto do novo comentário
 
   constructor(
     private route: ActivatedRoute,
     private service: RecipesService,
-    private commentsService: CommentsService // 🔥 Injeção do serviço de comentários
+    private commentsService: CommentsService
   ) { }
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      this.id = +params['id']; // 🔥 Convertendo para número
+      this.id = +params['id']; // Convertendo para número
       this.getRecipe();
-      this.getComments(); // 🔥 Busca os comentários ao carregar a página
+      this.getComments(); // Busca os comentários ao carregar a página
     });
   }
 
-  // 🔹 Busca os detalhes da receita
+  //Busca os detalhes da receita
   getRecipe(): void {
     if (this.id === undefined) return;
 
@@ -57,7 +57,7 @@ export class RecipeDetailsComponent implements OnInit {
     );
   }
 
-  // 🔹 Adiciona um novo comentário
+  //Adiciona um novo comentário
   addComment(): void {
     if (!this.id || !this.newComment.trim()) return;
 
@@ -76,5 +76,54 @@ export class RecipeDetailsComponent implements OnInit {
         console.log(error);
       }
     );
+  }
+
+  // Delete a um comentário
+  deleteComment(commentId: number | undefined): void {
+    if (!commentId) return; //Evita erro caso o ID seja indefinido
+
+    const confirmDelete = confirm('Are you sure you want to delete this comment?');
+    if (!confirmDelete) return;
+
+    this.commentsService.deleteComment(commentId).subscribe(
+      () => {
+        this.comments = this.comments.filter(comment => comment.idComment !== commentId);
+        console.log(`Comment with ID ${commentId} deleted successfully.`);
+      },
+      (error) => {
+        console.error(`Error deleting comment with ID ${commentId}:`, error);
+      }
+    );
+  }
+
+  public showModal = false;
+  private commentToDelete: number | undefined;
+
+  // Exibe o modal antes
+  openDeleteModal(commentId: number): void {
+    this.commentToDelete = commentId;
+    this.showModal = true;
+  }
+
+  //Confirma
+  confirmDelete(): void {
+    if (!this.commentToDelete) return;
+
+    this.commentsService.deleteComment(this.commentToDelete).subscribe(
+      () => {
+        this.comments = this.comments.filter(comment => comment.idComment !== this.commentToDelete);
+        console.log(`Comment with ID ${this.commentToDelete} deleted successfully.`);
+        this.showModal = false;
+      },
+      (error) => {
+        console.error(`Error deleting comment with ID ${this.commentToDelete}:`, error);
+      }
+    );
+  }
+
+  //Cancela
+  cancelDelete(): void {
+    this.showModal = false;
+    this.commentToDelete = undefined;
   }
 }

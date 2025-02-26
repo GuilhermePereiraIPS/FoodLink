@@ -14,7 +14,7 @@
   padding: 20px;
 }
 
-/* Título da Página (Agora sem fundo verde, alinhado com a navbar) */
+/* Título da Página*/
 .recipe-title {
   font-size: 28px;
   font-weight: bold;
@@ -53,9 +53,9 @@
 /* Botões de ação organizados verticalmente */
 .recipe-actions {
   display: flex;
-  flex-direction: column; /* 🔥 Empilha os botões verticalmente */
-  align-items: flex-end; /* 🔥 Alinha à direita */
-  gap: 10px; /* 🔥 Espaçamento entre os botões */
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
 }
 
 .skip-btn, .add-btn {
@@ -64,7 +64,7 @@
   cursor: pointer;
   font-size: 14px;
   border-radius: 4px;
-  width: 150px; /* 🔥 Para manter os botões com largura igual */
+  width: 150px;
   text-align: center;
 }
 
@@ -134,9 +134,9 @@
     resize: none;
   }
 
-/* Botão de Comentário (Agora alinhado corretamente) */
+/* Botão de Comentário */
 .comment-btn {
-  display: inline-block; /* 🔥 Faz o botão respeitar o fluxo da página */
+  display: inline-block; /* Faz o botão respeitar o fluxo da página */
   background-color: #28a745;
   color: white;
   border: none;
@@ -144,7 +144,7 @@
   border-radius: 4px;
   cursor: pointer;
   margin-top: 10px;
-  margin-left: auto; /* 🔥 Mantém alinhado à direita */
+  margin-left: auto; /* Mantém alinhado à direita */
   display: block;
   width: fit-content;
 }
@@ -158,14 +158,19 @@
 }
 
 .comment-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   background: #f8f8f8;
   padding: 10px;
-  border-radius: 4px;
+  border-radius: 5px;
   margin-bottom: 10px;
+  border: 1px solid #ddd;
 }
 
 .comment-text {
   font-size: 14px;
+  flex-grow: 1;
 }
 
 .comment-date {
@@ -192,11 +197,86 @@
 
 /* Adiciona margem no final da página para evitar que o footer cubra o conteúdo */
 .recipe-detail-container {
-  padding-bottom: 80px; /* 🔥 Cria um espaço antes do footer */
+  padding-bottom: 80px;
 }
 
-/* Ajusta o botão para não ficar escondido pelo footer */
 .comment-btn {
   position: relative;
-  z-index: 2; /* 🔥 Garante que o botão fique acima do footer */
+  z-index: 2;
+}
+
+/* Botão de delete comentário */
+.delete-btn {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-left: 15px; 
+}
+
+  .delete-btn:hover {
+    background-color: #c82333;
+  }
+
+
+/* Fundo escuro para o modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Conteúdo do modal */
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 300px;
+  text-align: center;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Botões do modal */
+.modal-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+}
+
+.confirm-btn {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 45%;
+}
+
+.cancel-btn {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 45%;
+}
+
+.confirm-btn:hover {
+  background-color: #c82333;
+}
+
+.cancel-btn:hover {
+  background-color: #5a6268;
 }

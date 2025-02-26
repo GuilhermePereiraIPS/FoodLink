@@ -41,5 +41,20 @@ namespace FoodLink.Server.Controllers
             await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetComments), new { recipeId = comment.RecipeId }, comment);
         }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteComment(int id)
+        {
+            var comment = await _context.Comments.FindAsync(id);
+            if (comment == null)
+            {
+                return NotFound(); // Retorna erro 404 se o comentário não existir
+            }
+
+            _context.Comments.Remove(comment);
+            await _context.SaveChangesAsync();
+
+            return NoContent(); // Retorna status 204 - No Content
+        }
     }
 }

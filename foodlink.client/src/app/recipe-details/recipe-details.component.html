@@ -54,12 +54,28 @@
     <!-- Lista de Comentários -->
     <div class="comment-list" *ngIf="comments.length > 0">
       <div class="comment-item" *ngFor="let comment of comments">
-        <p class="comment-text">{{ comment.commentText }}</p>
-        <p class="comment-date">Posted by User ID: {{ comment.userId }}</p>
+        <!--Texto do Comentário -->
+        <div class="comment-text">
+          <p>{{ comment.commentText }}</p>
+          <p class="comment-date">Posted by User ID: {{ comment.userId }}</p>
+        </div>
+
+        <!-- 🔹 Botão de delete -->
+        <button class="delete-btn" (click)="openDeleteModal(comment.idComment!)">
+          🗑
+        </button>
       </div>
     </div>
 
-    <!-- Caso não haja comentários -->
-    <p *ngIf="comments.length === 0" class="no-comments">No comments yet. Be the first to comment!</p>
+    <!-- Modal de Confirmação -->
+    <div class="modal-overlay" *ngIf="showModal">
+      <div class="modal-content">
+        <h3>Are you sure?</h3>
+        <p>Do you really want to delete this comment?</p>
+        <div class="modal-buttons">
+          <button class="confirm-btn" (click)="confirmDelete()">Delete</button>
+          <button class="cancel-btn" (click)="cancelDelete()">Cancel</button>
+        </div>
+      </div>
+    </div>
   </div>
-</div>
