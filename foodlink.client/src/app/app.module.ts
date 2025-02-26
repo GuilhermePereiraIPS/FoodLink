@@ -16,6 +16,7 @@ import { AuthorizeService } from './api-authorization/authorize.service';
 import { RecipeDetailsComponent } from './recipe-details/recipe-details.component';
 import { RecipeCreateComponent } from './recipe-create/recipe-create.component';
 import { FooterComponent } from './footer/footer.component';
+import { RecipeEditComponent } from './recipe-edit/recipe-edit.component';
 
 
 @NgModule({
@@ -26,6 +27,7 @@ import { FooterComponent } from './footer/footer.component';
     RecipeDetailsComponent,
     RecipeCreateComponent,
     FooterComponent,
+    RecipeEditComponent,
   ],
   imports: [
     BrowserModule, HttpClientModule,

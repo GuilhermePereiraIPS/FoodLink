@@ -1,0 +1,62 @@
+<h2 class="title">Edit Recipe</h2>
+
+<form *ngIf="recipe" (ngSubmit)="onSubmit()" class="recipe-form">
+  <div class="recipe-container">
+
+    <!-- Esquerda: Campos de Entrada -->
+    <div class="recipe-fields">
+      <!-- Título -->
+      <div class="form-group">
+        <label for="title">Title (required)</label>
+        <input type="text" id="title" [(ngModel)]="recipe.title" name="title" required minlength="2" placeholder="Enter title">
+        <div *ngIf="isInvalid(recipe.title)">
+          <span class="error-message">Title is required</span>
+        </div>
+      </div>
+
+      <!-- Descrição -->
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea id="description" [(ngModel)]="recipe.description" name="description" required placeholder="Tell users about your recipe"></textarea>
+        <div *ngIf="isInvalid(recipe.description)">
+          <span class="error-message">Description is required</span>
+        </div>
+      </div>
+
+      <!-- Ingredientes -->
+      <div class="form-group">
+        <label for="ingredients">Ingredients</label>
+        <textarea id="ingredients" [(ngModel)]="recipe.ingredients" name="ingredients" required placeholder="Ingredients"></textarea>
+        <div *ngIf="isInvalid(recipe.ingredients)">
+          <span class="error-message">Ingredients are required</span>
+        </div>
+      </div>
+
+      <!-- Instruções -->
+      <div class="form-group">
+        <label for="instructions">Preparation</label>
+        <textarea id="instructions" [(ngModel)]="recipe.instructions" name="instructions" required placeholder="Steps on how to make your recipe"></textarea>
+        <div *ngIf="isInvalid(recipe.instructions)">
+          <span class="error-message">Preparation is required</span>
+        </div>
+      </div>
+
+      <!-- Botão de Atualizar -->
+      <button type="submit" class="upload-btn" [disabled]="isFormInvalid()">Update Recipe</button>
+    </div>
+
+    <!-- Direita: Imagem e Tags -->
+    <div class="recipe-sidebar">
+      <img src="assets/default-recipe.jpg" alt="Recipe Image" class="recipe-image">
+
+      <div class="tags-section">
+        <label>Tags</label>
+        <div class="tags-container">
+          <span class="tag">Main</span>
+          <button type="button" class="add-tag">+</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</form>

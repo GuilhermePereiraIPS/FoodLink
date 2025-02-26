@@ -30,6 +30,7 @@
       <!-- Botões de ação -->
       <div class="recipe-actions">
         <a [routerLink]="['/recipes', recipe.id]" class="view-recipe">View Recipe</a>
+        <a [routerLink]="['/recipes/edit', recipe.id]" class="view-recipe">Edit</a>
         <a href="/recipes" (click)="deleteRecipe(recipe.id)" class="delete-recipe">Delete</a>
       </div>
     </div>

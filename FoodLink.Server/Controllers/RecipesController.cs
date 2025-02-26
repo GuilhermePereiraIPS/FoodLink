@@ -62,36 +62,6 @@ namespace FoodLink.Server.Controllers
             return Recipe;
         }
 
-        // PUT: api/Recipes/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutRecipe(int id, Recipe Recipe)
-        {
-            if (id != Recipe.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(Recipe).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!RecipeExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
 
         // POST: api/Recipes
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -119,6 +89,38 @@ namespace FoodLink.Server.Controllers
 
             return NoContent();
         }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutRecipe(int id, Recipe recipe)
+        {
+            if (id != recipe.Id)
+            {
+                return BadRequest("Recipe ID mismatch");
+            }
+
+            var existingRecipe = await _context.Recipes.FindAsync(id);
+            if (existingRecipe == null)
+            {
+                return NotFound("Recipe not found");
+            }
+
+            // Atualiza os valores
+            existingRecipe.Title = recipe.Title;
+            existingRecipe.Description = recipe.Description;
+            existingRecipe.Ingredients = recipe.Ingredients;
+            existingRecipe.Instructions = recipe.Instructions;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                return NoContent();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return StatusCode(500, "Error updating the recipe");
+            }
+        }
+
 
         private bool RecipeExists(int id)
         {
