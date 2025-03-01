@@ -40,7 +40,7 @@ export class SignInComponent implements OnInit {
     this.authService.signIn(email, password).subscribe({
       next: (response) => {
         if (response) {
-          this.router.navigateByUrl("/"); // Redireciona para a página inicial
+          this.router.navigateByUrl("/recipes"); // Redireciona para a página inicial
         }
       },
       error: () => {
