@@ -9,6 +9,7 @@ import { AuthGuard } from './api-authorization/authorize.guard';
 
 const routes: Routes = [
   { path: 'signin', redirectTo: 'signin'},
+  { path: 'new', redirectTo: 'new' },
   { path: 'recipes/create', component: RecipeCreateComponent, canActivate: [AuthGuard] },
   { path: 'recipes', component: RecipeListComponent, canActivate: [AuthGuard] },
   { path: 'recipes/:id', component: RecipeDetailsComponent, canActivate: [AuthGuard] },

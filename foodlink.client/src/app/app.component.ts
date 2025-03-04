@@ -22,13 +22,16 @@ export class AppComponent {
 
   //title = 'foodlink.client';
 
-  constructor(private router: Router, private authService: AuthorizeService) {
+  constructor(private router: Router, private authService: AuthorizeService) {}
 
+
+  ngOnInit() {
+    // Redirect if on root
     if (this.router.url === '/') {
       if (this.authService.isSignedIn()) {
-        this.router.navigate(['/recipes']); 
+        this.router.navigate(['/recipes']);
       } else {
-        this.router.navigate(['/signin']); 
+        //this.router.navigate(['/signin']);
       }
     }
 
