@@ -52,6 +52,21 @@ namespace FoodLink.Server.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Comments",
+                columns: table => new
+                {
+                    IdComment = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CommentText = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RecipeId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Comments", x => x.IdComment);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Recipes",
                 columns: table => new
                 {
@@ -177,7 +192,7 @@ namespace FoodLink.Server.Migrations
             migrationBuilder.InsertData(
                 table: "Recipes",
                 columns: new[] { "Id", "CreateDate", "Description", "Ingredients", "Instructions", "Title" },
-                values: new object[] { 1, new DateTime(2025, 1, 17, 9, 7, 42, 292, DateTimeKind.Local).AddTicks(9875), null, null, null, "bruh" });
+                values: new object[] { 1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null, null, "bruh" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -236,6 +251,9 @@ namespace FoodLink.Server.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "Comments");
 
             migrationBuilder.DropTable(
                 name: "Recipes");
