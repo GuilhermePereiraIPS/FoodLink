@@ -15,7 +15,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     RouterModule.forChild(
       [
         { path: 'signin', component: SignInComponent },
-        { path: 'new', component: RegisterComponent },
+        { path: 'register', component: RegisterComponent },
       ]
     )
   ],

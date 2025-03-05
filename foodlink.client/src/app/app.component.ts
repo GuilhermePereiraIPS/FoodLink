@@ -27,17 +27,15 @@ export class AppComponent {
 
   ngOnInit() {
     // Redirect if on root
-    if (this.router.url === '/') {
+    if (this.router.url == '/') {
       if (this.authService.isSignedIn()) {
         this.router.navigate(['/recipes']);
-      } else {
-        //this.router.navigate(['/signin']);
       }
     }
 
     this.router.events.subscribe(() => {
       // Esconder o footer quando a página for /signin
-      this.showFooter = !['/signin', '/new'].includes(this.router.url);
+      this.showFooter = !['/signin', '/register'].includes(this.router.url);
     });
   }
 }
