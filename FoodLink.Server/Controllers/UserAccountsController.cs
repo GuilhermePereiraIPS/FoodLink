@@ -23,6 +23,11 @@ namespace FoodLink.Server.Controllers
             _configuration = configuration;
         }
 
+        /// <summary>
+        /// Registra um novo utilizador.
+        /// </summary>
+        /// <param name="model">Dados do utilizador a ser registado.</param>
+        /// <returns>Retorna sucesso ou erro de validação.</returns>
         [HttpPost("api/signup")]
         public async Task<IActionResult> Register([FromBody] UserRegistrationModel model)
         {
@@ -30,7 +35,7 @@ namespace FoodLink.Server.Controllers
             if (userExists != null)
                 return BadRequest(new { message = "User already exists." });
 
-            var user = new ApplicationUser { UserName = model.Email, Email = model.Email, Name = model.Name };
+            var user = new ApplicationUser { UserName = model.Name, Email = model.Email};
 
             var result = await _userManager.CreateAsync(user, model.Password);
 
@@ -40,8 +45,14 @@ namespace FoodLink.Server.Controllers
             }
 
             return BadRequest(result.Errors);
-        }        
+        }
 
+
+        /// <summary>
+        /// Autentica um utilizador e retorna um token JWT.
+        /// </summary>
+        /// <param name="model">Dados de login do utilizador.</param>
+        /// <returns>Retorna um token JWT em caso de sucesso.</returns>
         [HttpPost("api/signin")]
         public async Task<IActionResult> Login([FromBody] UserLoginModel model)
         {
@@ -59,7 +70,7 @@ namespace FoodLink.Server.Controllers
             // Gerar os claims do utilizador
             var claims = new List<Claim>
             {
-                new Claim("Name", user.Name),
+                new Claim("Name", user.UserName),
                 new Claim("Email", user.Email),
                 new Claim("UserId", user.Id)
             };
@@ -86,25 +97,56 @@ namespace FoodLink.Server.Controllers
         }
 
 
+        [HttpGet("api/getUserInfo")]
+        public async Task<IActionResult> GetUserInfo([FromQuery] string username)
+        {
+            if (string.IsNullOrEmpty(username))
+            {
+                return BadRequest(new { message = "Username is required." });
+            }
+
+            var user = await _userManager.FindByNameAsync(username);
+            if (user == null)
+            {
+                return NotFound(new { message = "User not found." });
+            }
+
+            return Ok(new
+            {
+                id = user.Id,
+                username = user.UserName,
+                email = user.Email,
+            });
+        }
+
         /// <summary>
-        /// Retorna o utilizador autenticado
+        /// Retorna o utilizador autenticado, o id ou a informação toda (não sensivel)
         /// </summary>
+        /// <param name="includeDetails">Por omissão falso, retorna apenas o id, caso false retorna </param>
         /// <returns>
         /// Retorna um <see cref="UserProfileModel"/> contendo o ID, nome e email do utilizador.
         /// Se o utilizador não estiver autenticado, retorna uma resposta Unauthorized (401).
         /// </returns>
-        [HttpGet("api/currentUserId")]
+        [HttpGet("api/currentUser")]
         [Authorize]
-        public async Task<IActionResult> GetCurrentUserID()
+        public async Task<IActionResult> GetCurrentUserInfo([FromQuery] bool includeDetails = false)
         {
-            ClaimsPrincipal currentUser = this.User;
-            var currentUserIDClaim = currentUser.FindFirst("UserId");
+            var user = await GetCurrentUser();
+            if (user == null) return Unauthorized(new { message = "User not found." });
 
-            if (currentUserIDClaim == null) return Unauthorized(new { message = "User ID claim not found." });
+            if (includeDetails)
+            {
+                return Ok(new
+                {
+                    id = user.Id,
+                    username = user.UserName,
+                    email = user.Email
+                });
+            }
 
-            var currentUserID = currentUserIDClaim.Value;
-            return Ok(new { userID = currentUserID });
+            return Ok(new { userID = user.Id });
         }
+
 
         /// <summary>
         /// Atualiza informações do utilizador dependendo do que é enviado
@@ -160,11 +202,21 @@ namespace FoodLink.Server.Controllers
             return BadRequest(updateResult.Errors);
         }
 
+        /// <summary>
+        /// Verifica se a password do utilizador está correta
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
         private async Task<bool> IsPasswordValid(ApplicationUser user, string password)
         {
             return await _userManager.CheckPasswordAsync(user, password);
         }
 
+        /// <summary>
+        /// Usa claims para buscar o utilizador atual
+        /// </summary>
+        /// <returns>Retorna o utilizador atual<see cref="ApplicationUser"/></returns>
         private async Task<ApplicationUser> GetCurrentUser()
         {
             ClaimsPrincipal currentUser = this.User;

@@ -5,23 +5,13 @@
   box-sizing: border-box;
 }
 
-/* Fundo verde fixo no final da página */
-.footer-background {
-  background-color: #45D345;
-  width: 100%;
-  height: 60px; /* 🔥 Ajuste conforme necessário */
-  position: fixed; /* 🔥 Mantém o fundo fixo na parte inferior */
-  bottom: 0;
-  left: 0;
-  z-index: 100; /* 🔥 Mantém atrás do conteúdo */
-}
 
 /* Footer fixo no final da página */
-.footer {
+footer {
+  position:fixed;
   background-color: #45D345;
   width: 100%;
   height: 60px;
-  position: fixed; /* 🔥 Mantém o footer fixo */
   bottom: 0;
   left: 0;
   display: flex;
@@ -29,31 +19,6 @@
   justify-content: space-between;
   padding: 0 20px;
   z-index: 1000;
-}
-
-/* Garante que o conteúdo da página não seja sobreposto pelo footer */
-.body-content {
-  padding-bottom: 100px; /* 🔥 Deve ser maior ou igual à altura do footer */
-}
-
-/* Remover margens e scroll lateral */
-body, html {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  overflow-x: hidden;
-}
-
-/* Garante que a página ocupe no mínimo toda a altura da tela */
-.page-container {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh; /* 🔥 Faz o conteúdo ocupar pelo menos a altura total da tela */
-}
-
-/* Faz com que o conteúdo empurre o footer para baixo */
-.content-wrap {
-  flex: 1; /* 🔥 O conteúdo cresce e empurra o footer para o final */
 }
 
 
@@ -66,7 +31,7 @@ body, html {
 }
 
 /* Texto do footer */
-.footer p {
+footer p {
   color: #333;
   font-size: 14px;
   font-weight: 600;
@@ -103,7 +68,7 @@ body, html {
 
 /* Responsividade: Ajuste para telas menores */
 @media (max-width: 768px) {
-  .footer {
+  footer {
     flex-direction: column;
     height: auto;
     padding: 10px;

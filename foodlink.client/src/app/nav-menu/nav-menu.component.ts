@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { ChangeDetectorRef } from '@angular/core';
+
+import { User, AccountsService } from '../services/accounts.service';
 
 @Component({
   selector: 'app-nav-menu',
@@ -10,8 +13,13 @@ import { Router } from '@angular/router';
 })
 export class NavMenuComponent {
   menuOpen: boolean = false;
+  public username: string | undefined;
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private accountsService: AccountsService) { }
+
+  ngOnInit() {
+    this.getUserName()
+  }
 
   isLoginOrRegisterPage(): boolean {
     return this.router.url === '/signin' || this.router.url === '/new';
@@ -19,6 +27,20 @@ export class NavMenuComponent {
 
   toggleMenu() {
     this.menuOpen = !this.menuOpen;
+  }
+
+  getUserName() {
+    this.accountsService.getCurrentUser().subscribe(
+      (result) => {
+        console.log('User fetched:', result);
+        var user = result;
+        this.username = user.username;
+        console.log(user)
+      },
+      (error) => {
+        console.error(error);
+      }
+    );
   }
 
 }

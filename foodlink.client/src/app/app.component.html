@@ -1,15 +1,13 @@
+
+<app-nav-menu *ngIf="showNavElements"></app-nav-menu>
 <body>
-  <div class="header-background"></div> <!-- Fundo verde fixo -->
-  <app-nav-menu *ngIf="showFooter"></app-nav-menu>
   <div class="page-container">
     <div class="content-wrap">
       <router-outlet></router-outlet>
     </div>
-    <div *ngIf="showFooter">
+    <div *ngIf="showNavElements">
       <div class="footer-background"></div>
       <app-footer></app-footer>
     </div>
   </div>
-
-
 </body>

@@ -25,7 +25,7 @@ export class AuthInterceptor implements HttpInterceptor {
       tap({
         error: (event) => {
           if (event instanceof HttpErrorResponse && event.status === 401) {
-            this.router.navigate(['signin']); // Redirecionar para o login
+            //this.router.navigate(['signin']); // Redirecionar para o login
           }
         },
       })

@@ -5,109 +5,53 @@
   box-sizing: border-box;
 }
 
-/* Fundo verde cobrindo toda a parte superior da página */
-.header-background {
-  background-color: #45D345;
-  width: 100%;
-  height: 80px; /* 🔥 Ajuste conforme necessário */
-  position: fixed; /* 🔥 Mantém o fundo fixo junto com a navbar */
-  top: 0;
-  left: 0;
-  z-index: 100; /* 🔥 Mantém atrás da navbar */
-}
-
 /* Navbar fixa no topo */
 .navbar {
-  background: transparent;
-  width: 100%;
-  height: 80px; /* 🔥 Ajuste conforme necessário */
-  position: fixed; /* 🔥 Mantém a navbar fixa no topo */
-  top: 0;
-  left: 0;
+  position: sticky;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 20px;
-  z-index: 1000; /* 🔥 Mantém a navbar acima de outros elementos */
-}
-
-/* Garante que o conteúdo da página não fique escondido atrás do header */
-.body-content {
-  padding-top: 100px; /* 🔥 Deve ser igual ou maior que a altura do header */
-}
-
-/* Container */
-.container {
+  background-color: #45D345;
   width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  height: 15vh;
+  padding: 0 25px 50px 25px;
+  z-index: 1000;
+ 
 }
+
+  .navbar div:not(.hamburger) {
+    display: flex;
+    align-items: center;
+  }
+
+
+
+  .navbar ul {
+    display: flex;
+    justify-content: space-between;
+    list-style: none;
+    gap: 2vh;
+  }
+
+    .navbar ul a {
+      text-decoration: none;
+      color: #333;
+      font-size: 16px;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+
+      .navbar ul a:hover {
+        color: #fff;
+      }
 
 /* Logo */
 .logo {
-  height: 80px;
-  width: 120px;
-  background: url('../../assets/logo.png') no-repeat center center/cover;
-  background-size: contain;
+  height: 10vh;
   margin-right: 10px;
   display: block;
 }
 
-  .logo img {
-    height: 40px;
-  }
-
-.nav-left {
-  display: flex;
-  align-items: center;
-}
-
-/* Links principais */
-.nav-links {
-  display: flex;
-  list-style: none;
-  margin-left: 10px;
-}
-
-  .nav-links li {
-    margin: 0;
-  }
-
-  .nav-links a {
-    text-decoration: none;
-    color: #333;
-    font-size: 16px;
-    font-weight: 600;
-    transition: 0.3s;
-  }
-
-    .nav-links a:hover {
-      color: #fff;
-    }
-
-/* Links à direita */
-.nav-links-right {
-  display: flex;
-  list-style: none;
-  margin-left: auto;
-}
-
-  .nav-links-right li {
-    margin: 0 15px;
-  }
-
-  .nav-links-right a {
-    text-decoration: none;
-    color: #333;
-    font-size: 16px;
-    font-weight: 600;
-    transition: 0.3s;
-  }
-
-    .nav-links-right a:hover {
-      color: #fff;
-    }
 
 /* Menu Mobile */
 .hamburger {
@@ -140,13 +84,10 @@
 
 /* Responsividade */
 @media (max-width: 768px) {
-  .nav-links {
+  .navbar ul {
     display: none;
   }
 
-  .nav-links-right {
-    display: none;
-  }
 
   .hamburger {
     display: block;

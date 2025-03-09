@@ -1,25 +1,24 @@
-<div class="header-background"></div>
-
 <nav class="navbar">
-  <div class="container">
-
-    <!-- Logo + Browse alinhado à esquerda -->
-    <div class="nav-left">
-      <a class="logo" [routerLink]="['/']">
-      </a>
-      <ul class="nav-links">
-        <li><a [routerLink]="['/recipes']">Browse</a></li>
-      </ul>
-    </div>
-    <!-- Links à direita -->
+  <!-- Logo + Browse alinhado à esquerda -->
+  <div>
+    <a [routerLink]="['/recipes']">
+      <img class="logo" src="../../assets/logo.png" />
+    </a>
+    <ul class="nav-links">
+      <li><a [routerLink]="['/recipes']">Browse</a></li>
+    </ul>
+  </div>
+  <!-- Links à direita -->
+  <div>
     <ul class="nav-links-right">
       <li><a [routerLink]="['/books']">Books</a></li>
       <li><a [routerLink]="['/recipes/create']">Create Recipe</a></li>
-      <li><a [routerLink]="['/profile']">Profile</a></li>
+      <li><a [routerLink]="['/profile', username]">Profile</a></li>
     </ul>
-
-    <!-- Mobile -->
-    <div class="hamburger" (click)="toggleMenu()">☰</div>
   </div>
+
+  <!-- Mobile -->
+  <div class="hamburger" (click)="toggleMenu()">☰</div>
+
 
 </nav>
