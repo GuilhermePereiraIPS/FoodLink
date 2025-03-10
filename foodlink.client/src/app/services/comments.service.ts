@@ -7,6 +7,7 @@ export interface Comment {
   commentText: string;
   recipeId: number;
   userId: number;
+  username?: string;
 }
 
 @Injectable({

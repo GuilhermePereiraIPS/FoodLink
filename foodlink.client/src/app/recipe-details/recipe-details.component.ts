@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Recipe, RecipesService } from '../services/recipes.service';
 import { CommentsService, Comment } from '../services/comments.service';
+import { AccountsService, User } from '../services/accounts.service';
 
 @Component({
   selector: 'app-recipe-details',
@@ -12,13 +13,15 @@ import { CommentsService, Comment } from '../services/comments.service';
 export class RecipeDetailsComponent implements OnInit {
   public recipe: Recipe | undefined;
   public id: number | undefined;
-  public comments: Comment[] = []; // Lista de comentários
-  public newComment: string = ''; // Texto do novo comentário
+  public comments: Comment[] = [];
+  public newComment: string = '';
+  public currentUser: User | null = null;
 
   constructor(
     private route: ActivatedRoute,
     private service: RecipesService,
-    private commentsService: CommentsService
+    private commentsService: CommentsService,
+    private accountService: AccountsService
   ) { }
 
   ngOnInit(): void {
@@ -26,6 +29,7 @@ export class RecipeDetailsComponent implements OnInit {
       this.id = +params['id']; // Convertendo para número
       this.getRecipe();
       this.getComments(); // Busca os comentários ao carregar a página
+      this.loadUserInfo();
     });
   }
 
@@ -57,6 +61,19 @@ export class RecipeDetailsComponent implements OnInit {
     );
   }
 
+  loadUserInfo(): void {
+    this.accountService.getUserInfo(1).subscribe(
+      (user) => {
+        if (user.id) {
+          this.currentUser = user;
+        }
+      },
+      (error) => {
+        console.error("Error fetching user data:", error);
+      }
+    );
+  }
+
   //Adiciona um novo comentário
   addComment(): void {
     if (!this.id || !this.newComment.trim()) return;
@@ -64,7 +81,9 @@ export class RecipeDetailsComponent implements OnInit {
     const newCommentData: Comment = {
       commentText: this.newComment,
       recipeId: this.id,
-      userId: 1 //Usa sempre o mesmo Id até ter o user
+      userId: this.currentUser?.id,
+      username: this.currentUser?.username
+
     };
 
     this.commentsService.addComment(newCommentData).subscribe(
