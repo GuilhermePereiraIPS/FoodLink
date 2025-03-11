@@ -5,6 +5,7 @@ import { RecipeDetailsComponent } from './recipe-details/recipe-details.componen
 import { RecipeCreateComponent } from './recipe-create/recipe-create.component'
 import { RecipeEditComponent } from './recipe-edit/recipe-edit.component';
 import { ProfileViewComponent } from './profile-view/profile-view.component';
+import { BooksComponent } from './books/books.component';
 import { AuthGuard } from './api-authorization/authorize.guard';
 
 
@@ -15,6 +16,7 @@ const routes: Routes = [
   { path: 'recipes/create', component: RecipeCreateComponent, canActivate: [AuthGuard] },
   { path: 'recipes/:id', component: RecipeDetailsComponent, canActivate: [AuthGuard] },
   { path: 'recipes/edit/:id', component: RecipeEditComponent, canActivate: [AuthGuard] },
+  { path: 'books', component: BooksComponent },
 
   { path: '', redirectTo: 'signin', pathMatch: 'full' },
   //{ path: '**', redirectTo: 'signin' },
