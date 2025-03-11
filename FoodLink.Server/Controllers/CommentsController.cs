@@ -35,7 +35,6 @@ namespace FoodLink.Server.Controllers
             if (string.IsNullOrEmpty(comment.CommentText))
                 return BadRequest("Comment cannot be empty");
 
-            
 
             _context.Comments.Add(comment);
             await _context.SaveChangesAsync();

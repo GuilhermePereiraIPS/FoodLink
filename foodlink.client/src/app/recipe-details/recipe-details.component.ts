@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Recipe, RecipesService } from '../services/recipes.service';
 import { CommentsService, Comment } from '../services/comments.service';
 import { AccountsService, User } from '../services/accounts.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-recipe-details',
@@ -15,21 +16,23 @@ export class RecipeDetailsComponent implements OnInit {
   public id: number | undefined;
   public comments: Comment[] = [];
   public newComment: string = '';
-  public currentUser: User | null = null;
+  public currentUserId: string = '';
+  public userNames: Map<string, string> = new Map();
+
 
   constructor(
     private route: ActivatedRoute,
     private service: RecipesService,
     private commentsService: CommentsService,
-    private accountService: AccountsService
+    private accountsService: AccountsService
   ) { }
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       this.id = +params['id']; // Convertendo para número
       this.getRecipe();
-      this.getComments(); // Busca os comentários ao carregar a página
-      this.loadUserInfo();
+      this.getComments();
+      this.getUserId();
     });
   }
 
@@ -54,6 +57,7 @@ export class RecipeDetailsComponent implements OnInit {
     this.commentsService.getComments(this.id).subscribe(
       (comments) => {
         this.comments = comments;
+        this.loadUserNames();
       },
       (error) => {
         console.log(error);
@@ -61,29 +65,62 @@ export class RecipeDetailsComponent implements OnInit {
     );
   }
 
-  loadUserInfo(): void {
-    this.accountService.getUserInfo(1).subscribe(
-      (user) => {
-        if (user.id) {
-          this.currentUser = user;
-        }
+  // Obtém o nome do usuário e armazena no mapa para evitar chamadas repetidas
+  loadUserNames(): void {
+    this.comments.forEach(async (comment) => {
+      if (comment.userId && !this.userNames.has(comment.userId)) {
+        const username = await this.fetchUserName(comment.userId);
+        this.userNames.set(comment.userId, username);
+      }
+    });
+  }
+
+  async fetchUserName(userId: string | undefined): Promise<string> {
+    if (!userId) {
+      return "Unknown User";
+    }
+
+    if (this.userNames.has(userId)) {
+      return this.userNames.get(userId)!; 
+    }
+
+    try {
+      const username = await this.accountsService.getUserById(userId).toPromise() ?? "Unknown User"; // 🔥 Usa "Unknown User" se retornar undefined
+      this.userNames.set(userId, username);
+      return username;
+    } catch (error) {
+      console.log(`Error fetching username for userId: ${userId}`, error);
+      return "Unknown User";
+    }
+  }
+
+  getUserId() {
+    this.accountsService.getCurrentUser().subscribe(
+      (result) => {
+        console.log('User fetched:', result);
+        var user = result;
+        this.currentUserId = user.id;
+        console.log(user)
       },
       (error) => {
-        console.error("Error fetching user data:", error);
+        console.error(error);
       }
     );
   }
 
+ 
+  getUserName(userId: string): string {
+    return this.userNames.get(userId) || "Loading...";
+  }
+
   //Adiciona um novo comentário
   addComment(): void {
-    if (!this.id || !this.newComment.trim()) return;
+    if (!this.id || !this.newComment.trim() || !this.currentUserId) return;
 
     const newCommentData: Comment = {
       commentText: this.newComment,
       recipeId: this.id,
-      userId: this.currentUser?.id,
-      username: this.currentUser?.username
-
+      userId: this.currentUserId
     };
 
     this.commentsService.addComment(newCommentData).subscribe(

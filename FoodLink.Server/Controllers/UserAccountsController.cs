@@ -202,6 +202,19 @@ namespace FoodLink.Server.Controllers
             return BadRequest(updateResult.Errors);
         }
 
+        [HttpGet("api/users")]
+        public IActionResult GetAllUsers()
+        {
+            var users = _userManager.Users.Select(user => new
+            {
+                id = user.Id,
+                username = user.UserName,
+            }).ToList();
+
+            return Ok(users);
+        }
+
+
         /// <summary>
         /// Verifica se a password do utilizador está correta
         /// </summary>
