@@ -11,6 +11,6 @@ namespace FoodLink.Server.Models
         public string? RecipeBookTitle { get; set; }
 
         [Required]
-        public int UserId { get; set; }
+        public string UserId { get; set; }
     }
 }
