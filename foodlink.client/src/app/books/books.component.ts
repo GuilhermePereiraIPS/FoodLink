@@ -30,7 +30,7 @@ export class BooksComponent {
     );
   }
 
-  // 🔹 Criar um Recipe Book
+  // Criar um Recipe Book
   createRecipeBook(): void {
     if (!this.newRecipeBookTitle.trim() || !this.currentUserId) return;
 
@@ -49,7 +49,7 @@ export class BooksComponent {
     );
   }
 
-  // 🔹 Alternar a exibição do formulário
+  // Alternar a exibição do formulário
   toggleForm(): void {
     this.showForm = !this.showForm;
   }
