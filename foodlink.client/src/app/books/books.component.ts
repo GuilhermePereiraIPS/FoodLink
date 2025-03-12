@@ -11,9 +11,13 @@ export class BooksComponent {
   public newRecipeBookTitle: string = '';
   public currentUserId: string | undefined;
   public showForm: boolean = false;
+  public recipeBooks: RecipeBook[] = [];
+  public errorMessage: string = '';
+  public activeMenu: number | null = null;
 
   constructor(private recipeBooksService: RecipeBooksService, private accountsService: AccountsService) {
     this.getUserId();
+    
   }
 
   getUserId() {
@@ -22,6 +26,7 @@ export class BooksComponent {
         console.log('User fetched:', result);
         var user = result;
         this.currentUserId = user.id;
+        this.loadRecipeBooks();
         console.log(user)
       },
       (error) => {
@@ -30,9 +35,27 @@ export class BooksComponent {
     );
   }
 
+  loadRecipeBooks(): void {
+    if (!this.currentUserId) return;
+
+    this.recipeBooksService.getUserRecipeBooks(this.currentUserId).subscribe(
+      (books) => {
+        this.recipeBooks = books;
+      },
+      (error) => {
+        console.error('Error fetching Recipe Books:', error);
+      }
+    );
+  }
+
   // Criar um Recipe Book
   createRecipeBook(): void {
-    if (!this.newRecipeBookTitle.trim() || !this.currentUserId) return;
+
+    if (!this.newRecipeBookTitle.trim()) {
+      this.errorMessage = '⚠️ Please enter a name for the Recipe Book!'; // 🔥 Define a mensagem de erro
+      return;
+    }
+    if (!this.currentUserId) return;
 
     const newBook: RecipeBook = {
       recipeBookTitle: this.newRecipeBookTitle,
@@ -44,6 +67,8 @@ export class BooksComponent {
         console.log('Recipe Book Created:', createdBook);
         this.newRecipeBookTitle = '';
         this.showForm = false;
+        this.errorMessage = '';
+        this.loadRecipeBooks();
       },
       (error) => { console.log('Error creating Recipe Book:', error); }
     );
@@ -52,5 +77,10 @@ export class BooksComponent {
   // Alternar a exibição do formulário
   toggleForm(): void {
     this.showForm = !this.showForm;
+    this.errorMessage = '';
+  }
+
+  toggleMenu(bookId: number): void {
+    this.activeMenu = this.activeMenu === bookId ? null : bookId;
   }
 }

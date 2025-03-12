@@ -22,11 +22,10 @@ namespace FoodLink.Server.Controllers
         /// Obtém todos os Recipe Books do usuário autenticado
         /// </summary>
         [HttpGet]
-        public async Task<IActionResult> GetUserRecipeBooks()
+        public async Task<IActionResult> GetUserRecipeBooks([FromQuery] string userId)
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (userId == null)
-                return Unauthorized(new { message = "User not authenticated." });
+            if (string.IsNullOrEmpty(userId))
+                return BadRequest(new { message = "User ID is required." });
 
             var recipeBooks = await _context.RecipeBooks
                 .Where(rb => rb.UserId == userId)

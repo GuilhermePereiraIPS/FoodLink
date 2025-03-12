@@ -1,13 +1,42 @@
-<div class="books-container">
-  <h1>Recipe Books</h1>
-  <p>This page will display all your saved recipe books.</p>
+<div class="recipe-books-container">
+  <h2>My Recipe Books</h2>
 
-  <!-- Botão para abrir o formulário -->
-  <button class="add-book-btn" (click)="toggleForm()">+ Add Recipe Book</button>
+  <!-- Exibir a lista de Recipe Books -->
+  <div *ngIf="recipeBooks.length > 0; else noBooks">
+    <ul class="recipe-books-list">
+      <li *ngFor="let book of recipeBooks" class="recipe-book-item">
+        <strong>{{ book.recipeBookTitle }}</strong>
 
-  <!-- Formulário para criar um Recipe Book -->
-  <div *ngIf="showForm" class="form-container">
-    <input type="text" [(ngModel)]="newRecipeBookTitle" placeholder="Enter Recipe Book Title" />
-    <button class="create-btn" (click)="createRecipeBook()">Create</button>
+        <!-- Botão de três pontinhos -->
+        <div class="menu-container">
+          <button class="menu-btn" (click)="toggleMenu(book.idRecipeBook!)">⋮</button>
+
+          <!-- Dropdown do menu -->
+          <div *ngIf="activeMenu === book.idRecipeBook" class="dropdown-menu">
+            <button class="dropdown-item">✏️ Edit</button>
+            <button class="dropdown-item delete">🗑 Delete</button>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Caso o usuário não tenha Recipe Books -->
+  <ng-template #noBooks>
+    <p class="no-books-message">No Recipe Books found. Create one!</p>
+  </ng-template>
+
+  <!-- Botão para adicionar um novo Recipe Book -->
+  <button class="add-recipe-book-btn" (click)="toggleForm()">+ Add Recipe Book</button>
+
+  <!-- Formulário para criar um novo Recipe Book -->
+  <div *ngIf="showForm" class="recipe-book-form">
+    <input type="text" [(ngModel)]="newRecipeBookTitle" placeholder="Enter Recipe Book Title" class="recipe-book-input" />
+
+    <!--Exibir mensagem de erro -->
+    <p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p>
+
+    <button (click)="createRecipeBook()" class="save-recipe-book-btn">Save</button>
+    <button (click)="toggleForm()" class="cancel-recipe-book-btn">Cancel</button>
   </div>
 </div>

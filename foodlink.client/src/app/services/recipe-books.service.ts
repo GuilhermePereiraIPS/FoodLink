@@ -16,6 +16,11 @@ export class RecipeBooksService {
 
   constructor(private http: HttpClient) { }
 
+  getUserRecipeBooks(userId: string): Observable<RecipeBook[]> {
+    return this.http.get<RecipeBook[]>(`${this.apiUrl}?userId=${ userId }`);
+  }
+
+  
   // Criar um Recipe Book
   createRecipeBook(recipeBook: RecipeBook): Observable<RecipeBook> {
     return this.http.post<RecipeBook>(this.apiUrl, recipeBook);
