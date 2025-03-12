@@ -1,6 +1,20 @@
 <div class="recipe-books-container">
   <h2>My Recipe Books</h2>
 
+  <!-- Botão para adicionar um novo Recipe Book -->
+  <button class="add-recipe-book-btn" (click)="toggleForm()">+ Add Recipe Book</button>
+
+  <!-- Formulário para criar um novo Recipe Book -->
+  <div *ngIf="showForm" class="recipe-book-form">
+    <input type="text" [(ngModel)]="newRecipeBookTitle" placeholder="Enter Recipe Book Title" class="recipe-book-input" />
+
+    <!--Exibir mensagem de erro -->
+    <p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p>
+
+    <button (click)="createRecipeBook()" class="save-recipe-book-btn">Save</button>
+    <button (click)="toggleForm()" class="cancel-recipe-book-btn">Cancel</button>
+  </div>
+
   <!-- Exibir a lista de Recipe Books -->
   <div *ngIf="recipeBooks.length > 0; else noBooks">
     <ul class="recipe-books-list">
@@ -26,17 +40,6 @@
     <p class="no-books-message">No Recipe Books found. Create one!</p>
   </ng-template>
 
-  <!-- Botão para adicionar um novo Recipe Book -->
-  <button class="add-recipe-book-btn" (click)="toggleForm()">+ Add Recipe Book</button>
 
-  <!-- Formulário para criar um novo Recipe Book -->
-  <div *ngIf="showForm" class="recipe-book-form">
-    <input type="text" [(ngModel)]="newRecipeBookTitle" placeholder="Enter Recipe Book Title" class="recipe-book-input" />
-
-    <!--Exibir mensagem de erro -->
-    <p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p>
-
-    <button (click)="createRecipeBook()" class="save-recipe-book-btn">Save</button>
-    <button (click)="toggleForm()" class="cancel-recipe-book-btn">Cancel</button>
-  </div>
 </div>
+<br /><br /><br />
