@@ -14,6 +14,8 @@ export class BooksComponent {
   public recipeBooks: RecipeBook[] = [];
   public errorMessage: string = '';
   public activeMenu: number | null = null;
+  public editingBookId: number | null = null;
+  public editedTitle: string = '';
 
   constructor(private recipeBooksService: RecipeBooksService, private accountsService: AccountsService) {
     this.getUserId();
@@ -52,7 +54,7 @@ export class BooksComponent {
   createRecipeBook(): void {
 
     if (!this.newRecipeBookTitle.trim()) {
-      this.errorMessage = '⚠️ Please enter a name for the Recipe Book!'; // 🔥 Define a mensagem de erro
+      this.errorMessage = '⚠️ Please enter a name for the Recipe Book!'; 
       return;
     }
     if (!this.currentUserId) return;
@@ -83,4 +85,44 @@ export class BooksComponent {
   toggleMenu(bookId: number): void {
     this.activeMenu = this.activeMenu === bookId ? null : bookId;
   }
+
+  // Ativar modo de edição
+  startEditing(book: RecipeBook): void {
+    this.editingBookId = book.idRecipeBook!;
+    this.editedTitle = book.recipeBookTitle;
+    this.activeMenu = null; // Fecha o menu ao entrar no modo de edição
+  }
+
+  // 🔹 Salvar Edição
+  saveEditedBook(): void {
+    if (!this.editedTitle.trim() || this.editingBookId === null) return;
+
+    if (!this.currentUserId) return;
+
+    const updatedBook: RecipeBook = {
+      idRecipeBook: this.editingBookId,
+      recipeBookTitle: this.editedTitle,
+      userId: this.currentUserId
+    };
+
+    this.recipeBooksService.updateRecipeBook(updatedBook).subscribe(
+      () => {
+        // Atualizar a lista após a edição
+        this.loadRecipeBooks();
+        this.editingBookId = null; // Sai do modo de edição
+        this.editedTitle = ''; // Limpa o campo de edição
+      },
+      (error) => {
+        console.error('Error updating Recipe Book:', error);
+      }
+    );
+  }
+
+  // 🔹 Cancelar Edição
+  cancelEditing(): void {
+    this.editingBookId = null;
+    this.editedTitle = '';
+  }
+
+
 }

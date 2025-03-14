@@ -25,4 +25,8 @@ export class RecipeBooksService {
   createRecipeBook(recipeBook: RecipeBook): Observable<RecipeBook> {
     return this.http.post<RecipeBook>(this.apiUrl, recipeBook);
   }
+
+  updateRecipeBook(recipeBook: RecipeBook): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/${recipeBook.idRecipeBook}`, recipeBook);
+  }
 }

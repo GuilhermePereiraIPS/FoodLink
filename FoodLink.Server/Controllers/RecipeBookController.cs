@@ -57,5 +57,33 @@ namespace FoodLink.Server.Controllers
 
             return CreatedAtAction(nameof(GetUserRecipeBooks), new { id = recipeBook.IdRecipeBook }, recipeBook);
         }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateRecipeBook(int id, [FromBody] RecipeBook updatedBook)
+        {
+            if (updatedBook == null || id != updatedBook.IdRecipeBook)
+            {
+                return BadRequest("Invalid Recipe Book data.");
+            }
+
+            var existingBook = await _context.RecipeBooks.FindAsync(id);
+            if (existingBook == null)
+            {
+                return NotFound("Recipe Book not found.");
+            }
+
+            // Atualizar os dados do Recipe Book
+            existingBook.RecipeBookTitle = updatedBook.RecipeBookTitle;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                return Ok(existingBook); // Retorna o Recipe Book atualizado
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal Server Error: {ex.Message}");
+            }
+        }
     }
 }

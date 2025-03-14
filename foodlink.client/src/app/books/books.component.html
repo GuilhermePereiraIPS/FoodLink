@@ -19,18 +19,28 @@
   <div *ngIf="recipeBooks.length > 0; else noBooks">
     <ul class="recipe-books-list">
       <li *ngFor="let book of recipeBooks" class="recipe-book-item">
-        <strong>{{ book.recipeBookTitle }}</strong>
 
-        <!-- Botão de três pontinhos -->
-        <div class="menu-container">
-          <button class="menu-btn" (click)="toggleMenu(book.idRecipeBook!)">⋮</button>
-
-          <!-- Dropdown do menu -->
-          <div *ngIf="activeMenu === book.idRecipeBook" class="dropdown-menu">
-            <button class="dropdown-item">✏️ Edit</button>
-            <button class="dropdown-item delete">🗑 Delete</button>
-          </div>
+        <!-- Exibir input se estiver no modo de edição -->
+        <div *ngIf="editingBookId === book.idRecipeBook; else normalView">
+          <input type="text" [(ngModel)]="editedTitle" class="edit-input" />
+          <button (click)="saveEditedBook()" class="save-btn">✔ Save</button>
+          <button (click)="cancelEditing()" class="cancel-btn">✖ Cancel</button>
         </div>
+
+        <!-- Visão normal com três pontinhos -->
+        <ng-template #normalView>
+          <strong>{{ book.recipeBookTitle }}</strong>
+          <div class="menu-container">
+            <button class="menu-btn" (click)="toggleMenu(book.idRecipeBook!)">⋮</button>
+
+            <!-- Dropdown do menu -->
+            <div *ngIf="activeMenu === book.idRecipeBook" class="dropdown-menu">
+              <button class="dropdown-item" (click)="startEditing(book)">✏️ Edit</button>
+              <button class="dropdown-item delete">🗑 Delete</button>
+            </div>
+          </div>
+        </ng-template>
+
       </li>
     </ul>
   </div>
