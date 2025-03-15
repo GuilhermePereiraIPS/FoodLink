@@ -18,6 +18,7 @@ import { RecipeCreateComponent } from './recipe-create/recipe-create.component';
 import { FooterComponent } from './footer/footer.component';
 import { RecipeEditComponent } from './recipe-edit/recipe-edit.component';
 import { ProfileViewComponent } from './profile-view/profile-view.component';
+import { ProfileEditComponent } from './profile-edit/profile-edit.component';
 
 
 @NgModule({
@@ -30,6 +31,7 @@ import { ProfileViewComponent } from './profile-view/profile-view.component';
     FooterComponent,
     RecipeEditComponent,
     ProfileViewComponent,
+    ProfileEditComponent,
   ],
   imports: [
     BrowserModule, HttpClientModule,
