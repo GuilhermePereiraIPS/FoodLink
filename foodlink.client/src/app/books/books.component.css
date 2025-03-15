@@ -215,6 +215,14 @@ h2 {
     background: #d32f2f;
   }
 
+.dropdown-item.delete {
+  color: red;
+}
+
+  .dropdown-item.delete:hover {
+    background: #ffe6e6;
+  }
+
 /* Responsividade */
 @media (max-width: 600px) {
   .recipe-books-container {

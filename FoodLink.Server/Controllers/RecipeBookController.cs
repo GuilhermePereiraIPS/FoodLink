@@ -85,5 +85,27 @@ namespace FoodLink.Server.Controllers
                 return StatusCode(500, $"Internal Server Error: {ex.Message}");
             }
         }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteRecipeBook(int id)
+        {
+            var recipeBook = await _context.RecipeBooks.FindAsync(id);
+            if (recipeBook == null)
+            {
+                return NotFound("Recipe Book not found.");
+            }
+
+            _context.RecipeBooks.Remove(recipeBook);
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                return Ok(new { message = "Recipe Book deleted successfully." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal Server Error: {ex.Message}");
+            }
+        }
     }
 }

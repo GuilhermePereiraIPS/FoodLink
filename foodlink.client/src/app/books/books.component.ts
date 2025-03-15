@@ -124,5 +124,18 @@ export class BooksComponent {
     this.editedTitle = '';
   }
 
+  deleteBook(bookId: number): void {
+    if (!confirm('Are you sure you want to delete this Recipe Book?')) return;
+
+    this.recipeBooksService.deleteRecipeBook(bookId).subscribe(
+      () => {
+        this.recipeBooks = this.recipeBooks.filter(book => book.idRecipeBook !== bookId);
+      },
+      (error) => {
+        console.error('Error deleting Recipe Book:', error);
+      }
+    );
+  }
+
 
 }
