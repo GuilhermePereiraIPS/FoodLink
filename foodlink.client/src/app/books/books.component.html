@@ -8,7 +8,7 @@
   <div *ngIf="showForm" class="recipe-book-form">
     <input type="text" [(ngModel)]="newRecipeBookTitle" placeholder="Enter Recipe Book Title" class="recipe-book-input" />
 
-    <!--Exibir mensagem de erro -->
+    <!-- Exibir mensagem de erro -->
     <p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p>
 
     <button (click)="createRecipeBook()" class="save-recipe-book-btn">Save</button>
@@ -36,7 +36,7 @@
             <!-- Dropdown do menu -->
             <div *ngIf="activeMenu === book.idRecipeBook" class="dropdown-menu">
               <button class="dropdown-item" (click)="startEditing(book)">✏️ Edit</button>
-              <button class="dropdown-item delete" (click)="deleteBook(book.idRecipeBook!)">🗑 Delete</button>
+              <button class="dropdown-item delete" (click)="openDeleteModal(book.idRecipeBook!)">🗑 Delete</button>
             </div>
           </div>
         </ng-template>
@@ -49,7 +49,20 @@
   <ng-template #noBooks>
     <p class="no-books-message">No Recipe Books found. Create one!</p>
   </ng-template>
-
-
 </div>
-<br /><br /><br />
+
+<!-- Modal de Confirmação para Delete -->
+<div [ngClass]="{'modal-overlay': true, 'hidden': !showDeleteModal}">
+  <div class="modal">
+    <h3>Are you sure?</h3>
+    <p>You are about to delete this Recipe Book. This action cannot be undone.</p>
+    <div class="modal-buttons">
+      <button class="confirm-btn" (click)="confirmDelete()">Delete</button>
+      <button class="modal-cancel-btn" (click)="closeDeleteModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<br />
+<br />
+<br />

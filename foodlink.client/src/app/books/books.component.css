@@ -31,9 +31,9 @@ h2 {
   font-weight: bold;
   transition: background 0.3s ease;
   display: flex;
-  justify-content: space-between; /*  Alinha os três pontos na direita */
+  justify-content: space-between;
   align-items: center;
-  position: relative; /* 🔥 Para o menu dropdown */
+  position: relative;
 }
 
   .recipe-book-item:hover {
@@ -84,6 +84,7 @@ h2 {
   font-size: 16px;
 }
 
+/* Botão de salvar Recipe Book */
 .save-recipe-book-btn {
   padding: 8px 15px;
   background: #4CAF50;
@@ -99,6 +100,7 @@ h2 {
     background: #45a049;
   }
 
+/* Botão de cancelar Recipe Book */
 .cancel-recipe-book-btn {
   padding: 8px 15px;
   background: #f44336;
@@ -215,12 +217,89 @@ h2 {
     background: #d32f2f;
   }
 
-.dropdown-item.delete {
-  color: red;
+/* Modal de Confirmação */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Fundo escuro semi-transparente */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.3s ease-in-out;
 }
 
-  .dropdown-item.delete:hover {
-    background: #ffe6e6;
+  /* Ocultar o modal quando showDeleteModal for false */
+  .modal-overlay.hidden {
+    display: none;
+  }
+
+/* Caixa do modal */
+.modal {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  max-width: 400px;
+  min-width: 300px;
+  position: relative;
+  z-index: 1001;
+}
+
+  /* Título do modal */
+  .modal h3 {
+    margin-bottom: 10px;
+    font-size: 20px;
+    color: #333;
+  }
+
+  /* Texto do modal */
+  .modal p {
+    margin-bottom: 20px;
+    color: #666;
+    font-size: 16px;
+  }
+
+/* Botões do modal */
+.modal-buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Botão de deletar (Confirmar) */
+.confirm-btn {
+  padding: 10px 20px;
+  background: #f44336;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+  .confirm-btn:hover {
+    background: #d32f2f;
+  }
+
+/* */
+.modal-cancel-btn {
+  padding: 10px 20px;
+  background: #ccc;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+  .modal-cancel-btn:hover {
+    background: #999;
   }
 
 /* Responsividade */
@@ -229,5 +308,3 @@ h2 {
     max-width: 90%;
   }
 }
-
-
