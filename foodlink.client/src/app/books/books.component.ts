@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { RecipeBooksService, RecipeBook } from '../services/recipe-books.service';
 import { AccountsService } from '../services/accounts.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-books',
@@ -21,7 +22,7 @@ export class BooksComponent {
 
 
 
-  constructor(private recipeBooksService: RecipeBooksService, private accountsService: AccountsService) {
+  constructor(private recipeBooksService: RecipeBooksService, private accountsService: AccountsService, private router: Router) {
     this.getUserId();
     
   }
@@ -140,14 +141,20 @@ export class BooksComponent {
     this.bookToDeleteId = null;
   }
 
-  // Confirma e deleta o Recipe Book
-  confirmDelete(): void {
-    if (this.bookToDeleteId !== null) {
+  
+
+  confirmDelete(id: number) {
+    const confirmDelete = confirm('Are you sure you want to delete this recipe book?');
+    if (confirmDelete && this.bookToDeleteId !== null) {
       this.recipeBooksService.deleteRecipeBook(this.bookToDeleteId).subscribe(() => {
-        // Remove o livro da lista após exclusão
-        this.recipeBooks = this.recipeBooks.filter(book => book.idRecipeBook !== this.bookToDeleteId);
-        this.closeDeleteModal();
-      });
+          console.log(`Book with with ID ${id} deleted successfully.`);
+          this.router.navigate(["/recipes"]);
+        },
+        (error) => {
+          console.error(`Error deleting recipe with ID ${id}:`, error);
+        }
+      );
     }
   }
+
 }
