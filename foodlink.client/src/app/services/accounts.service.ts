@@ -3,9 +3,18 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 export interface User {
-  email: string;
   id: string;
+  email: string;
   username: string;
+  aboutMe?: string;
+}
+
+export interface UserUpdate {
+  username?: string;
+  email?: string;
+  aboutMe?: string;
+  password?: string;
+  currentPassword: string;
 }
 
 @Injectable({
@@ -17,15 +26,18 @@ export class AccountsService {
   constructor(private http: HttpClient) { }
 
   getCurrentUser(includeDetails: boolean = true): Observable<User> {
-    return this.http.get<User>('api/currentUser', {
+    return this.http.get<User>('api/getCurrentUser', {
       params: { includeDetails }
     });
   }
 
-  getUserInfo(username: string): Observable<User> {
+  getUserInfo(username?: string, id?: string): Observable<User> {
     return this.http.get<User>('api/getUserInfo', {
-      params: { username }
+      params: { username: username || '', id: id || '' }
     });
   }
-
+  
+  editUser(userUpdate: UserUpdate): Observable<any> {
+    return this.http.put('api/updateCurrentUser', userUpdate);
+  }
 }

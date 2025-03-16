@@ -23,10 +23,10 @@ export class ProfileViewComponent {
       this.username = params['username']; 
     });
 
-    this.getUserInfo(this.username);
+    this.getUser(this.username);
   }
 
-  getUserInfo(username:string) {
+  getUser(username:string) {
     this.accountsService.getUserInfo(username).subscribe(
       (result) => {
         console.log('User fetched:', result);
