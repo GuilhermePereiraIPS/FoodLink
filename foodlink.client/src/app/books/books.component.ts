@@ -129,32 +129,18 @@ export class BooksComponent {
     this.editedTitle = '';
   }
 
-  openDeleteModal(bookId: number): void {
-    console.log("Abrindo modal para excluir livro ID:", bookId);
-    this.bookToDeleteId = bookId;
-    this.showDeleteModal = true;
-  }
 
-  // Fecha o modal
-  closeDeleteModal(): void {
-    this.showDeleteModal = false;
-    this.bookToDeleteId = null;
-  }
+  deleteBook(bookId: number): void {
+    if (!confirm('Are you sure you want to delete this Recipe Book?')) return;
 
-  
-
-  confirmDelete(id: number) {
-    const confirmDelete = confirm('Are you sure you want to delete this recipe book?');
-    if (confirmDelete && this.bookToDeleteId !== null) {
-      this.recipeBooksService.deleteRecipeBook(this.bookToDeleteId).subscribe(() => {
-          console.log(`Book with with ID ${id} deleted successfully.`);
-          this.router.navigate(["/recipes"]);
-        },
-        (error) => {
-          console.error(`Error deleting recipe with ID ${id}:`, error);
-        }
-      );
-    }
+    this.recipeBooksService.deleteRecipeBook(bookId).subscribe(
+      () => {
+        this.recipeBooks = this.recipeBooks.filter(book => book.idRecipeBook !== bookId);
+      },
+      (error) => {
+        console.error('Error deleting Recipe Book:', error);
+      }
+    );
   }
 
 }

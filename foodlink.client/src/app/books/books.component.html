@@ -36,7 +36,7 @@
             <!-- Dropdown do menu -->
             <div *ngIf="activeMenu === book.idRecipeBook" class="dropdown-menu">
               <button class="dropdown-item" (click)="startEditing(book)">✏️ Edit</button>
-              <button class="dropdown-item delete" (click)="confirmDelete(book.idRecipeBook!)">🗑 Delete</button>
+              <button class="dropdown-item delete" (click)="deleteBook(book.idRecipeBook!)">🗑 Delete</button>
             </div>
           </div>
         </ng-template>
