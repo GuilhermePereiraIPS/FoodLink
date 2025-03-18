@@ -107,5 +107,39 @@ namespace FoodLink.Server.Controllers
                 return StatusCode(500, $"Internal Server Error: {ex.Message}");
             }
         }
+
+        [HttpGet("{id}/recipes")]
+        public IActionResult GetRecipesByBook(int id)
+        {
+            var recipes = _context.RecipeToRB
+                .Where(r => r.IdRecipeBook == id)
+                .Join(_context.Recipes,
+                      rtb => rtb.IdRecipe,
+                      r => r.Id,
+                      (rtb, recipe) => recipe) 
+                .ToList();
+
+            return Ok(recipes);
+        }
+
+        [HttpDelete("{idRecipeBook}/recipes/{idRecipe}")]
+        public IActionResult RemoveRecipeFromBook(int idRecipeBook, int idRecipe)
+        {
+            var entry = _context.RecipeToRB
+                .FirstOrDefault(r => r.IdRecipeBook == idRecipeBook && r.IdRecipe == idRecipe);
+
+            if (entry == null)
+            {
+                return NotFound(new { message = "Recipe not found in this book." });
+            }
+
+            _context.RecipeToRB.Remove(entry);
+            _context.SaveChanges();
+
+            return Ok(new { message = "Recipe removed from book successfully!" });
+        }
+
     }
+
+
 }

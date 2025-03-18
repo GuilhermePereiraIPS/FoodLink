@@ -48,4 +48,21 @@ export class RecipeBookDetailsComponent implements OnInit {
       }
     );
   }
+
+  removeRecipe(idRecipe: number) {
+    if (!this.recipeBookId) return;
+
+    const confirmDelete = confirm("Are you sure you want to remove this recipe from the book?");
+    if (!confirmDelete) return;
+
+    this.recipeBooksService.removeRecipeFromBook(this.recipeBookId, idRecipe).subscribe(
+      () => {
+       
+        this.recipes = this.recipes.filter(recipe => recipe.id !== idRecipe);
+      },
+      (error) => {
+        console.error("Error removing recipe:", error);
+      }
+    );
+  }
 }

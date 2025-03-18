@@ -35,11 +35,15 @@ export class RecipeBooksService {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
-  getRecipeBookById(recipeBookId: number): Observable<RecipeBook> {
-    return this.http.get<RecipeBook>(`api/recipebooks/${recipeBookId}`);
+  getRecipeBookById(idRecipeBook: number): Observable<RecipeBook> {
+    return this.http.get<RecipeBook>(`api/recipebooks/${idRecipeBook}`);
   }
 
-  getRecipesByRecipeBook(recipeBookId: number): Observable<Recipe[]> {
-    return this.http.get<Recipe[]>(`api/recipebooks/${recipeBookId}/recipes`);
+  getRecipesByRecipeBook(idRecipeBook: number): Observable<Recipe[]> {
+    return this.http.get<Recipe[]>(`api/recipebooks/${idRecipeBook}/recipes`);
+  }
+
+  removeRecipeFromBook(idRecipeBook: number, idRecipe: number): Observable<any> {
+    return this.http.delete(`api/recipebooks/${idRecipeBook}/recipes/${idRecipe}`);
   }
 }
