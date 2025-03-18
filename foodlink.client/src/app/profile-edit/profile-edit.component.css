@@ -1,0 +1,51 @@
+.edit-section {
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 1vh;
+}
+
+
+
+#confirm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+span {
+  color: red;
+}
+
+input, textarea, button {
+  border: 1px solid black;
+  border-radius: 5px;
+  height: 4vh;
+}
+
+
+input {
+  width: 40vh;
+}
+
+textarea {
+  width: 70%;
+  height: 20vh;
+}
+
+button {
+  width: auto;
+  height: auto;
+  padding: 5px 10px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+  button:disabled {
+    color: gray;
+    background-color: #CDCDCD;
+  }
+
+  button:enabled {
+    color: black;
+    background-color: #45D345;
+  }
