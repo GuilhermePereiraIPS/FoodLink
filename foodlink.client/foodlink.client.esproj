@@ -7,4 +7,10 @@
     <!-- Folder where production build objects will be placed -->
     <PublishAssetsDirectory>$(MSBuildProjectDirectory)\dist\foodlink.client\</PublishAssetsDirectory>
   </PropertyGroup>
+  <ItemGroup>
+    <None Remove="src\app\services\recipe-to-rb.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="src\app\services\recipe-to-rb.ts" />
+  </ItemGroup>
 </Project>

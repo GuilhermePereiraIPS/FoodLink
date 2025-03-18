@@ -29,7 +29,12 @@
 
         <!-- Visão normal com três pontinhos -->
         <ng-template #normalView>
-          <strong>{{ book.recipeBookTitle }}</strong>
+          <!-- O link ocupa toda a área do RecipeBook -->
+          <a [routerLink]="['/recipe-books', book.idRecipeBook]" class="recipe-book-link">
+            <span>{{ book.recipeBookTitle }}</span>
+          </a>
+
+          <!-- Container do menu -->
           <div class="menu-container">
             <button class="menu-btn" (click)="toggleMenu(book.idRecipeBook!)">⋮</button>
 
@@ -50,7 +55,6 @@
     <p class="no-books-message">No Recipe Books found. Create one!</p>
   </ng-template>
 </div>
-
 
 <br />
 <br />

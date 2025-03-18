@@ -7,6 +7,7 @@ import { RecipeEditComponent } from './recipe-edit/recipe-edit.component';
 import { ProfileViewComponent } from './profile-view/profile-view.component';
 import { BooksComponent } from './books/books.component';
 import { AuthGuard } from './api-authorization/authorize.guard';
+import { RecipeBookDetailsComponent } from './recipe-book-details/recipe-book-details.component';
 
 
 const routes: Routes = [
@@ -17,6 +18,8 @@ const routes: Routes = [
   { path: 'recipes/:id', component: RecipeDetailsComponent, canActivate: [AuthGuard] },
   { path: 'recipes/edit/:id', component: RecipeEditComponent, canActivate: [AuthGuard] },
   { path: 'books', component: BooksComponent, canActivate: [AuthGuard] },
+  { path: 'recipe-books/:id', component: RecipeBookDetailsComponent, canActivate: [AuthGuard] },
+
 
   { path: '', redirectTo: 'signin', pathMatch: 'full' },
   //{ path: '**', redirectTo: 'signin' },

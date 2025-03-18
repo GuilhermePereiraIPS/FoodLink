@@ -2,14 +2,16 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Recipe, RecipesService } from '../services/recipes.service';
 import { CommentsService, Comment } from '../services/comments.service';
-import { AccountsService, User } from '../services/accounts.service';
+import { AccountsService } from '../services/accounts.service';
+import { RecipeBooksService } from '../services/recipe-books.service';
+import { RecipeToRBService, RecipeToRB } from '../services/recipe-to-rb.service';
 import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-recipe-details',
   standalone: false,
   templateUrl: './recipe-details.component.html',
-  styleUrl: './recipe-details.component.css'
+  styleUrls: ['./recipe-details.component.css']
 })
 export class RecipeDetailsComponent implements OnInit {
   public recipe: Recipe | undefined;
@@ -19,12 +21,20 @@ export class RecipeDetailsComponent implements OnInit {
   public currentUserId: string = '';
   public userNames: Map<string, string> = new Map();
 
+  public userRecipeBooks: any[] = [];
+  public selectedRecipeBook: number | null = null;
+  public showRecipeBookList = false; // Controla a exibição da lista de Recipe Books
+
+  public showModal = false;
+  private commentToDelete: number | undefined;
 
   constructor(
     private route: ActivatedRoute,
-    private service: RecipesService,
+    private recipeService: RecipesService,
     private commentsService: CommentsService,
-    private accountsService: AccountsService
+    private accountsService: AccountsService,
+    private recipeBooksService: RecipeBooksService,
+    private recipeToRBService: RecipeToRBService
   ) { }
 
   ngOnInit(): void {
@@ -33,14 +43,23 @@ export class RecipeDetailsComponent implements OnInit {
       this.getRecipe();
       this.getComments();
       this.getUserId();
+      this.accountsService.getCurrentUser().subscribe(
+        (result) => {
+          this.currentUserId = result.id;
+          this.getUserRecipeBooks(this.currentUserId);
+        },
+        (error) => {
+          console.error("Error fetching user:", error);
+        }
+      );
     });
   }
 
-  //Busca os detalhes da receita
+  // 🔹 Busca os detalhes da receita
   getRecipe(): void {
     if (this.id === undefined) return;
 
-    this.service.getRecipe(this.id).subscribe(
+    this.recipeService.getRecipe(this.id).subscribe(
       (result) => {
         this.recipe = result;
       },
@@ -50,7 +69,7 @@ export class RecipeDetailsComponent implements OnInit {
     );
   }
 
-  //Busca os comentários da receita
+  // 🔹 Busca os comentários da receita
   getComments(): void {
     if (this.id === undefined) return;
 
@@ -65,7 +84,7 @@ export class RecipeDetailsComponent implements OnInit {
     );
   }
 
-  // Obtém o nome do usuário e armazena no mapa para evitar chamadas repetidas
+  // 🔹 Obtém o nome do usuário e armazena no mapa para evitar chamadas repetidas
   loadUserNames(): void {
     this.comments.forEach(async (comment) => {
       if (comment.userId && !this.userNames.has(comment.userId)) {
@@ -81,11 +100,11 @@ export class RecipeDetailsComponent implements OnInit {
     }
 
     if (this.userNames.has(userId)) {
-      return this.userNames.get(userId)!; 
+      return this.userNames.get(userId)!;
     }
 
     try {
-      const username = await this.accountsService.getUserById(userId).toPromise() ?? "Unknown User"; // 🔥 Usa "Unknown User" se retornar undefined
+      const username = await this.accountsService.getUserById(userId).toPromise() ?? "Unknown User";
       this.userNames.set(userId, username);
       return username;
     } catch (error) {
@@ -100,7 +119,6 @@ export class RecipeDetailsComponent implements OnInit {
         console.log('User fetched:', result);
         var user = result;
         this.currentUserId = user.id;
-        console.log(user)
       },
       (error) => {
         console.error(error);
@@ -108,12 +126,11 @@ export class RecipeDetailsComponent implements OnInit {
     );
   }
 
- 
   getUserName(userId: string): string {
     return this.userNames.get(userId) || "Loading...";
   }
 
-  //Adiciona um novo comentário
+  // 🔹 Adiciona um novo comentário
   addComment(): void {
     if (!this.id || !this.newComment.trim() || !this.currentUserId) return;
 
@@ -134,34 +151,13 @@ export class RecipeDetailsComponent implements OnInit {
     );
   }
 
-  // Delete a um comentário
-  deleteComment(commentId: number | undefined): void {
-    if (!commentId) return; //Evita erro caso o ID seja indefinido
-
-    const confirmDelete = confirm('Are you sure you want to delete this comment?');
-    if (!confirmDelete) return;
-
-    this.commentsService.deleteComment(commentId).subscribe(
-      () => {
-        this.comments = this.comments.filter(comment => comment.idComment !== commentId);
-        console.log(`Comment with ID ${commentId} deleted successfully.`);
-      },
-      (error) => {
-        console.error(`Error deleting comment with ID ${commentId}:`, error);
-      }
-    );
-  }
-
-  public showModal = false;
-  private commentToDelete: number | undefined;
-
-  // Exibe o modal antes
+  // 🔹 Exibe o modal antes de deletar um comentário
   openDeleteModal(commentId: number): void {
     this.commentToDelete = commentId;
     this.showModal = true;
   }
 
-  //Confirma
+  // 🔹 Confirma a exclusão do comentário
   confirmDelete(): void {
     if (!this.commentToDelete) return;
 
@@ -177,9 +173,64 @@ export class RecipeDetailsComponent implements OnInit {
     );
   }
 
-  //Cancela
+  // 🔹 Cancela a exclusão do comentário
   cancelDelete(): void {
     this.showModal = false;
     this.commentToDelete = undefined;
+  }
+
+  deleteComment(commentId: number | undefined): void {
+    if (!commentId) return;
+
+    const confirmDelete = confirm('Are you sure you want to delete this comment?');
+    if (!confirmDelete) return;
+
+    this.commentsService.deleteComment(commentId).subscribe(
+      () => {
+        this.comments = this.comments.filter(comment => comment.idComment !== commentId);
+        console.log(`Comment with ID ${commentId} deleted successfully.`);
+      },
+      (error) => {
+        console.error(`Error deleting comment with ID ${commentId}:`, error);
+      }
+    );
+  }
+
+  // Buscar os Recipe Books do usuário
+  getUserRecipeBooks(userId: string): void {
+    this.recipeBooksService.getUserRecipeBooks(userId).subscribe(
+      (books) => {
+        this.userRecipeBooks = books;
+      },
+      (error) => {
+        console.error("Error loading user recipe books:", error);
+      }
+    );
+  }
+
+  // Alternar a exibição da lista de Recipe Books
+  toggleRecipeBookList(): void {
+    this.showRecipeBookList = !this.showRecipeBookList;
+  }
+
+  // Adicionar a receita ao Recipe Book selecionado
+  addToRecipeBook(): void {
+    if (!this.id || !this.selectedRecipeBook) {
+      alert("Please select a Recipe Book.");
+      return;
+    }
+
+    const newAssociation: RecipeToRB = {
+      idRecipe: this.id,
+      idRecipeBook: this.selectedRecipeBook
+    };
+
+    this.recipeToRBService.addRecipeToBook(newAssociation).subscribe(
+      () => {
+        alert("Recipe added to Recipe Book!");
+        this.showRecipeBookList = false;
+      },
+      error => console.log(error)
+    );
   }
 }

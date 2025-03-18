@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { Recipe } from './recipes.service';
 
 export interface RecipeBook {
   idRecipeBook?: number;
@@ -32,5 +33,13 @@ export class RecipeBooksService {
 
   deleteRecipeBook(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+  getRecipeBookById(recipeBookId: number): Observable<RecipeBook> {
+    return this.http.get<RecipeBook>(`api/recipebooks/${recipeBookId}`);
+  }
+
+  getRecipesByRecipeBook(recipeBookId: number): Observable<Recipe[]> {
+    return this.http.get<Recipe[]>(`api/recipebooks/${recipeBookId}/recipes`);
   }
 }

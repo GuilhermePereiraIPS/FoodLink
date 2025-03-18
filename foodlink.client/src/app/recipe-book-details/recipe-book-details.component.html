@@ -1,0 +1,17 @@
+<div class="recipe-book-details-container">
+  <h2>{{ recipeBookTitle }}</h2>
+
+  <div *ngIf="recipes.length > 0; else noRecipes">
+    <ul class="recipes-list">
+      <li *ngFor="let recipe of recipes">
+        <strong>{{ recipe.title }}</strong>
+        <p>{{ recipe.description }}</p>
+        <button [routerLink]="['/recipes', recipe.id]">View Recipe</button>
+      </li>
+    </ul>
+  </div>
+
+  <ng-template #noRecipes>
+    <p>No recipes in this book.</p>
+  </ng-template>
+</div>
