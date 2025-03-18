@@ -21,6 +21,8 @@ namespace FoodLink.Server.Data
         public DbSet<Comment> Comments { get; set; }
         public DbSet<RecipeBook> RecipeBooks { get; set; }
 
+        public DbSet<RecipeToRB> RecipeToRB { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
