@@ -36,7 +36,8 @@ export class ProfileEditComponent implements OnInit {
       (userData) => {
         this.userForm.patchValue({
           username: userData.username,
-          email: userData.email
+          email: userData.email,
+          aboutMe: userData.aboutMe
         });
         this.userData = userData;
       },
@@ -61,12 +62,13 @@ export class ProfileEditComponent implements OnInit {
     if (this.userForm.invalid) return;
 
     const userUpdate: UserUpdate = {
+      aboutMe: this.userForm.get('aboutMe')?.value,
       username: this.userForm.get('username')?.value,
       email: this.userForm.get('email')?.value,
       password: this.userForm.get('password')?.value,
       currentPassword: this.userForm.get('currentPassword')?.value,
-      aboutMe: this.userForm.get('aboutMe')?.value
     };
+
 
     this.accountsService.editUser(userUpdate).subscribe(
       () => {
@@ -74,7 +76,7 @@ export class ProfileEditComponent implements OnInit {
         this.router.navigate(['/profile', this.userData.username]);
       },
       (error) => {
-        console.error('Error updating user:', error);
+        alert(error);
       }
     );
   }

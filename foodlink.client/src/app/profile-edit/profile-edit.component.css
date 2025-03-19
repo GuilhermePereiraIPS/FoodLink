@@ -35,17 +35,18 @@ textarea {
 
 button {
   width: auto;
-  height: auto;
+  height:auto;
   padding: 5px 10px;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-  button:disabled {
-    color: gray;
-    background-color: #CDCDCD;
-  }
+button:disabled {
+  color: gray;
+  background-color: #CDCDCD;
+}
 
-  button:enabled {
-    color: black;
-    background-color: #45D345;
-  }
+button:enabled {
+  color: black;
+  background-color: #45D345;
+}
+

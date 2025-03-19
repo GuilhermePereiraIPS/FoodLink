@@ -1,6 +1,7 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 export interface User {
   id: string;
@@ -38,6 +39,23 @@ export class AccountsService {
   }
   
   editUser(userUpdate: UserUpdate): Observable<any> {
-    return this.http.put('api/updateCurrentUser', userUpdate);
+    return this.http.put('api/updateCurrentUser', userUpdate).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  private handleError(error: HttpErrorResponse) {
+    let errorMessage = 'An unknown error occurred!';
+    if (error.error instanceof ErrorEvent) {
+      // Client-side or network error
+      errorMessage = `Error: ${error.error.message}`;
+    } else {
+      // Server-side error
+      if (error.status === 400) {
+        errorMessage = error.error?.message || 'Bad Request';
+      }
+    }
+    return throwError(errorMessage);
   }
 }
+

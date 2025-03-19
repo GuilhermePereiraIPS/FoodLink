@@ -8,6 +8,7 @@ using FoodLink.Server.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Diagnostics;
 
 namespace FoodLink.Server.Controllers
 {
@@ -202,14 +203,15 @@ namespace FoodLink.Server.Controllers
                 }
             }
 
+            // About me
+            if (!string.IsNullOrEmpty(model.AboutMe))
+            {
+                user.AboutMe = model.AboutMe;
+            }
+
             // Password
             if (!string.IsNullOrEmpty(model.Password))
             {
-                var passwordValid = await _userManager.CheckPasswordAsync(user, model.CurrentPassword);
-                if (!passwordValid)
-                {
-                    return BadRequest(new { message = "Current password is incorrect." });
-                }
 
                 var passwordChangeResult = await _userManager.ChangePasswordAsync(user, model.CurrentPassword, model.Password);
                 if (!passwordChangeResult.Succeeded)
@@ -217,12 +219,14 @@ namespace FoodLink.Server.Controllers
                     return BadRequest(passwordChangeResult.Errors);
                 }
             }
+            
 
-            // About me
-            if (!string.IsNullOrEmpty(model.AboutMe))
+            var passwordValid = await _userManager.CheckPasswordAsync(user, model.CurrentPassword);
+            if (!passwordValid)
             {
-                user.AboutMe = model.AboutMe;
+                return BadRequest(new { message = "Current password is incorrect." });
             }
+
 
             var updateResult = await _userManager.UpdateAsync(user);
 
