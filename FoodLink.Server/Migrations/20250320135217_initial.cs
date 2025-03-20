@@ -33,11 +33,25 @@ namespace FoodLink.Server.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CommentText = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     RecipeId = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false)
+                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Comments", x => x.IdComment);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RecipeBooks",
+                columns: table => new
+                {
+                    IdRecipeBook = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RecipeBookTitle = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RecipeBooks", x => x.IdRecipeBook);
                 });
 
             migrationBuilder.CreateTable(
@@ -55,6 +69,20 @@ namespace FoodLink.Server.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Recipes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RecipeToRB",
+                columns: table => new
+                {
+                    IdRecipeToRB = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    IdRecipe = table.Column<int>(type: "int", nullable: false),
+                    IdRecipeBook = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RecipeToRB", x => x.IdRecipeToRB);
                 });
 
             migrationBuilder.CreateTable(
@@ -265,6 +293,12 @@ namespace FoodLink.Server.Migrations
 
             migrationBuilder.DropTable(
                 name: "Comments");
+
+            migrationBuilder.DropTable(
+                name: "RecipeBooks");
+
+            migrationBuilder.DropTable(
+                name: "RecipeToRB");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
