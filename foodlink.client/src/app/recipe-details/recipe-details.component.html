@@ -1,80 +1,95 @@
 <div class="recipe-detail-container" *ngIf="recipe">
-  <!-- Título da Receita (Sem fundo verde, integrado na navbar) -->
-  <h1 class="recipe-title">{{ recipe.title }} by User</h1>
+    <!-- Título da Receita (Sem fundo verde, integrado na navbar) -->
+    <h1 class="recipe-title">{{ recipe.title }} by User</h1>
 
-  <!-- Informações do usuário -->
-  <div class="recipe-user">
     <!-- Informações do usuário -->
-    <div class="user-info">
-      <img src="assets/user-avatar.png" class="user-avatar">
-      <div>
-        <p>By User</p>
-        <p class="recipe-date">Created: {{ recipe.createDate | date:'longDate' }}</p>
+    <div class="recipe-user">
+      <!-- Informações do usuário -->
+      <div class="user-info">
+        <img src="assets/user-avatar.png" class="user-avatar">
+        <div>
+          <p>By User</p>
+          <p class="recipe-date">Created: {{ recipe.createDate | date:'longDate' }}</p>
+        </div>
+      </div>
+
+      <!-- Botões de ação (empilhados verticalmente) -->
+      <div class="recipe-actions">
+        <button class="add-btn" (click)="toggleRecipeBookList()">Add to book</button>
+
+        <!-- Lista de Recipe Books (Dropdown) -->
+        <div *ngIf="showRecipeBookList" class="recipe-book-dropdown">
+          <label for="selectBook">Select a Recipe Book:</label>
+          <select [(ngModel)]="selectedRecipeBook" id="selectBook">
+            <option *ngFor="let book of userRecipeBooks" [value]="book.idRecipeBook">
+              {{ book.recipeBookTitle }}
+            </option>
+          </select>
+          <button class="confirm-add-btn" (click)="addToRecipeBook()">Add</button>
+        </div>
       </div>
     </div>
-
-    <!-- Botões de ação (empilhados verticalmente) -->
-    <div class="recipe-actions">
-      <button class="skip-btn">Skip to recipe</button>
-      <button class="add-btn">Add to book</button>
+    <hr />
+    <!-- Imagem da receita (placeholder, pois não há imagens no BD) -->
+    <div class="recipe-image">
+        <img src="assets/placeholder-image.png" alt="Recipe Image">
     </div>
-  </div>
-  <hr />
-  <!-- Imagem da receita (placeholder, pois não há imagens no BD) -->
-  <div class="recipe-image">
-    <img src="assets/placeholder-image.png" alt="Recipe Image">
-  </div>
 
-  <!-- Descrição -->
-  <p class="recipe-description">{{ recipe.description }}</p>
+    <!-- Descrição -->
+    <p class="recipe-description">{{ recipe.description }}</p>
 
-  <hr />
-  <!-- Seção de Ingredientes -->
-  <h2>Recipe</h2>
-  <div class="recipe-section">
-    <h3>Ingredients</h3>
-    <p>{{ recipe.ingredients }}</p> <!-- 🔥 Agora tratado como texto, não lista -->
-  </div>
+    <hr />
+    <!-- Seção de Ingredientes -->
+    <h2>Recipe</h2>
+    <div class="recipe-section">
+        <h3>Ingredients</h3>
+        <p>{{ recipe.ingredients }}</p> <!-- 🔥 Agora tratado como texto, não lista -->
+    </div>
 
-  <!-- Seção de Instruções -->
-  <div class="recipe-section">
-    <h3>Preparation</h3>
-    <p>{{ recipe.instructions }}</p>
-  </div>
+    <!-- Seção de Instruções -->
+    <div class="recipe-section">
+        <h3>Preparation</h3>
+        <p>{{ recipe.instructions }}</p>
+    </div>
 
-  <!-- Seção de Comentários -->
-  <div class="recipe-comments">
-    <h3>Comments</h3>
+    <!-- Seção de Comentários -->
+    <div class="recipe-comments">
+        <h3>Comments</h3>
 
-    <!-- Caixa de comentário -->
-    <textarea [(ngModel)]="newComment" placeholder="Leave a comment"></textarea>
-    <button class="comment-btn" (click)="addComment()">Comment</button>
+        <!-- Caixa de comentário -->
+        <textarea [(ngModel)]="newComment" placeholder="Leave a comment"></textarea>
+        <button class="comment-btn" (click)="addComment()">Comment</button>
 
-    <!-- Lista de Comentários -->
-    <div class="comment-list" *ngIf="comments.length > 0">
-      <div class="comment-item" *ngFor="let comment of comments">
-        <!--Texto do Comentário -->
-        <div class="comment-text">
-          <p>{{ comment.commentText }}</p>
-          <p class="comment-date">Posted by User ID: {{ comment.userId }}</p>
+        <!-- Lista de Comentários -->
+        <div class="comment-list" *ngIf="comments.length > 0">
+            <div class="comment-item" *ngFor="let comment of comments">
+                <p class="comment-text">{{ comment.commentText }}</p>
+
+                <!-- 🔹 Obtém o username dinamicamente -->
+                <p class="comment-date">
+                    Posted by <strong>{{ getUserName(comment.userId) }}</strong>
+                </p>
+
+                <!-- Botão de deletar -->
+                <button class="delete-btn" (click)="deleteComment(comment.idComment)">
+                    🗑
+                </button>
+            </div>
         </div>
 
-        <!-- 🔹 Botão de delete -->
-        <button class="delete-btn" (click)="openDeleteModal(comment.idComment!)">
-          🗑
-        </button>
-      </div>
+        <!-- Caso não haja comentários -->
+        <p *ngIf="comments.length === 0" class="no-comments">No comments yet. Be the first to comment!</p>
     </div>
 
     <!-- Modal de Confirmação -->
     <div class="modal-overlay" *ngIf="showModal">
-      <div class="modal-content">
-        <h3>Are you sure?</h3>
-        <p>Do you really want to delete this comment?</p>
-        <div class="modal-buttons">
-          <button class="confirm-btn" (click)="confirmDelete()">Delete</button>
-          <button class="cancel-btn" (click)="cancelDelete()">Cancel</button>
+        <div class="modal-content">
+            <h3>Are you sure?</h3>
+            <p>Do you really want to delete this comment?</p>
+            <div class="modal-buttons">
+                <button class="confirm-btn" (click)="confirmDelete()">Delete</button>
+                <button class="cancel-btn" (click)="cancelDelete()">Cancel</button>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
+</div>

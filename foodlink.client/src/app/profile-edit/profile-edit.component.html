@@ -1,0 +1,56 @@
+
+<div class="main-content">
+  <h2>Edit Profile</h2>
+  <form [formGroup]="userForm" (ngSubmit)="onSubmit()" id="user-edit">
+
+    <div class="edit-section">
+      <h4>About Me</h4>
+      <textarea id="aboutMe" formControlName="aboutMe"></textarea>
+    </div>
+
+    <hr />
+
+    <div class="edit-section">
+      <h4>Username</h4>
+      <input type="text" id="username" formControlName="username" required>
+    </div>
+
+    <hr />
+
+    <div class="edit-section">
+      <h4>Email</h4>
+      <input type="email" id="email" formControlName="email" placeholder="Enter new email" required>
+    </div>
+
+    <hr />
+
+    <div >
+      <div class="edit-section">
+        <h4>Password</h4>
+
+        <h5>New Password</h5>
+        <input type="password" id="password" formControlName="password" placeholder="Enter new password">
+        <div *ngIf="userForm.get('password')?.invalid && userForm.get('password')?.touched">
+          <span class="error-message">
+            Password must be at least 6 characters and contain a special character
+          </span>
+        </div>
+
+        <h5>Confirm Password</h5>
+        <input type="password" id="confirmPassword" formControlName="confirmPassword" placeholder="Confirm new password">
+        <div *ngIf="userForm.hasError('passwordMismatch') && userForm.get('confirmPassword')?.touched">
+          <span class="error-message">Passwords do not match</span>
+        </div>
+      </div>
+    </div>
+
+    <hr />
+
+    <div id="confirm" class="edit-section">
+      <h4>Confirm changes</h4>
+      <input type="password" id="currentPassword" formControlName="currentPassword" placeholder="Enter current password" required />
+      <button type="submit" class="update-btn" [disabled]="userForm.invalid">Update Profile</button>
+    </div>
+
+  </form>
+</div>

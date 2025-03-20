@@ -4,6 +4,7 @@ using FoodLink.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FoodLink.Server.Migrations
 {
     [DbContext(typeof(FoodLinkContext))]
-    partial class FoodLinkContextModelSnapshot : ModelSnapshot
+    [Migration("20250318202757_mig1")]
+    partial class mig1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -110,9 +113,8 @@ namespace FoodLink.Server.Migrations
                     b.Property<int>("RecipeId")
                         .HasColumnType("int");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("IdComment");
 
@@ -154,46 +156,6 @@ namespace FoodLink.Server.Migrations
                             CreateDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Title = "bruh"
                         });
-                });
-
-            modelBuilder.Entity("FoodLink.Server.Models.RecipeBook", b =>
-                {
-                    b.Property<int>("IdRecipeBook")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdRecipeBook"));
-
-                    b.Property<string>("RecipeBookTitle")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("IdRecipeBook");
-
-                    b.ToTable("RecipeBooks");
-                });
-
-            modelBuilder.Entity("FoodLink.Server.Models.RecipeToRB", b =>
-                {
-                    b.Property<int>("IdRecipeToRB")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdRecipeToRB"));
-
-                    b.Property<int>("IdRecipe")
-                        .HasColumnType("int");
-
-                    b.Property<int>("IdRecipeBook")
-                        .HasColumnType("int");
-
-                    b.HasKey("IdRecipeToRB");
-
-                    b.ToTable("RecipeToRB");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

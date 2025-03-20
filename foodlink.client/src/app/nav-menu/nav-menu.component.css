@@ -5,8 +5,8 @@
   box-sizing: border-box;
 }
 
-/* Navbar fixa no topo */
-.navbar {
+
+nav {
   position: sticky;
   display: flex;
   align-items: center;
@@ -16,32 +16,30 @@
   height: 15vh;
   padding: 0 25px 50px 25px;
   z-index: 1000;
- 
+  box-shadow: 0 3px 5px 0 gray;
 }
 
-  .navbar div:not(.hamburger) {
+  nav div:not(.hamburger) {
     display: flex;
     align-items: center;
   }
 
-
-
-  .navbar ul {
+  nav ul {
     display: flex;
     justify-content: space-between;
     list-style: none;
     gap: 2vh;
   }
 
-    .navbar ul a {
+    nav ul a {
       text-decoration: none;
       color: #333;
       font-size: 16px;
-      font-weight: 600;
+      font-weight: 450;
       transition: 0.3s;
     }
 
-      .navbar ul a:hover {
+      nav ul a:hover {
         color: #fff;
       }
 

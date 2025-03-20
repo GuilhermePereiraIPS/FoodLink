@@ -6,7 +6,7 @@ export interface Comment {
   idComment?: number;
   commentText: string;
   recipeId: number;
-  userId: number;
+  userId: string;
 }
 
 @Injectable({
@@ -14,6 +14,7 @@ export interface Comment {
 })
 export class CommentsService {
   private apiUrl = 'api/comments';
+  private userUrl = 'api/currentUser';
 
   constructor(private http: HttpClient) { }
 

@@ -18,6 +18,9 @@ import { RecipeCreateComponent } from './recipe-create/recipe-create.component';
 import { FooterComponent } from './footer/footer.component';
 import { RecipeEditComponent } from './recipe-edit/recipe-edit.component';
 import { ProfileViewComponent } from './profile-view/profile-view.component';
+import { ProfileEditComponent } from './profile-edit/profile-edit.component';
+import { BooksComponent } from './books/books.component';
+import { RecipeBookDetailsComponent } from './recipe-book-details/recipe-book-details.component';
 
 
 @NgModule({
@@ -30,6 +33,9 @@ import { ProfileViewComponent } from './profile-view/profile-view.component';
     FooterComponent,
     RecipeEditComponent,
     ProfileViewComponent,
+    ProfileEditComponent,
+    BooksComponent,
+    RecipeBookDetailsComponent,
   ],
   imports: [
     BrowserModule, HttpClientModule,

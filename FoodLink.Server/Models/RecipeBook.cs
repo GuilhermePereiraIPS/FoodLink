@@ -2,16 +2,13 @@
 
 namespace FoodLink.Server.Models
 {
-    public class Comment
+    public class RecipeBook
     {
         [Key]
-        public int IdComment { get; set; }
+        public int IdRecipeBook { get; set; }
 
         [Required]
-        public string? CommentText { get; set; }
-
-        [Required]
-        public int RecipeId { get; set; }
+        public string? RecipeBookTitle { get; set; }
 
         [Required]
         public string UserId { get; set; }
