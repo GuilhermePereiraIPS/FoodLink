@@ -1,0 +1,327 @@
+/* Estiliza o container principal */
+.recipe-books-container {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  background: white;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  text-align: center;
+}
+
+/* Estiliza o título */
+h2 {
+  color: #333;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+/* Lista de Recipe Books */
+.recipe-books-list {
+  list-style: none;
+  padding: 0;
+}
+
+.recipe-book-item {
+  background: #f5f5f5;
+  margin: 10px 0;
+  padding: 12px;
+  border-radius: 5px;
+  font-size: 18px;
+  transition: background 0.3s ease;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+
+  .recipe-book-item:hover {
+    background: #e0e0e0;
+  }
+
+/* Torna toda a área do RecipeBook clicável */
+.recipe-book-link {
+  text-decoration: none;
+  color: #333;
+  font-size: 18px;
+  font-weight: bold;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding: 12px;
+}
+
+  .recipe-book-link:hover {
+    color: #45D345;
+  }
+
+
+/* Mensagem quando não há Recipe Books */
+.no-books-message {
+  color: #777;
+  font-style: italic;
+  font-size: 16px;
+}
+
+/* Botão para adicionar um Recipe Book */
+.add-recipe-book-btn {
+  display: block;
+  margin: 20px auto;
+  padding: 10px 20px;
+  background: #45D345;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+  .add-recipe-book-btn:hover {
+    background: #3bb133;
+  }
+
+/* Formulário de adicionar Recipe Book */
+.recipe-book-form {
+  margin-top: 20px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #f9f9f9;
+  text-align: center;
+}
+
+.recipe-book-input {
+  width: 80%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+/* Botão de salvar Recipe Book */
+.save-recipe-book-btn {
+  padding: 8px 15px;
+  background: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-right: 5px;
+}
+
+  .save-recipe-book-btn:hover {
+    background: #45a049;
+  }
+
+/* Botão de cancelar Recipe Book */
+.cancel-recipe-book-btn {
+  padding: 8px 15px;
+  background: #f44336;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+  .cancel-recipe-book-btn:hover {
+    background: #d32f2f;
+  }
+
+/* Mensagem de erro */
+.error-message {
+  color: red;
+  font-size: 14px;
+  margin-top: 5px;
+  font-weight: bold;
+}
+
+/* 🔥 Botão de três pontinhos */
+.menu-btn {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 5px;
+}
+
+/* 🔥 Container do menu dropdown */
+.menu-container {
+  position: relative;
+}
+
+/* 🔥 Menu dropdown */
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  min-width: 120px;
+  z-index: 100;
+}
+
+/* 🔥 Itens do menu dropdown */
+.dropdown-item {
+  background: none;
+  border: none;
+  text-align: left;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 14px;
+  width: 100%;
+}
+
+  .dropdown-item:hover {
+    background: #f0f0f0;
+  }
+
+  /* Cor do botão de deletar */
+  .dropdown-item.delete {
+    color: red;
+  }
+
+    .dropdown-item.delete:hover {
+      background: #ffe6e6;
+    }
+
+/* Campo de edição */
+.edit-input {
+  width: 70%;
+  padding: 5px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-right: 5px;
+}
+
+/* Botão de salvar edição */
+.save-btn {
+  padding: 6px 12px;
+  background: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+  .save-btn:hover {
+    background: #45a049;
+  }
+
+/* Botão de cancelar edição */
+.cancel-btn {
+  padding: 6px 12px;
+  background: #f44336;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+  .cancel-btn:hover {
+    background: #d32f2f;
+  }
+
+/* Modal de Confirmação */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Fundo escuro semi-transparente */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.3s ease-in-out;
+}
+
+  /* Ocultar o modal quando showDeleteModal for false */
+  .modal-overlay.hidden {
+    display: none;
+  }
+
+/* Caixa do modal */
+.modal {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  max-width: 400px;
+  min-width: 300px;
+  position: relative;
+  z-index: 1001;
+}
+
+  /* Título do modal */
+  .modal h3 {
+    margin-bottom: 10px;
+    font-size: 20px;
+    color: #333;
+  }
+
+  /* Texto do modal */
+  .modal p {
+    margin-bottom: 20px;
+    color: #666;
+    font-size: 16px;
+  }
+
+/* Botões do modal */
+.modal-buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Botão de deletar (Confirmar) */
+.confirm-btn {
+  padding: 10px 20px;
+  background: #f44336;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+  .confirm-btn:hover {
+    background: #d32f2f;
+  }
+
+/* */
+.modal-cancel-btn {
+  padding: 10px 20px;
+  background: #ccc;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+  .modal-cancel-btn:hover {
+    background: #999;
+  }
+
+/* Responsividade */
+@media (max-width: 600px) {
+  .recipe-books-container {
+    max-width: 90%;
+  }
+}

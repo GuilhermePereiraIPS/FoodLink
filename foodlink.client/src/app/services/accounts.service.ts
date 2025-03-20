@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs';
+import { Observable, catchError, map, of } from 'rxjs';
 
 export interface User {
   id: string;
@@ -57,5 +57,34 @@ export class AccountsService {
     }
     return throwError(errorMessage);
   }
+  
+  getAllUsers(): Observable<{ id: string; username: string }[]> {
+    return this.http.get<{ id: string; username: string }[]>('api/users').pipe(
+      map(users => {
+       // console.log("Users fetched:", users);
+        return users;
+      }),
+      catchError(error => {
+        console.error("Error fetching users:", error);
+        return of([]);
+      })
+    );
+  }
+
+  getUserById(userId: string): Observable<string> {
+    return this.getAllUsers().pipe(
+      map(users => {
+        //console.log(`Searching for userId: ${userId}`);
+        const user = users.find(u => u.id === userId);
+        //console.log(user?.username);
+        return user ? user.username : "Unknown User";
+      }),
+      catchError(error => {
+        console.error(`Error fetching username for userId: ${userId}`, error);
+        return of("Unknown User");
+      })
+    );
+  }
+
 }
 
