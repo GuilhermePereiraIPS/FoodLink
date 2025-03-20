@@ -13,12 +13,12 @@ import { User, AccountsService } from '../services/accounts.service';
 })
 export class NavMenuComponent {
   menuOpen: boolean = false;
-  public username: string | undefined;
+  public user!: User;
 
   constructor(private router: Router, private accountsService: AccountsService) { }
 
   ngOnInit() {
-    this.getUserName()
+    this.getCurrentUser()
   }
 
   isLoginOrRegisterPage(): boolean {
@@ -29,13 +29,11 @@ export class NavMenuComponent {
     this.menuOpen = !this.menuOpen;
   }
 
-  getUserName() {
-    this.accountsService.getCurrentUser().subscribe(
+  getCurrentUser() {
+    this.accountsService.getCurrentUser(true).subscribe(
       (result) => {
         console.log('User fetched:', result);
-        var user = result;
-        this.username = user.username;
-        console.log(user)
+        this.user = result;
       },
       (error) => {
         console.error(error);

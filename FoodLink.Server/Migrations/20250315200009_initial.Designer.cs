@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FoodLink.Server.Migrations
 {
     [DbContext(typeof(FoodLinkContext))]
-    [Migration("20250310103558_initial")]
+    [Migration("20250315200009_initial")]
     partial class initial
     {
         /// <inheritdoc />
@@ -29,6 +29,9 @@ namespace FoodLink.Server.Migrations
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("AboutMe")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
@@ -67,6 +70,9 @@ namespace FoodLink.Server.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<int?>("RecipesId")
+                        .HasColumnType("int");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
@@ -86,6 +92,8 @@ namespace FoodLink.Server.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.HasIndex("RecipesId");
 
                     b.ToTable("AspNetUsers", (string)null);
                 });
@@ -281,6 +289,15 @@ namespace FoodLink.Server.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("FoodLink.Server.Models.ApplicationUser", b =>
+                {
+                    b.HasOne("FoodLink.Server.Models.Recipe", "Recipes")
+                        .WithMany()
+                        .HasForeignKey("RecipesId");
+
+                    b.Navigation("Recipes");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

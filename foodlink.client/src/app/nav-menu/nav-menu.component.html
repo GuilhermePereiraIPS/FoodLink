@@ -1,4 +1,5 @@
-<nav class="navbar">
+
+<nav>
   <!-- Logo + Browse alinhado à esquerda -->
   <div>
     <a [routerLink]="['/recipes']">
@@ -13,7 +14,8 @@
     <ul class="nav-links-right">
       <li><a [routerLink]="['/books']">books</a></li>
       <li><a [routerLink]="['/recipes/create']">create</a></li>
-      <li><a [routerLink]="['/profile', username]">profile</a></li>
+      <li><a [routerLink]="['/profile', user.username]">profile</a></li>
+      <li><a [routerLink]="['/profile/edit']">edit</a></li>
     </ul>
   </div>
 

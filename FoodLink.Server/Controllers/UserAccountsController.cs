@@ -8,6 +8,7 @@ using FoodLink.Server.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Diagnostics;
 
 namespace FoodLink.Server.Controllers
 {
@@ -96,16 +97,31 @@ namespace FoodLink.Server.Controllers
             });
         }
 
-
+        /// <summary>
+        /// Retorna a informação do utilizador, seja por username ou id
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("api/getUserInfo")]
-        public async Task<IActionResult> GetUserInfo([FromQuery] string username)
+        public async Task<IActionResult> GetUserInfo([FromQuery] string? username, [FromQuery] string? id)
         {
             if (string.IsNullOrEmpty(username))
             {
-                return BadRequest(new { message = "Username is required." });
+                return BadRequest(new { message = "Username or Id is required." });
             }
 
-            var user = await _userManager.FindByNameAsync(username);
+            ApplicationUser? user = null;
+
+            if (!string.IsNullOrEmpty(id))
+            {
+                user = await _userManager.FindByIdAsync(id);
+            }
+            else if (!string.IsNullOrEmpty(username))
+            {
+                user = await _userManager.FindByNameAsync(username);
+            }
+
             if (user == null)
             {
                 return NotFound(new { message = "User not found." });
@@ -116,6 +132,8 @@ namespace FoodLink.Server.Controllers
                 id = user.Id,
                 username = user.UserName,
                 email = user.Email,
+                aboutMe = user.AboutMe,
+                recipes = user.Recipes
             });
         }
 
@@ -127,20 +145,23 @@ namespace FoodLink.Server.Controllers
         /// Retorna um <see cref="UserProfileModel"/> contendo o ID, nome e email do utilizador.
         /// Se o utilizador não estiver autenticado, retorna uma resposta Unauthorized (401).
         /// </returns>
-        [HttpGet("api/currentUser")]
+        [HttpGet("api/getCurrentUser")]
         [Authorize]
-        public async Task<IActionResult> GetCurrentUserInfo([FromQuery] bool includeDetails = false)
+        public async Task<IActionResult> GetCurrentUser([FromQuery] bool includeDetails = false)
         {
             var user = await GetCurrentUser();
             if (user == null) return Unauthorized(new { message = "User not found." });
 
             if (includeDetails)
             {
+                //getcurrentuser e getuserinfo com este codigo repetido, dar refact
                 return Ok(new
                 {
                     id = user.Id,
                     username = user.UserName,
-                    email = user.Email
+                    email = user.Email,
+                    aboutMe = user.AboutMe,
+                    recipes = user.Recipes
                 });
             }
 
@@ -157,6 +178,8 @@ namespace FoodLink.Server.Controllers
         [Authorize]
         public async Task<IActionResult> UpdateCurrentUser([FromBody] UserUpdateModel model)
         {
+            if (string.IsNullOrEmpty(model.CurrentPassword)) return BadRequest(new { message = "Current password is required" });
+
             ApplicationUser user = await GetCurrentUser();
             if (user == null) return NotFound(new { message = "User not found." });
             
@@ -172,18 +195,23 @@ namespace FoodLink.Server.Controllers
             {
                 var emailExists = await _userManager.FindByEmailAsync(model.Email);
                 if (emailExists != null) return BadRequest(new { message = "Email already in use." });
-                
-                user.Email = model.Email;
+
+                var emailChangeResult = await _userManager.SetEmailAsync(user, model.Email);
+                if (!emailChangeResult.Succeeded)
+                {
+                    return BadRequest(emailChangeResult.Errors);
+                }
+            }
+
+            // About me
+            if (!string.IsNullOrEmpty(model.AboutMe))
+            {
+                user.AboutMe = model.AboutMe;
             }
 
             // Password
             if (!string.IsNullOrEmpty(model.Password))
             {
-                var passwordValid = await _userManager.CheckPasswordAsync(user, model.CurrentPassword);
-                if (!passwordValid)
-                {
-                    return BadRequest(new { message = "Current password is incorrect." });
-                }
 
                 var passwordChangeResult = await _userManager.ChangePasswordAsync(user, model.CurrentPassword, model.Password);
                 if (!passwordChangeResult.Succeeded)
@@ -191,6 +219,14 @@ namespace FoodLink.Server.Controllers
                     return BadRequest(passwordChangeResult.Errors);
                 }
             }
+            
+
+            var passwordValid = await _userManager.CheckPasswordAsync(user, model.CurrentPassword);
+            if (!passwordValid)
+            {
+                return BadRequest(new { message = "Current password is incorrect." });
+            }
+
 
             var updateResult = await _userManager.UpdateAsync(user);
 
@@ -232,11 +268,18 @@ namespace FoodLink.Server.Controllers
     }
 
 
+    public class UserInfoModel
+    {
+        public string? Username { get; set; }
+        public string? Email { get; set; }
+        public string? AboutMe { get; set; }
+    }
 
     public class UserUpdateModel
     {
         public string? Username { get; set; }
         public string? Email { get; set; }
+        public string? AboutMe { get; set; }
         public string? Password { get; set; }
         public string? CurrentPassword { get; set; } // Needed to check if the current password is correct when updating
     }
