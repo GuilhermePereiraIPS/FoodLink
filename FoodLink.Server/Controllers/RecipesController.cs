@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using FoodLink.Server.Data;
 using FoodLink.Server.Models;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace FoodLink.Server.Controllers

@@ -17,9 +17,11 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<FoodLinkContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("FoodLinkContext") ?? throw new InvalidOperationException("Connection string 'FoodLinkContext' not found.")));
 
+
 // Add Identity  
 builder.Services
     .AddIdentityApiEndpoints<ApplicationUser>()
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<FoodLinkContext>();
 
 // Configure Identity
@@ -112,5 +114,41 @@ app
     .MapIdentityApi<ApplicationUser>();
 
 app.MapFallbackToFile("/index.html");
+
+
+using (var scope = app.Services.CreateScope())
+{
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    var roles = new[] { "Admin", "Member" };
+
+    foreach (var role in roles)
+    {
+        if (!await roleManager.RoleExistsAsync(role))
+            await roleManager.CreateAsync(new IdentityRole(role));
+    }
+
+}
+
+//criar admin
+using (var scope = app.Services.CreateScope())
+{
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+
+    string email = "admin@admin.com";
+    string password = "FoodLink123%";
+
+    if(await userManager.FindByEmailAsync(email) == null)
+    {
+        var user = new ApplicationUser();
+
+        user.UserName = email;
+        user.Email = email;
+        user.EmailConfirmed = true;
+
+        await userManager.CreateAsync(user, password);
+
+        await userManager.AddToRoleAsync(user, "Admin");
+    }
+}
 
 app.Run();

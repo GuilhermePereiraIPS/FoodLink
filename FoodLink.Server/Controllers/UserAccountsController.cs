@@ -39,6 +39,7 @@ namespace FoodLink.Server.Controllers
             var user = new ApplicationUser { UserName = model.Name, Email = model.Email};
 
             var result = await _userManager.CreateAsync(user, model.Password);
+            await _userManager.AddToRoleAsync(user, "Member");
 
             if (result.Succeeded)
             {                
