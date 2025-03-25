@@ -55,13 +55,13 @@ namespace FoodLink.Server.Controllers
             _context.RecipeBooks.Add(recipeBook);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetUserRecipeBooks), new { id = recipeBook.IdRecipeBook }, recipeBook);
+            return CreatedAtAction(nameof(GetUserRecipeBooks), new { id = recipeBook.Id }, recipeBook);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateRecipeBook(int id, [FromBody] RecipeBook updatedBook)
         {
-            if (updatedBook == null || id != updatedBook.IdRecipeBook)
+            if (updatedBook == null || id != updatedBook.Id)
             {
                 return BadRequest("Invalid Recipe Book data.");
             }

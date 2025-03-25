@@ -13,18 +13,6 @@
   margin: auto;
 }
 
-/* Título da Página (agora alinhado com a search bar) */
-.recipe-page-title {
-  font-size: 26px;
-  font-weight: bold;
-  margin: 20px 0;
-  color: #000;
-  text-align: left; /* 🔥 Alinha o título à esquerda */
-  width: 600px; /* 🔥 Mesmo tamanho da search bar */
-  margin-left: auto;
-  margin-right: auto;
-}
-
 /* Search Bar */
 .search-bar {
   display: flex;
@@ -88,27 +76,15 @@
 
 /* Grid de receitas */
 .recipe-grid {
-  display: grid;
+  display: flex;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 15px;
+  gap: 2vw;
   margin-top: 20px;
 }
 
-/* Card da Receita */
-.recipe-card {
-  background-color: white;
-  border: 2px solid #333; /* 🔥 Adiciona um contorno */
-  padding: 15px;
-  border-radius: 8px; /* 🔥 Bordas arredondadas */
-  text-align: center;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease-in-out;
+.recipe-grid a {
+  text-decoration: none
 }
-
-  .recipe-card:hover {
-    transform: scale(1.05);
-    border-color: #007BFF; /* 🔥 Muda a cor da borda ao passar o mouse */
-  }
 
 /* Informações da Receita */
 .recipe-info h3 {

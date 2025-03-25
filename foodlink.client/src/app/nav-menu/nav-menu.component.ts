@@ -15,13 +15,14 @@ export class NavMenuComponent {
   menuOpen: boolean = false;
   public user: User | null = null;
 
-  constructor(private router: Router, private accountsService: AccountsService) { }
+  constructor(private router: Router, private accountsService: AccountsService, private cdr: ChangeDetectorRef) { }
 
   ngOnInit() {
     this.accountsService.currentUser$.subscribe(
       (user) => {
         console.log('Current user updated:', user);
         this.user = user;
+        this.cdr.detectChanges();
       },
       (error) => {
         console.error('Error in current user subscription:', error);

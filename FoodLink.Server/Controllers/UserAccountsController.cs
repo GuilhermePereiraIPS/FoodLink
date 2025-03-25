@@ -107,7 +107,7 @@ namespace FoodLink.Server.Controllers
         [HttpGet("api/getUserInfo")]
         public async Task<IActionResult> GetUserInfo([FromQuery] string? username, [FromQuery] string? id)
         {
-            if (string.IsNullOrEmpty(username))
+            if (string.IsNullOrEmpty(username) && string.IsNullOrEmpty(id))
             {
                 return BadRequest(new { message = "Username or Id is required." });
             }
@@ -117,15 +117,18 @@ namespace FoodLink.Server.Controllers
             if (!string.IsNullOrEmpty(id))
             {
                 user = await _userManager.FindByIdAsync(id);
+                Console.WriteLine($"User by ID: {user?.Id}");
             }
-            else if (!string.IsNullOrEmpty(username))
+            if (!string.IsNullOrEmpty(username))
             {
                 user = await _userManager.FindByNameAsync(username);
+                Console.WriteLine($"User by username: {user?.UserName}");
             }
 
             if (user == null)
             {
                 return NotFound(new { message = "User not found." });
+
             }
 
             var roles = await _userManager.GetRolesAsync(user);

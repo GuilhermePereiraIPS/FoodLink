@@ -28,9 +28,9 @@ namespace FoodLink.Server.Data
             base.OnModelCreating(modelBuilder);
 
             // Configuração inicial (seeding) de dados 
-            modelBuilder.Entity<Recipe>().HasData(
-                new Recipe { Id = 1, Title = "bruh"}
-            );
+            //modelBuilder.Entity<Recipe>().HasData(
+            //    new Recipe { Id = 1, Title = "Amondegas", UserId="213fd-awd12-daww21-23fg"}
+            //);
         }
     }
 }

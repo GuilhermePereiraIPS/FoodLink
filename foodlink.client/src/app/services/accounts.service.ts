@@ -1,4 +1,4 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, throwError, catchError, map, of } from 'rxjs';
 import {jwtDecode } from 'jwt-decode'
@@ -49,10 +49,14 @@ export class AccountsService {
     });
   }
 
+  
+
   getUserInfo(username?: string, id?: string): Observable<User> {
-    return this.http.get<User>('api/getUserInfo', {
-      params: { username: username || '', id: id || '' }
-    });
+    let params = new HttpParams();
+    if (username) params = params.set('username', username);
+    if (id) params = params.set('id', id);
+
+    return this.http.get<User>('api/getUserInfo', { params })
   }
   
   editUser(userUpdate: UserUpdate): Observable<any> {
