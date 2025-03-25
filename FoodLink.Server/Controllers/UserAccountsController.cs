@@ -38,7 +38,8 @@ namespace FoodLink.Server.Controllers
         /// <param name="model">The data of the user to be registered.</param>
         /// <returns>An <see cref="IActionResult"/> indicating success or a validation error.</returns>
         /// <response code="200">User registered successfully.</response>
-        /// <response code="400">User already exists or validation errors occurred.</response>HttpPost("api/signup")]
+        /// <response code="400">User already exists or validation errors occurred.</response>
+        [HttpPost("api/signup")]
         public async Task<IActionResult> Register([FromBody] UserRegistrationModel model)
         {
             var userExists = await _userManager.FindByEmailAsync(model.Email);
@@ -65,7 +66,8 @@ namespace FoodLink.Server.Controllers
         /// <param name="model">The user login credentials.</param>
         /// <returns>An <see cref="IActionResult"/> containing a JWT token and expiration date on success.</returns>
         /// <response code="200">Login successful, returns token and expiration.</response>
-        /// <response code="400">Invalid email or password.</response>[HttpPost("api/signin")]
+        /// <response code="400">Invalid email or password.</response>
+        [HttpPost("api/signin")]
         public async Task<IActionResult> Login([FromBody] UserLoginModel model)
         {
             var user = await _userManager.FindByEmailAsync(model.Email);
@@ -116,7 +118,8 @@ namespace FoodLink.Server.Controllers
         /// <returns>An <see cref="IActionResult"/> containing user details or an error message.</returns>
         /// <response code="200">User information retrieved successfully.</response>
         /// <response code="400">Neither username nor ID provided.</response>
-        /// <response code="404">User not found.</response>HttpGet("api/getUserInfo")]
+        /// <response code="404">User not found.</response>
+        [HttpGet("api/getUserInfo")]
         public async Task<IActionResult> GetUserInfo([FromQuery] string? username, [FromQuery] string? id)
         {
             if (string.IsNullOrEmpty(username) && string.IsNullOrEmpty(id))
@@ -199,7 +202,8 @@ namespace FoodLink.Server.Controllers
         /// <response code="200">User information updated successfully.</response>
         /// <response code="400">Validation errors (e.g., incorrect password, email in use).</response>
         /// <response code="401">User is not authenticated.</response>
-        /// <response code="404">Authenticated user not found.</response>[HttpPut("api/updateCurrentUser")]
+        /// <response code="404">Authenticated user not found.</response>
+        [HttpPut("api/updateCurrentUser")]
         [Authorize]
         public async Task<IActionResult> UpdateCurrentUser([FromBody] UserUpdateModel model)
         {

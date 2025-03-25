@@ -1,5 +1,5 @@
 <div class="recipe-list-container">
-  
+
   <!-- Título da Página -->
   <h2 class="recipe-page-title">Find a great recipe</h2>
 
@@ -13,9 +13,16 @@
   </div>
 
   <!-- Botão para ordenar -->
-  <button (click)="toggleOrderRecent()" class="order-button">
-    Order by: {{ orderRecent ? 'Recent' : 'None' }}
-  </button>
+  <ul id="order-list">
+    <li (click)="setOrderRecent()">
+      <input id="latest" checked="checked" type="radio" name="order"/>
+      <label for="latest">Latest</label>
+    </li>
+    <li (click)="setOrderRated()">
+      <input id="brated"  type="radio" name="order"/>
+      <label for="brated">Best Rated</label>
+    </li>
+  </ul>
 
   <!-- Grid de receitas -->
   <div class="recipe-grid" *ngIf="recipes">
@@ -24,7 +31,7 @@
         <app-recipe-card [title]="recipe.title"
                          [description]="recipe.description"
                          [date]="recipe.createDate | date:'short'"
-                         [userId] = "recipe.userId">
+                         [userId]="recipe.userId">
         </app-recipe-card>
       </a>
 

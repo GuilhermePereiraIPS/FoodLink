@@ -2,10 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Recipe, RecipesService } from '../services/recipes.service';
 import { CommentsService, Comment } from '../services/comments.service';
-import { AccountsService } from '../services/accounts.service';
+import { AccountsService, User } from '../services/accounts.service';
 import { RecipeBooksService } from '../services/recipe-books.service';
 import { RecipeToRBService, RecipeToRB } from '../services/recipe-to-rb.service';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-recipe-details',
@@ -14,17 +13,18 @@ import { Observable } from 'rxjs';
   styleUrls: ['./recipe-details.component.css']
 })
 export class RecipeDetailsComponent implements OnInit {
-  public recipe: Recipe | undefined;
+  public currentUser: User | null = null;
+  public user: User | null = null;
   public id: number | undefined;
+  public recipe!: Recipe; // Non-null assertion, but we'll handle it safely
+
   public comments: Comment[] = [];
   public newComment: string = '';
-  public currentUserId: string = '';
   public userNames: Map<string, string> = new Map();
 
   public userRecipeBooks: any[] = [];
   public selectedRecipeBook: number | null = null;
-  public showRecipeBookList = false; // Controla a exibição da lista de Recipe Books
-
+  public showRecipeBookList = false;
   public showModal = false;
   private commentToDelete: number | undefined;
 
@@ -38,38 +38,55 @@ export class RecipeDetailsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.accountsService.currentUser$.subscribe(
+      (user) => {
+        console.log('Current user updated:', user);
+        this.currentUser = user;
+      },
+      (error) => {
+        console.error('Error in current user subscription:', error);
+      }
+    );
+
     this.route.params.subscribe(params => {
-      this.id = +params['id']; // Convertendo para número
+      this.id = +params['id'];
       this.getRecipe();
       this.getComments();
-      this.getUserId();
-      this.accountsService.getCurrentUser().subscribe(
-        (result) => {
-          this.currentUserId = result.id;
-          this.getUserRecipeBooks(this.currentUserId);
-        },
-        (error) => {
-          console.error("Error fetching user:", error);
-        }
-      );
     });
   }
 
-  // 🔹 Busca os detalhes da receita
   getRecipe(): void {
     if (this.id === undefined) return;
 
     this.recipeService.getRecipe(this.id).subscribe(
       (result) => {
         this.recipe = result;
+        // Call getUser only after recipe is set
+        if (this.recipe.userId) {
+          this.getUser(this.recipe.userId);
+        } else {
+          console.warn('Recipe has no userId:', this.recipe);
+        }
       },
       (error) => {
-        console.log(error);
+        console.error('Error fetching recipe:', error);
       }
     );
   }
 
-  // 🔹 Busca os comentários da receita
+  getUser(id: string): void {
+    this.accountsService.getUserInfo(undefined, id).subscribe(
+      (result: User) => {
+        console.log('User fetched:', result);
+        this.user = result;
+      },
+      (error) => {
+        console.error('Error fetching user:', error);
+        this.user = null; // Reset user on error
+      }
+    );
+  }
+
   getComments(): void {
     if (this.id === undefined) return;
 
@@ -84,60 +101,48 @@ export class RecipeDetailsComponent implements OnInit {
     );
   }
 
-  // 🔹 Obtém o nome do usuário e armazena no mapa para evitar chamadas repetidas
   loadUserNames(): void {
-    this.comments.forEach(async (comment) => {
+    this.comments.forEach(comment => {
       if (comment.userId && !this.userNames.has(comment.userId)) {
-        const username = await this.fetchUserName(comment.userId);
-        this.userNames.set(comment.userId, username);
+        this.accountsService.getUserById(comment.userId).subscribe(
+          username => {
+            this.userNames.set(comment.userId, username);
+          },
+          error => {
+            console.error(`Error fetching username for userId: ${comment.userId}`, error);
+            this.userNames.set(comment.userId, 'Unknown User');
+          }
+        );
       }
     });
   }
 
-  async fetchUserName(userId: string | undefined): Promise<string> {
-    if (!userId) {
-      return "Unknown User";
-    }
+  getUserName(userId: string | undefined): string {
+    if (!userId) return 'Unknown User';
 
-    if (this.userNames.has(userId)) {
-      return this.userNames.get(userId)!;
-    }
+    const cachedUsername = this.userNames.get(userId);
+    if (cachedUsername) return cachedUsername;
 
-    try {
-      const username = await this.accountsService.getUserById(userId).toPromise() ?? "Unknown User";
-      this.userNames.set(userId, username);
-      return username;
-    } catch (error) {
-      console.log(`Error fetching username for userId: ${userId}`, error);
-      return "Unknown User";
-    }
-  }
-
-  getUserId() {
-    this.accountsService.getCurrentUser().subscribe(
-      (result) => {
-        console.log('User fetched:', result);
-        var user = result;
-        this.currentUserId = user.id;
+    this.accountsService.getUserById(userId).subscribe(
+      username => {
+        this.userNames.set(userId, username);
       },
-      (error) => {
-        console.error(error);
+      error => {
+        console.error(`Error fetching username for userId: ${userId}`, error);
+        this.userNames.set(userId, 'Unknown User');
       }
     );
+
+    return 'Loading...';
   }
 
-  getUserName(userId: string): string {
-    return this.userNames.get(userId) || "Loading...";
-  }
-
-  // 🔹 Adiciona um novo comentário
   addComment(): void {
-    if (!this.id || !this.newComment.trim() || !this.currentUserId) return;
+    if (!this.id || !this.newComment.trim() || !this.currentUser?.id) return;
 
     const newCommentData: Comment = {
       commentText: this.newComment,
       recipeId: this.id,
-      userId: this.currentUserId
+      userId: this.currentUser.id
     };
 
     this.commentsService.addComment(newCommentData).subscribe(
@@ -151,19 +156,17 @@ export class RecipeDetailsComponent implements OnInit {
     );
   }
 
-  // 🔹 Exibe o modal antes de deletar um comentário
   openDeleteModal(commentId: number): void {
     this.commentToDelete = commentId;
     this.showModal = true;
   }
 
-  // 🔹 Confirma a exclusão do comentário
   confirmDelete(): void {
     if (!this.commentToDelete) return;
 
     this.commentsService.deleteComment(this.commentToDelete).subscribe(
       () => {
-        this.comments = this.comments.filter(comment => comment.idComment !== this.commentToDelete);
+        this.comments = this.comments.filter(comment => comment.id !== this.commentToDelete);
         console.log(`Comment with ID ${this.commentToDelete} deleted successfully.`);
         this.showModal = false;
       },
@@ -173,7 +176,6 @@ export class RecipeDetailsComponent implements OnInit {
     );
   }
 
-  // 🔹 Cancela a exclusão do comentário
   cancelDelete(): void {
     this.showModal = false;
     this.commentToDelete = undefined;
@@ -187,7 +189,7 @@ export class RecipeDetailsComponent implements OnInit {
 
     this.commentsService.deleteComment(commentId).subscribe(
       () => {
-        this.comments = this.comments.filter(comment => comment.idComment !== commentId);
+        this.comments = this.comments.filter(comment => comment.id !== commentId);
         console.log(`Comment with ID ${commentId} deleted successfully.`);
       },
       (error) => {
@@ -196,27 +198,24 @@ export class RecipeDetailsComponent implements OnInit {
     );
   }
 
-  // Buscar os Recipe Books do usuário
   getUserRecipeBooks(userId: string): void {
     this.recipeBooksService.getUserRecipeBooks(userId).subscribe(
       (books) => {
         this.userRecipeBooks = books;
       },
       (error) => {
-        console.error("Error loading user recipe books:", error);
+        console.error('Error loading user recipe books:', error);
       }
     );
   }
 
-  // Alternar a exibição da lista de Recipe Books
   toggleRecipeBookList(): void {
     this.showRecipeBookList = !this.showRecipeBookList;
   }
 
-  // Adicionar a receita ao Recipe Book selecionado
   addToRecipeBook(): void {
     if (!this.id || !this.selectedRecipeBook) {
-      alert("Please select a Recipe Book.");
+      alert('Please select a Recipe Book.');
       return;
     }
 
@@ -227,7 +226,7 @@ export class RecipeDetailsComponent implements OnInit {
 
     this.recipeToRBService.addRecipeToBook(newAssociation).subscribe(
       () => {
-        alert("Recipe added to Recipe Book!");
+        alert('Recipe added to Recipe Book!');
         this.showRecipeBookList = false;
       },
       error => console.log(error)

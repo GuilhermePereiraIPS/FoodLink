@@ -57,6 +57,38 @@
   }
 
 
+#order-list {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display:flex;
+  gap: 5px;
+}
+
+  #order-list li {
+    padding: 0;
+    
+  }
+
+    #order-list li label {
+      background: #CDCDCD;
+      padding: 6px;
+      display: inline-block;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #order-list li input[type="radio"] {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+      #order-list li input[type="radio"]:checked ~ label {
+        background: #141414;
+        color: white;
+      }
+
 /* Botão de Ordenação */
 .order-button {
   display: block;

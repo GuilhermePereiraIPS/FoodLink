@@ -21,7 +21,7 @@
       <li *ngFor="let book of recipeBooks" class="recipe-book-item">
 
         <!-- Exibir input se estiver no modo de edição -->
-        <div *ngIf="editingBookId === book.idRecipeBook; else normalView">
+        <div *ngIf="editingBookId === book.id; else normalView">
           <input type="text" [(ngModel)]="editedTitle" class="edit-input" />
           <button (click)="saveEditedBook()" class="save-btn">✔ Save</button>
           <button (click)="cancelEditing()" class="cancel-btn">✖ Cancel</button>
@@ -30,18 +30,18 @@
         <!-- Visão normal com três pontinhos -->
         <ng-template #normalView>
           <!-- O link ocupa toda a área do RecipeBook -->
-          <a [routerLink]="['/recipe-books', book.idRecipeBook]" class="recipe-book-link">
+          <a [routerLink]="['/recipe-books', book.id]" class="recipe-book-link">
             <span>{{ book.recipeBookTitle }}</span>
           </a>
 
           <!-- Container do menu -->
           <div class="menu-container">
-            <button class="menu-btn" (click)="toggleMenu(book.idRecipeBook!)">⋮</button>
+            <button class="menu-btn" (click)="toggleMenu(book.id!)">⋮</button>
 
             <!-- Dropdown do menu -->
-            <div *ngIf="activeMenu === book.idRecipeBook" class="dropdown-menu">
+            <div *ngIf="activeMenu === book.id" class="dropdown-menu">
               <button class="dropdown-item" (click)="startEditing(book)">✏️ Edit</button>
-              <button class="dropdown-item delete" (click)="deleteBook(book.idRecipeBook!)">🗑 Delete</button>
+              <button class="dropdown-item delete" (click)="deleteBook(book.id!)">🗑 Delete</button>
             </div>
           </div>
         </ng-template>
@@ -56,6 +56,3 @@
   </ng-template>
 </div>
 
-<br />
-<br />
-<br />
