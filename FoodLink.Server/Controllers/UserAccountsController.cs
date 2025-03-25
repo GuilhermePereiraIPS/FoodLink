@@ -128,13 +128,16 @@ namespace FoodLink.Server.Controllers
                 return NotFound(new { message = "User not found." });
             }
 
+            var roles = await _userManager.GetRolesAsync(user);
+
             return Ok(new
             {
                 id = user.Id,
                 username = user.UserName,
                 email = user.Email,
                 aboutMe = user.AboutMe,
-                recipes = user.Recipes
+                recipes = user.Recipes,
+                role = roles.FirstOrDefault() // apenas uma role por utilizador
             });
         }
 
@@ -155,6 +158,9 @@ namespace FoodLink.Server.Controllers
 
             if (includeDetails)
             {
+
+                var roles = await _userManager.GetRolesAsync(user);
+
                 //getcurrentuser e getuserinfo com este codigo repetido, dar refact
                 return Ok(new
                 {
@@ -162,7 +168,8 @@ namespace FoodLink.Server.Controllers
                     username = user.UserName,
                     email = user.Email,
                     aboutMe = user.AboutMe,
-                    recipes = user.Recipes
+                    recipes = user.Recipes,
+                    role = roles.FirstOrDefault() // uma role -
                 });
             }
 

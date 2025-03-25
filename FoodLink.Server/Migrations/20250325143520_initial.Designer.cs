@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FoodLink.Server.Migrations
 {
     [DbContext(typeof(FoodLinkContext))]
-    [Migration("20250315200009_initial")]
+    [Migration("20250325143520_initial")]
     partial class initial
     {
         /// <inheritdoc />
@@ -113,8 +113,9 @@ namespace FoodLink.Server.Migrations
                     b.Property<int>("RecipeId")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("IdComment");
 
@@ -156,6 +157,46 @@ namespace FoodLink.Server.Migrations
                             CreateDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Title = "bruh"
                         });
+                });
+
+            modelBuilder.Entity("FoodLink.Server.Models.RecipeBook", b =>
+                {
+                    b.Property<int>("IdRecipeBook")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdRecipeBook"));
+
+                    b.Property<string>("RecipeBookTitle")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("IdRecipeBook");
+
+                    b.ToTable("RecipeBooks");
+                });
+
+            modelBuilder.Entity("FoodLink.Server.Models.RecipeToRB", b =>
+                {
+                    b.Property<int>("IdRecipeToRB")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdRecipeToRB"));
+
+                    b.Property<int>("IdRecipe")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdRecipeBook")
+                        .HasColumnType("int");
+
+                    b.HasKey("IdRecipeToRB");
+
+                    b.ToTable("RecipeToRB");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

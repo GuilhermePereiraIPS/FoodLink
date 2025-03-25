@@ -13,12 +13,20 @@ import { User, AccountsService } from '../services/accounts.service';
 })
 export class NavMenuComponent {
   menuOpen: boolean = false;
-  public user!: User;
+  public user: User | null = null;
 
   constructor(private router: Router, private accountsService: AccountsService) { }
 
   ngOnInit() {
-    this.getCurrentUser()
+    this.accountsService.currentUser$.subscribe(
+      (user) => {
+        console.log('Current user updated:', user);
+        this.user = user;
+      },
+      (error) => {
+        console.error('Error in current user subscription:', error);
+      }
+    );
   }
 
   isLoginOrRegisterPage(): boolean {
@@ -29,16 +37,5 @@ export class NavMenuComponent {
     this.menuOpen = !this.menuOpen;
   }
 
-  getCurrentUser() {
-    this.accountsService.getCurrentUser(true).subscribe(
-      (result) => {
-        console.log('User fetched:', result);
-        this.user = result;
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
-  }
 
 }

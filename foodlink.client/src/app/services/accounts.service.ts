@@ -1,13 +1,14 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { throwError } from 'rxjs';
-import { Observable, catchError, map, of } from 'rxjs';
+import { BehaviorSubject, Observable, throwError, catchError, map, of } from 'rxjs';
+import {jwtDecode } from 'jwt-decode'
 
 export interface User {
   id: string;
   email: string;
   username: string;
   aboutMe?: string;
+  role: string;
 }
 
 export interface UserUpdate {
@@ -23,8 +24,24 @@ export interface UserUpdate {
 })
 
 export class AccountsService {
+  private currentUserSubject: BehaviorSubject<User | null> = new BehaviorSubject<User | null>(null);
+  public currentUser$: Observable<User | null> = this.currentUserSubject.asObservable();
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+    this.loadCurrentUser();
+  }
+
+  private loadCurrentUser(): void {
+    this.getCurrentUser(true).subscribe(
+      (user) => {
+        this.currentUserSubject.next(user);
+      },
+      (error) => {
+        console.error('Error loading current user:', error);
+        this.currentUserSubject.next(null); // Reset to null on error
+      }
+    );
+  }
 
   getCurrentUser(includeDetails: boolean = true): Observable<User> {
     return this.http.get<User>('api/getCurrentUser', {
