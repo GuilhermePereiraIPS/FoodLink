@@ -1,7 +1,8 @@
 <div class="recipe-detail-container" *ngIf="recipe">
   <h1 class="recipe-title">{{ recipe.title }}</h1>  <!--by {{ user?.username || 'Unknown' }}-->
 
-  <div class="recipe-user">
+  <div class="recipe-header">
+
     <div class="user-info">
       <img src="assets/user-avatar.png" class="user-avatar">
       <div>
@@ -11,7 +12,8 @@
     </div>
 
     <div class="recipe-actions">
-      <button class="add-btn" (click)="toggleRecipeBookList()">Add to book</button>
+      <button class="recipe-action-btn" (click)="scrollToRecipe($event)" >Skip to recipe</button>
+      <button class="recipe-action-btn recipe-action-small-btn" (click)="toggleRecipeBookList()">Add to book</button>
       <div *ngIf="showRecipeBookList" class="recipe-book-dropdown">
         <label for="selectBook">Select a Recipe Book:</label>
         <select [(ngModel)]="selectedRecipeBook" id="selectBook">
@@ -22,35 +24,42 @@
         <button class="confirm-add-btn" (click)="addToRecipeBook()">Add</button>
       </div>
       <!-- Show Delete button if currentUser is the creator or an Admin -->
-      <button class="add-btn" *ngIf="canDeleteRecipe()" (click)="deleteRecipe()">Delete</button>
+      <button class="recipe-action-btn recipe-action-small-btn" *ngIf="canDeleteRecipe()" (click)="deleteRecipe()">Delete</button>
       <!-- Show Edit button only if currentUser is the creator -->
-      <button class="add-btn" *ngIf="canEditRecipe()" (click)="editRecipe()">Edit</button>
+      <button class="recipe-action-btn recipe-action-small-btn" *ngIf="canEditRecipe()" (click)="editRecipe()">Edit</button>
     </div>
-  </div>
-  <hr />
-  <div class="recipe-image">
-    <img src="assets/placeholder-image.png" alt="Recipe Image">
-  </div>
 
-  <p class="recipe-description">{{ recipe.description }}</p>
+  </div>
 
   <hr />
-  <h2>Recipe</h2>
-  <div class="recipe-section">
-    <h3>Ingredients</h3>
-    <p>{{ recipe.ingredients }}</p>
-  </div>
 
   <div class="recipe-section">
-    <h3>Preparation</h3>
-    <p>{{ recipe.instructions }}</p>
+    <p class="recipe-description">{{ recipe.description }}</p>
   </div>
+
+  <hr />
+  <section id="recipe-section">
+    <h2>Recipe</h2>
+    <div class="recipe-section">
+      <h3>Ingredients</h3>
+      <p>{{ recipe.ingredients }}</p>
+    </div>
+
+    <div class="recipe-section">
+      <h3>Preparation</h3>
+      <p>{{ recipe.instructions }}</p>
+    </div>
+  </section>
+    <hr />
 
   <div class="recipe-comments">
     <h3>Comments</h3>
-    <textarea [(ngModel)]="newComment" placeholder="Leave a comment"></textarea>
+    <div class="comment-box">
+      <img src="assets/user-avatar.png" class="user-avatar user-avatar-small">
+      <textarea [(ngModel)]="newComment" placeholder="Leave a comment"></textarea>
+    </div>
     <button class="comment-btn" (click)="addComment()">Comment</button>
-
+    
     <div class="comment-list" *ngIf="comments.length > 0">
       <div class="comment-item" *ngFor="let comment of comments">
         <p class="comment-text">{{ comment.commentText }}</p>

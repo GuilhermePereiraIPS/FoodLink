@@ -25,7 +25,7 @@
 }
 
 /* Informações do usuário e botões */
-.recipe-user {
+.recipe-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -44,11 +44,23 @@
     align-items: flex-start;
   }
 
+  .user-info div p {
+    font-size: 20px;
+    font-weight: 400
+  }
+
 .user-avatar {
-  width: 50px;
-  height: 50px;
+  width: 10vh;
+  height: 10vh;
+  object-fit: cover;
   border-radius: 50%;
+  border: 1px solid black;
   margin-right: 10px;
+}
+
+.user-avatar-small {
+  width: 6vh;
+  height: 6vh;
 }
 
 .recipe-date {
@@ -60,32 +72,33 @@
 .recipe-actions {
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
+  align-items: center;
   gap: 10px;
 }
 
-.skip-btn, .add-btn {
+.recipe-action-btn {
+  background-color: #E4E4E4;
+  color: #082109;
   padding: 8px 12px;
-  border: none;
+  border: 1px solid black;
+  border-radius: 3px;
   cursor: pointer;
-  font-size: 14px;
-  border-radius: 4px;
+  font-size: 20px;
+  font-weight: 600;
   width: 150px;
   text-align: center;
 }
 
-.skip-btn {
-  background-color: #ddd;
-}
-
-.add-btn {
-  background-color: #007BFF;
-  color: white;
-}
-
-  .add-btn:hover {
-    background-color: #0056b3;
+  .recipe-action-btn:hover {
+    background-color: #737373;
+    color:white;
   }
+
+.recipe-action-small-btn {
+  width: 100px;
+  font-size: 14px;
+  padding: 6px 10px;
+}
 
 /* Descrição da Receita */
 .recipe-description {
@@ -119,7 +132,6 @@
   }
 
   .recipe-section p {
-    background: #f8f8f8;
     padding: 8px;
     border-radius: 4px;
   }
@@ -130,24 +142,36 @@
   text-align: left;
 }
 
+  .recipe-comments h3{
+    margin-bottom: 10px;  
+    text-align: center;
+  }
+
   /* Caixa de comentário */
   .recipe-comments textarea {
     width: 100%;
     padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    border: 1px solid gray;
     font-size: 14px;
     resize: none;
   }
 
+.comment-box{
+    display:flex;
+    gap:10px;
+}
+
 /* Botão de Comentário */
 .comment-btn {
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.3);
   display: inline-block; /* Faz o botão respeitar o fluxo da página */
-  background-color: #28a745;
-  color: white;
+  background-color: #45D345;
+  font-size: 15px;
+  font-weight: 500;
+  color: #082109;
   border: none;
   padding: 8px 12px;
-  border-radius: 4px;
+  border-radius: 61px;
   cursor: pointer;
   margin-top: 10px;
   margin-left: auto; /* Mantém alinhado à direita */
@@ -236,7 +260,7 @@
 
 /* Responsividade */
 @media (max-width: 768px) {
-  .recipe-user {
+  .recipe-header {
     flex-direction: column;
     text-align: center;
   }

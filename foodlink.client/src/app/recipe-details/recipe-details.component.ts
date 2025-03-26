@@ -57,6 +57,14 @@ export class RecipeDetailsComponent implements OnInit {
     });
   }
 
+  scrollToRecipe(event: Event): void {
+    event.preventDefault(); // Prevent Angular routing from interfering
+    const element = document.getElementById('recipe-section');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+
   getRecipe(): void {
     if (this.id === undefined) return;
 

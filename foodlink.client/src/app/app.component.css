@@ -1,20 +1,39 @@
 :host {
   max-width: 1280px;
-  text-align: center; 
+  text-align: center;
+  margin: 0;
+  padding: 0;
 }
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+   
 }
 
+html {
+  min-height: 100vh;
+}
 
 html, body {
   margin: 0;
   padding: 0;
+  scroll-behavior: smooth;
+  background-color: #F7F9F7;
 }
 
-h1, h2, h3, h4, h5, h6, p {
-  color: #082109 !important
+.page-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 90vh; /* Ensure it fills viewport */
+}
+
+.content-wrap {
+  flex: 1 0 auto; /* Grow to fill space, don’t shrink below content */
+}
+
+app-footer {
+  flex-shrink: 0; /* Prevent footer from shrinking */
+  margin-top: 0 !important; /* Remove the 200px gap */
 }

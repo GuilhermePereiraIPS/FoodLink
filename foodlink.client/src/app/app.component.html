@@ -1,13 +1,14 @@
-
-<app-nav-menu *ngIf="showNavElements"></app-nav-menu>
-<body>
-  <div class="page-container">
-    <div class="content-wrap">
-      <router-outlet></router-outlet>
+<html>
+  <app-nav-menu *ngIf="showNavElements"></app-nav-menu>
+  <body>
+    <div class="page-container">
+      <div class="content-wrap">
+        <router-outlet></router-outlet>
+      </div>
+      <div *ngIf="showNavElements">
+        
+        <app-footer></app-footer>
+      </div>
     </div>
-    <div *ngIf="showNavElements">
-      <div class="footer-background"></div>
-      <app-footer></app-footer>
-    </div>
-  </div>
-</body>
+  </body>
+</html>

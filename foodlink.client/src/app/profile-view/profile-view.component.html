@@ -1,12 +1,13 @@
 <div class="main-content">
   <!--Profile image here-->
   <div>
-    <img class="user-avatar" src="../../assets/background.png" />
+    <img class="user-avatar" src="assets/user-avatar.png" />
     <h3>{{ user.username }}</h3>
   </div>
   <div>
     <h4>About me</h4>
-    <p> {{ user.aboutMe }} </p>
+    <p *ngIf="!user.aboutMe">We don't know much about {{ user.username }} but we're sure they're a good person!</p>
+    <p *ngIf="user.aboutMe"> {{ user.aboutMe }} </p>
   </div>
   <hr />
   <div>
@@ -18,7 +19,7 @@
                            [id]="recipe.id"
                            [title]="recipe.title"
                            [description]="recipe.description"
-                           [date]="recipe.createDate | date:'short'"
+                           [date]="recipe.createDate | date:'shortDate'"
                            [userId]="recipe.userId">
           </app-recipe-card>
       </div>
