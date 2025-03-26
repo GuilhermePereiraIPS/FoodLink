@@ -14,8 +14,12 @@ describe('RecipeListComponent', () => {
   let router: Router;
 
   const mockRecipes: Recipe[] = [
-    { id: 1, title: 'Recipe 1' },
-    { id: 2, title: 'Recipe 2' },
+    {
+      id: 1, title: 'Recipe 1', description: 'teste', ingredients: 'teste', instructions: 'teste', createDate:  new Date()
+    },
+    {
+      id: 2, title: 'Recipe 2', description: '', ingredients: '', instructions: '', createDate: new Date()
+    },
   ];
 
   beforeEach(async () => {
@@ -33,11 +37,11 @@ describe('RecipeListComponent', () => {
     router = TestBed.inject(Router);
   });
 
-  it('should create', () => {
+  fit('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should fetch recipes on init', () => {
+  fit('should fetch recipes on init', () => {
     recipesService.getRecipes.and.returnValue(of(mockRecipes));
 
     component.ngOnInit();
@@ -46,7 +50,7 @@ describe('RecipeListComponent', () => {
     expect(component.recipes).toEqual(mockRecipes);
   });
 
-  it('should handle error when fetching recipes', () => {
+  fit('should handle error when fetching recipes', () => {
     const consoleErrorSpy = spyOn(console, 'error');
     recipesService.getRecipes.and.returnValue(throwError(() => new Error('Error fetching recipes')));
 
@@ -56,7 +60,7 @@ describe('RecipeListComponent', () => {
     expect(consoleErrorSpy).toHaveBeenCalledWith(jasmine.any(Error));
   });
 
-  it('should delete a recipe and navigate to recipes', () => {
+  fit('should delete a recipe and navigate to recipes', () => {
     const navigateSpy = spyOn(router, 'navigate');
     recipesService.deleteRecipe.and.returnValue(of(mockRecipes[0]));
 
