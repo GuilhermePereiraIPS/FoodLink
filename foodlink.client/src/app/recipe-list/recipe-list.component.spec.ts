@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RecipeListComponent } from './recipe-list.component';
+
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RecipesService } from '../services/recipes.service';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -37,11 +38,11 @@ describe('RecipeListComponent', () => {
     router = TestBed.inject(Router);
   });
 
-  fit('should create', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  fit('should fetch recipes on init', () => {
+  it('should fetch recipes on init', () => {
     recipesService.getRecipes.and.returnValue(of(mockRecipes));
 
     component.ngOnInit();
@@ -50,7 +51,7 @@ describe('RecipeListComponent', () => {
     expect(component.recipes).toEqual(mockRecipes);
   });
 
-  fit('should handle error when fetching recipes', () => {
+  it('should handle error when fetching recipes', () => {
     const consoleErrorSpy = spyOn(console, 'error');
     recipesService.getRecipes.and.returnValue(throwError(() => new Error('Error fetching recipes')));
 
@@ -60,7 +61,7 @@ describe('RecipeListComponent', () => {
     expect(consoleErrorSpy).toHaveBeenCalledWith(jasmine.any(Error));
   });
 
-  fit('should delete a recipe and navigate to recipes', () => {
+  it('should delete a recipe and navigate to recipes', () => {
     const navigateSpy = spyOn(router, 'navigate');
     recipesService.deleteRecipe.and.returnValue(of(mockRecipes[0]));
 
