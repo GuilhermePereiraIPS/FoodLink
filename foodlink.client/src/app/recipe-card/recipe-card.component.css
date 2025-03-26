@@ -34,6 +34,7 @@
 #recipe-details {
   display: flex;
   flex-direction: column;
+  overflow: hidden;
   gap: 0px;
 }
 

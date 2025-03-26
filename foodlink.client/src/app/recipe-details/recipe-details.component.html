@@ -1,5 +1,5 @@
 <div class="recipe-detail-container" *ngIf="recipe">
-  <h1 class="recipe-title">{{ recipe.title }} by {{ user.username }}</h1>
+  <h1 class="recipe-title">{{ recipe.title }} by {{ user?.username || 'Unknown' }}</h1>
 
   <div class="recipe-user">
     <div class="user-info">
