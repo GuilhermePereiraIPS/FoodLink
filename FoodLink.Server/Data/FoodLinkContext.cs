@@ -17,7 +17,6 @@ namespace FoodLink.Server.Data
         }
 
         public DbSet<Recipe> Recipes { get; set; } = default!;
-
         public DbSet<Comment> Comments { get; set; }
         public DbSet<RecipeBook> RecipeBooks { get; set; }
 

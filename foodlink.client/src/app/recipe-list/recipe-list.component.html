@@ -30,13 +30,13 @@
   <!-- Grid de receitas -->
   <div class="recipe-grid" *ngIf="recipes">
     <div *ngFor="let recipe of recipes" class="recipe-card">
-      <a [routerLink]="['/recipes', recipe.id]">
-        <app-recipe-card [title]="recipe.title"
+        <app-recipe-card [id]="recipe.id"
+                         [title]="recipe.title"
                          [description]="recipe.description"
                          [date]="recipe.createDate | date:'short'"
                          [userId]="recipe.userId">
         </app-recipe-card>
-      </a>
+      
 
       <!-- Botões de ação -->
       <!--<div class="recipe-actions">

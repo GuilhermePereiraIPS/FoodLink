@@ -4,6 +4,7 @@ import { Router } from '@angular/router'
   ;
 import { Recipe, RecipesService } from '../services/recipes.service'
 import { User, AccountsService } from '../services/accounts.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-recipe-create',
@@ -13,13 +14,16 @@ import { User, AccountsService } from '../services/accounts.service';
   styleUrl: './recipe-create.component.css'
 })
 export class RecipeCreateComponent {
-
+  public user$: Observable<User | null>; 
   currentUser: User | null = null;
 
-  constructor(private recipesService: RecipesService, private router: Router, private accountsService: AccountsService) { }
+  constructor(private recipesService: RecipesService, private router: Router, private accountsService: AccountsService) {
+    this.user$ = this.accountsService.currentUser$;
+  }
 
   ngOnInit() {
-    this.accountsService.currentUser$.subscribe(
+
+    this.user$.subscribe(
       (user) => {
         this.currentUser = user;
       },
@@ -29,18 +33,20 @@ export class RecipeCreateComponent {
     );
   }
 
+
   onSubmit(form: NgForm) {
-    if (form.valid) {
-      const recipe = {
+    if (form.valid && this.currentUser?.id) {
+      const recipe : Recipe = {
         ...form.value, // Spread form values
-        createDate: new Date(), // Add createDate
-        userId: this.currentUser?.id // Add userId from currentUser
-      } as Recipe;
+        userId: this.currentUser.id 
+      };
 
       this.recipesService.createRecipe(recipe).subscribe(res => {
         console.log('Recipe created successfully!');
         this.router.navigateByUrl(`recipes/${res.id}`);
       });
+    } else {
+      console.warn('Form is invalid or user is not logged in.');
     }
   }
 }

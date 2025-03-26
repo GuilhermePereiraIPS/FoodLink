@@ -1,5 +1,5 @@
 <div class="recipe-detail-container" *ngIf="recipe">
-  <h1 class="recipe-title">{{ recipe.title }} by {{ user?.username || 'Unknown' }}</h1>
+  <h1 class="recipe-title">{{ recipe.title }}</h1>  <!--by {{ user?.username || 'Unknown' }}-->
 
   <div class="recipe-user">
     <div class="user-info">
@@ -21,6 +21,10 @@
         </select>
         <button class="confirm-add-btn" (click)="addToRecipeBook()">Add</button>
       </div>
+      <!-- Show Delete button if currentUser is the creator or an Admin -->
+      <button class="add-btn" *ngIf="canDeleteRecipe()" (click)="deleteRecipe()">Delete</button>
+      <!-- Show Edit button only if currentUser is the creator -->
+      <button class="add-btn" *ngIf="canEditRecipe()" (click)="editRecipe()">Edit</button>
     </div>
   </div>
   <hr />

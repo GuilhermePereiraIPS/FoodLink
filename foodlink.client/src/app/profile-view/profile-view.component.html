@@ -13,7 +13,15 @@
     <h4>Recipes</h4>
     <!--recipes-->
     <div class="recipes-container">
-      
+      <div *ngFor="let recipe of recipes" class="recipe-card">
+          <app-recipe-card
+                           [id]="recipe.id"
+                           [title]="recipe.title"
+                           [description]="recipe.description"
+                           [date]="recipe.createDate | date:'short'"
+                           [userId]="recipe.userId">
+          </app-recipe-card>
+      </div>
     </div>
   </div>
   <hr />

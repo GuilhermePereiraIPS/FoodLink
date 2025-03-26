@@ -1,21 +1,23 @@
-<div id="recipe-container">
-  <div id="recipe-image">
-    <img src="../../assets/background.png" />
-    <div id="recipe-short-description">
-      
+<a [routerLink]="['/recipes', id]">
+  <div id="recipe-container">
+    <div id="recipe-image">
+      <img src="../../assets/background.png" />
+      <div id="recipe-short-description">
+
+        <div>
+          <p id="recipe-description-text">{{ description }}</p>
+        </div>
+      </div>
+    </div>
+    <div id="recipe-details">
       <div>
-        <p id="recipe-description-text">{{ description }}</p>
+        <p id="recipe-title">{{ title }}</p>
+      </div>
+      <div>
+        <p>{{ username }}</p>
+        <p>•</p>
+        <p>{{ date }}</p>
       </div>
     </div>
   </div>
-  <div id="recipe-details">
-    <div>
-      <p id="recipe-title">{{ title }}</p>
-    </div>
-    <div>
-      <p>{{ username }}</p>
-      <p>•</p>
-      <p>{{ date }}</p>
-    </div>
-  </div>
-</div>
+</a>

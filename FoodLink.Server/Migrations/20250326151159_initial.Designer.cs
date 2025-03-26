@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FoodLink.Server.Migrations
 {
     [DbContext(typeof(FoodLinkContext))]
-    [Migration("20250325191935_initial")]
+    [Migration("20250326151159_initial")]
     partial class initial
     {
         /// <inheritdoc />
@@ -125,9 +125,6 @@ namespace FoodLink.Server.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<DateTime>("CreateDate")
                         .HasColumnType("datetime2");
 
@@ -146,11 +143,11 @@ namespace FoodLink.Server.Migrations
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ApplicationUserId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Recipes");
                 });
@@ -330,9 +327,13 @@ namespace FoodLink.Server.Migrations
 
             modelBuilder.Entity("FoodLink.Server.Models.Recipe", b =>
                 {
-                    b.HasOne("FoodLink.Server.Models.ApplicationUser", null)
+                    b.HasOne("FoodLink.Server.Models.ApplicationUser", "User")
                         .WithMany("Recipes")
-                        .HasForeignKey("ApplicationUserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

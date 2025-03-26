@@ -2,8 +2,6 @@ p{
     margin:0 !important
 }
 
-
-
 .main-content div h4, p {
   text-align: left;
 }
@@ -17,9 +15,9 @@ p{
   height: 18vh;
 }
 
-
 .recipes-container {
   display: flex;
   align-items: center;
+  gap: 25px;
 }
 

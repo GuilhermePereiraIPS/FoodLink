@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using FoodLink.Server.Data;
 using FoodLink.Server.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 
 namespace FoodLink.Server.Controllers
@@ -20,14 +21,16 @@ namespace FoodLink.Server.Controllers
     public class RecipesController: ControllerBase
     {
         private readonly FoodLinkContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RecipesController"/> class.
         /// </summary>
         /// <param name="context">The database context for accessing recipe data.</param>
-        public RecipesController(FoodLinkContext context)
+        public RecipesController(FoodLinkContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         /// <summary>
@@ -89,17 +92,37 @@ namespace FoodLink.Server.Controllers
         /// <summary>
         /// Creates a new recipe.
         /// </summary>
-        /// <param name="Recipe">The recipe object to be created.</param>
+        /// <param name="recipe">The recipe object to be created.</param>
         /// <returns>An <see cref="ActionResult{T}"/> containing the created recipe.</returns>
         /// <response code="201">Recipe created successfully, returns the created recipe.</response>
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize]
         [HttpPost]
-        public async Task<ActionResult<Recipe>> PostRecipe(Recipe Recipe)
+        public async Task<ActionResult<Recipe>> PostRecipe(Recipe recipe)
         {
-            _context.Recipes.Add(Recipe);
+            if (string.IsNullOrEmpty(recipe.UserId))
+            {
+                return BadRequest("UserId is required.");
+            }
+
+            var user = await _userManager.FindByIdAsync(recipe.UserId);
+            if (user == null)
+            {
+                return BadRequest("User not found.");
+            }
+
+            // if Recipes collection not created then create
+            if (user.Recipes == null)
+            {
+                user.Recipes = new List<Recipe>();
+            }
+            user.Recipes.Add(recipe);
+            recipe.CreateDate = DateTime.UtcNow; // CreateDate is set server-side
+
+            _context.Recipes.Add(recipe);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetRecipe", new { id = Recipe.Id }, Recipe);
+            return CreatedAtAction("GetRecipe", new { id = recipe.Id }, recipe);
         }
 
         /// <summary>

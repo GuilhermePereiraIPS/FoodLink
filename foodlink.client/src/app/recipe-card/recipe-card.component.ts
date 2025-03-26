@@ -7,6 +7,7 @@ import { AccountsService, User } from '../services/accounts.service';
   styleUrl: './recipe-card.component.css'
 })
 export class RecipeCardComponent implements OnInit {
+  @Input() id: number = 0
   @Input() title: string = '';
   @Input() userId: string = '';
   @Input() date: string | null = null;

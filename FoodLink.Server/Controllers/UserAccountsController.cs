@@ -9,6 +9,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Diagnostics;
+using Microsoft.EntityFrameworkCore;
+using FoodLink.Server.Data;
 
 namespace FoodLink.Server.Controllers
 {
@@ -18,6 +20,7 @@ namespace FoodLink.Server.Controllers
     [ApiController]
     public class UserAccountsController : ControllerBase
     {
+        private readonly FoodLinkContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IConfiguration _configuration;
 
@@ -26,10 +29,11 @@ namespace FoodLink.Server.Controllers
         /// </summary>
         /// <param name="userManager">The user manager for handling Identity operations.</param>
         /// <param name="configuration">The configuration for accessing app settings (e.g., JWT settings).</param>
-        public UserAccountsController(UserManager<ApplicationUser> userManager, IConfiguration configuration)
+        public UserAccountsController(UserManager<ApplicationUser> userManager, IConfiguration configuration, FoodLinkContext context)
         {
             _userManager = userManager;
             _configuration = configuration;
+            _context = context;
         }
 
         /// <summary>
@@ -293,7 +297,7 @@ namespace FoodLink.Server.Controllers
         /// <response code="400">User ID is required but not provided.</response>
         /// <response code="404">User not found.</response>
         [HttpGet("api/getUserRecipes")]
-        public async Task<IActionResult> GetUserRecipes([FromBody] string id)
+        public async Task<IActionResult> GetUserRecipes([FromQuery] string id)
         {
             if (string.IsNullOrEmpty(id))
             {
@@ -306,8 +310,9 @@ namespace FoodLink.Server.Controllers
                 return NotFound(new { message = "User not found." });
             }
 
-            var recipes = user.Recipes ?? new Recipe[0]; // Return empty array if Recipes is null
-
+            var recipes = await _context.Recipes
+                .Where(r => r.UserId == id)
+                .ToListAsync();
 
             return Ok(recipes);
         }

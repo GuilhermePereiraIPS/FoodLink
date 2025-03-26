@@ -2,6 +2,7 @@ import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http'
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, throwError, catchError, map, of } from 'rxjs';
 import {jwtDecode } from 'jwt-decode'
+import { Recipe } from './recipes.service';
 
 export interface User {
   id: string;
@@ -49,7 +50,15 @@ export class AccountsService {
     });
   }
 
-  
+  getUserRecipes(userId: string): Observable<Recipe[]> {
+    let params = new HttpParams().set('id', userId); // Match backend's [FromQuery] string id
+    return this.http.get<Recipe[]>('api/getUserRecipes', { params }).pipe(
+      catchError(error => {
+        console.error(`Error fetching recipes for user ${userId}:`, error);
+        return of([]); 
+      })
+    );
+  }
 
   getUserInfo(username?: string, id?: string): Observable<User> {
     let params = new HttpParams();

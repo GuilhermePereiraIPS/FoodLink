@@ -123,7 +123,6 @@ export class BooksComponent {
     );
   }
 
-  // 🔹 Cancelar Edição
   cancelEditing(): void {
     this.editingBookId = null;
     this.editedTitle = '';

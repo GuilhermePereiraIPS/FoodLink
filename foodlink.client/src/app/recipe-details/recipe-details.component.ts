@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router'; // Add Router for navigation
 import { Recipe, RecipesService } from '../services/recipes.service';
 import { CommentsService, Comment } from '../services/comments.service';
 import { AccountsService, User } from '../services/accounts.service';
-import { RecipeBooksService } from '../services/recipe-books.service';
+import { RecipeBook, RecipeBooksService } from '../services/recipe-books.service';
 import { RecipeToRBService, RecipeToRB } from '../services/recipe-to-rb.service';
 
 @Component({
@@ -16,13 +16,13 @@ export class RecipeDetailsComponent implements OnInit {
   public currentUser: User | null = null;
   public user: User | null = null;
   public id: number | undefined;
-  public recipe!: Recipe; // Non-null assertion, but we'll handle it safely
+  public recipe!: Recipe;
 
   public comments: Comment[] = [];
   public newComment: string = '';
   public userNames: Map<string, string> = new Map();
 
-  public userRecipeBooks: any[] = [];
+  public userRecipeBooks: RecipeBook[] = [];
   public selectedRecipeBook: number | null = null;
   public showRecipeBookList = false;
   public showModal = false;
@@ -30,6 +30,7 @@ export class RecipeDetailsComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router, // Add Router
     private recipeService: RecipesService,
     private commentsService: CommentsService,
     private accountsService: AccountsService,
@@ -42,6 +43,7 @@ export class RecipeDetailsComponent implements OnInit {
       (user) => {
         console.log('Current user updated:', user);
         this.currentUser = user;
+        if (this.currentUser) this.getUserRecipeBooks(this.currentUser.id);
       },
       (error) => {
         console.error('Error in current user subscription:', error);
@@ -61,7 +63,6 @@ export class RecipeDetailsComponent implements OnInit {
     this.recipeService.getRecipe(this.id).subscribe(
       (result) => {
         this.recipe = result;
-        // Call getUser only after recipe is set
         if (this.recipe.userId) {
           this.getUser(this.recipe.userId);
         } else {
@@ -82,7 +83,7 @@ export class RecipeDetailsComponent implements OnInit {
       },
       (error) => {
         console.error('Error fetching user:', error);
-        this.user = null; // Reset user on error
+        this.user = null;
       }
     );
   }
@@ -231,5 +232,40 @@ export class RecipeDetailsComponent implements OnInit {
       },
       error => console.log(error)
     );
+  }
+
+  // Permission checks
+  canDeleteRecipe(): boolean {
+    if (!this.currentUser) return false;
+    return this.currentUser &&
+      (this.currentUser.id === this.recipe.userId || this.currentUser.role === 'Admin');
+  }
+
+  canEditRecipe(): boolean {
+    if (!this.currentUser) return false;
+    return this.currentUser && this.currentUser.id === this.recipe.userId;
+  }
+
+  // Delete recipe action
+  deleteRecipe(): void {
+    if (!this.id || !this.canDeleteRecipe()) return;
+
+    if (confirm('Are you sure you want to delete this recipe?')) {
+      this.recipeService.deleteRecipe(this.id).subscribe(
+        () => {
+          console.log(`Recipe with ID ${this.id} deleted successfully.`);
+          this.router.navigate(['/recipes']); // Redirect after deletion
+        },
+        (error) => {
+          console.error('Error deleting recipe:', error);
+        }
+      );
+    }
+  }
+
+  // Edit recipe action (placeholder - redirect to edit page)
+  editRecipe(): void {
+    if (!this.id || !this.canEditRecipe()) return;
+    this.router.navigate(['/recipes/edit', this.id]); // Assuming an edit route exists
   }
 }

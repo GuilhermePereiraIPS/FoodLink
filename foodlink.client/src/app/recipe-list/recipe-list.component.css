@@ -131,10 +131,6 @@
   margin-top: 20px;
 }
 
-.recipe-grid a {
-  text-decoration: none
-}
-
 /* Informações da Receita */
 .recipe-info h3 {
   font-size: 18px;
