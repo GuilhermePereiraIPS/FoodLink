@@ -28,12 +28,12 @@ export class ProfileEditComponent implements OnInit {
     this.userForm = this.formBuilder.group({
       username: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      currentPassword: ['', Validators.required],
       password: ['', [
         Validators.minLength(6),
         Validators.pattern(/(?=.*[^a-zA-Z0-9 ])/)
       ]],
       confirmPassword: [''],
+      currentPassword: ['', Validators.required],
       aboutMe: ['']
     }, { validators: this.passwordMatchValidator });
 

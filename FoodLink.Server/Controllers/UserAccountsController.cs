@@ -242,6 +242,12 @@ namespace FoodLink.Server.Controllers
                 user.AboutMe = model.AboutMe;
             }
 
+            var passwordValid = await _userManager.CheckPasswordAsync(user, model.CurrentPassword);
+            if (!passwordValid)
+            {
+                return BadRequest(new { message = "Current password is incorrect." });
+            }
+
             // Password
             if (!string.IsNullOrEmpty(model.Password))
             {
@@ -252,14 +258,6 @@ namespace FoodLink.Server.Controllers
                     return BadRequest(passwordChangeResult.Errors);
                 }
             }
-            
-
-            var passwordValid = await _userManager.CheckPasswordAsync(user, model.CurrentPassword);
-            if (!passwordValid)
-            {
-                return BadRequest(new { message = "Current password is incorrect." });
-            }
-
 
             var updateResult = await _userManager.UpdateAsync(user);
 
