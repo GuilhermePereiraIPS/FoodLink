@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FoodLink.Server.Migrations
 {
     [DbContext(typeof(FoodLinkContext))]
-    [Migration("20250326151159_initial")]
+    [Migration("20250327104100_initial")]
     partial class initial
     {
         /// <inheritdoc />

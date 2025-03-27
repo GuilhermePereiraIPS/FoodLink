@@ -189,13 +189,10 @@
 
 .comment-item {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   background: #f8f8f8;
   padding: 10px;
-  border-radius: 5px;
   margin-bottom: 10px;
-  border: 1px solid #ddd;
 }
 
 .comment-text {
@@ -203,8 +200,8 @@
   flex-grow: 1;
 }
 
-.comment-date {
-  font-size: 12px;
+.comment-username {
+  font-size: 18px;
   color: #666;
 }
 
@@ -289,7 +286,7 @@
   border-radius: 5px;
   cursor: pointer;
   font-size: 14px;
-  margin-left: 15px; 
+  margin-left: auto;
 }
 
   .delete-btn:hover {

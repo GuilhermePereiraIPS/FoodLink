@@ -62,8 +62,12 @@
     
     <div class="comment-list" *ngIf="comments.length > 0">
       <div class="comment-item" *ngFor="let comment of comments">
-        <p class="comment-text">{{ comment.commentText }}</p>
-        <p class="comment-date">Posted by <strong>{{ getUserName(comment.userId) }}</strong></p>
+        <img src="assets/user-avatar.png" class="user-avatar user-avatar-small">
+        <div>
+          <p class="comment-username"><strong>{{ getUserName(comment.userId) }}</strong></p>
+          <p class="comment-text">{{ comment.commentText }}</p>
+        </div>
+        
         <button class="delete-btn" (click)="deleteComment(comment.id)">🗑</button>
       </div>
     </div>
