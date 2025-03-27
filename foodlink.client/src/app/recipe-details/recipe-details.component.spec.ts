@@ -77,6 +77,7 @@ describe('RecipeDetailsComponent', () => {
 
     fixture = TestBed.createComponent(RecipeDetailsComponent);
     component = fixture.componentInstance;
+
     fixture.detectChanges();
   });
 
@@ -100,6 +101,9 @@ describe('RecipeDetailsComponent', () => {
   });
 
   it('should fetch user recipe books', () => {
+    component.comments = [];
+    component.getComments();
+
     expect(component.userRecipeBooks.length).toBe(1);
     expect(component.userRecipeBooks[0].recipeBookTitle).toBe('Favorites');
   });

@@ -30,6 +30,9 @@ describe('RecipeCreateComponent', () => {
     fixture = TestBed.createComponent(RecipeCreateComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+
+    mockRecipesService.createRecipe.calls.reset();
+    mockRouter.navigateByUrl.calls.reset();
   });
 
   it('should create', () => {
