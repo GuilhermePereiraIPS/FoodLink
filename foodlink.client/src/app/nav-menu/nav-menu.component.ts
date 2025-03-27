@@ -24,4 +24,8 @@ export class NavMenuComponent {
   toggleMenu() {
     this.menuOpen = !this.menuOpen;
   }
+
+  logout() {
+
+  }
 }

@@ -15,7 +15,7 @@ import { RecipeToRBService, RecipeToRB } from '../services/recipe-to-rb.service'
 export class RecipeDetailsComponent implements OnInit {
   public currentUser: User | null = null;
   public user: User | null = null;
-  public id: number | undefined;
+  public recipeId: number | undefined;
   public recipe!: Recipe;
 
   public comments: Comment[] = [];
@@ -51,7 +51,7 @@ export class RecipeDetailsComponent implements OnInit {
     );
 
     this.route.params.subscribe(params => {
-      this.id = +params['id'];
+      this.recipeId = +params['id'];
       this.getRecipe();
       this.getComments();
     });
@@ -66,9 +66,9 @@ export class RecipeDetailsComponent implements OnInit {
   }
 
   getRecipe(): void {
-    if (this.id === undefined) return;
+    if (this.recipeId === undefined) return;
 
-    this.recipeService.getRecipe(this.id).subscribe(
+    this.recipeService.getRecipe(this.recipeId).subscribe(
       (result) => {
         this.recipe = result;
         if (this.recipe.userId) {
@@ -97,15 +97,15 @@ export class RecipeDetailsComponent implements OnInit {
   }
 
   getComments(): void {
-    if (this.id === undefined) return;
+    if (this.recipeId === undefined) return;
 
-    this.commentsService.getComments(this.id).subscribe(
+    this.commentsService.getComments(this.recipeId).subscribe(
       (comments) => {
         this.comments = comments;
         this.loadUserNames();
       },
       (error) => {
-        console.log(error);
+        console.log('Error fetching comments:', error.status, error.message, error);
       }
     );
   }
@@ -146,11 +146,11 @@ export class RecipeDetailsComponent implements OnInit {
   }
 
   addComment(): void {
-    if (!this.id || !this.newComment.trim() || !this.currentUser?.id) return;
+    if (!this.recipeId || !this.newComment.trim() || !this.currentUser?.id) return;
 
     const newCommentData: Comment = {
       commentText: this.newComment,
-      recipeId: this.id,
+      recipeId: this.recipeId,
       userId: this.currentUser.id
     };
 
@@ -190,6 +190,15 @@ export class RecipeDetailsComponent implements OnInit {
     this.commentToDelete = undefined;
   }
 
+  canDeleteComment(commentId: number | undefined): boolean {
+    if (!commentId) return false;
+
+    if (this.currentUser?.role === "Admin") return true;
+
+    const comment = this.comments.find(c => c.id === commentId);
+    return (comment?.userId === this.currentUser?.id || this.currentUser?.id == this.recipe.userId) || false; // if comment user id is same as current user, can delete
+  }
+
   deleteComment(commentId: number | undefined): void {
     if (!commentId) return;
 
@@ -223,13 +232,13 @@ export class RecipeDetailsComponent implements OnInit {
   }
 
   addToRecipeBook(): void {
-    if (!this.id || !this.selectedRecipeBook) {
+    if (!this.recipeId || !this.selectedRecipeBook) {
       alert('Please select a Recipe Book.');
       return;
     }
 
     const newAssociation: RecipeToRB = {
-      idRecipe: this.id,
+      idRecipe: this.recipeId,
       idRecipeBook: this.selectedRecipeBook
     };
 
@@ -256,12 +265,12 @@ export class RecipeDetailsComponent implements OnInit {
 
   // Delete recipe action
   deleteRecipe(): void {
-    if (!this.id || !this.canDeleteRecipe()) return;
+    if (!this.recipeId || !this.canDeleteRecipe()) return;
 
     if (confirm('Are you sure you want to delete this recipe?')) {
-      this.recipeService.deleteRecipe(this.id).subscribe(
+      this.recipeService.deleteRecipe(this.recipeId).subscribe(
         () => {
-          console.log(`Recipe with ID ${this.id} deleted successfully.`);
+          console.log(`Recipe with ID ${this.recipeId} deleted successfully.`);
           this.router.navigate(['/recipes']); // Redirect after deletion
         },
         (error) => {
@@ -273,7 +282,7 @@ export class RecipeDetailsComponent implements OnInit {
 
   // Edit recipe action (placeholder - redirect to edit page)
   editRecipe(): void {
-    if (!this.id || !this.canEditRecipe()) return;
-    this.router.navigate(['/recipes/edit', this.id]); // Assuming an edit route exists
+    if (!this.recipeId || !this.canEditRecipe()) return;
+    this.router.navigate(['/recipes/edit', this.recipeId]); // Assuming an edit route exists
   }
 }

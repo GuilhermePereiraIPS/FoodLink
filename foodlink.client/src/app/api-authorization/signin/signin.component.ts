@@ -29,8 +29,9 @@ export class SignInComponent implements OnInit {
   }
 
   public signIn(event: Event): void {
-    event.preventDefault(); // Previne o comportamento padrão do formulário
+    event.preventDefault();
     if (!this.loginForm.valid) {
+      alert('Por favor, preencha o e-mail e a palavra-passe corretamente.');
       return;
     }
 
@@ -40,12 +41,30 @@ export class SignInComponent implements OnInit {
     this.authService.signIn(email, password).subscribe({
       next: (response) => {
         if (response) {
-          this.router.navigateByUrl("/recipes"); // Redireciona para a página inicial
+          alert('Sessão iniciada com sucesso!');
+          this.router.navigateByUrl("/recipes");
         }
       },
-      error: () => {
-        this.authFailed = true; // Mostra mensagem de erro se falhar
+      error: (err) => {
+        this.authFailed = true;
+        console.error('Erro no login:', err);
+
+        const backendMessage = err?.error?.message;
+
+        let msg = 'Erro ao iniciar sessão. Tente novamente.';
+
+        if (backendMessage === 'Invalid email or password.') {
+          msg = 'Email ou palavra-passe incorretos.';
+        } else if (backendMessage) {
+          msg = backendMessage;
+        } else if (err.status === 400) {
+          msg = 'Dados inválidos. Verifique os campos.';
+        }
+
+        alert(msg);
       }
     });
   }
+
+
 }

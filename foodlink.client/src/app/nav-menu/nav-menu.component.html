@@ -16,6 +16,7 @@
       <li><a [routerLink]="['/recipes/create']">create</a></li>
       <li *ngIf="user$ | async as user"><a [routerLink]="['/profile', user.username]">profile</a></li>
       <li *ngIf="user$ | async as user"><a [routerLink]="['/profile/edit']">edit</a></li>
+      <li><a (click)="logout()">logout</a></li>
     </ul>
   </div>
 

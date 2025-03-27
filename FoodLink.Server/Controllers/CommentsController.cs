@@ -33,12 +33,25 @@ namespace FoodLink.Server.Controllers
         /// <param name="recipeId">The ID of the recipe to fetch comments for.</param>
         /// <returns>An <see cref="ActionResult{T}"/> containing a list of comments for the specified recipe.</returns>
         /// <response code="200">Comments retrieved successfully.</response>
-        [HttpGet("{recipeId}")]
+        [HttpGet("comments/{recipeId}")]
         public async Task<ActionResult<IEnumerable<Comment>>> GetComments(int recipeId)
         {
             return await _context.Comments
                 .Where(c => c.RecipeId == recipeId)
                 .ToListAsync();
+        }
+
+        [HttpGet("{commentId}")]
+        public async Task<ActionResult<Comment>> GetComment(int commentId)
+        {
+            var comment = await _context.Comments.FindAsync(commentId);
+
+            if (comment == null)
+            {
+                return NotFound();
+            }
+
+            return comment;
         }
 
         /// <summary>
