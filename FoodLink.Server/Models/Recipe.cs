@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace FoodLink.Server.Models
 {
@@ -6,6 +8,13 @@ namespace FoodLink.Server.Models
     {
         [Key]
         public int Id { get; set; }
+
+        [Required]
+        public string? UserId { get; set; }
+
+        [ForeignKey("UserId")]
+        [JsonIgnore]
+        public ApplicationUser? User { get; set; }
 
         [Required]
         public string? Title { get; set; }

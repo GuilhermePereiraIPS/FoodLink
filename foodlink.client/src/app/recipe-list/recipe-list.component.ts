@@ -62,9 +62,12 @@ export class RecipeListComponent implements OnInit{
     }
   }
 
-  toggleOrderRecent() {
-    this.orderRecent = !this.orderRecent;
-    console.log('order: ' + this.orderRecent);
-    this.getRecipesSearch();
+  setOrderRecent() {
+    this.orderRecent = true;
   }
+
+  setOrderRated() {
+    this.orderRecent = false;
+  }
+
 }

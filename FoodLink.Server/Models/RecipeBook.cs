@@ -5,7 +5,7 @@ namespace FoodLink.Server.Models
     public class RecipeBook
     {
         [Key]
-        public int IdRecipeBook { get; set; }
+        public int Id { get; set; }
 
         [Required]
         public string? RecipeBookTitle { get; set; }

@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface Comment {
-  idComment?: number;
+  id?: number;
   commentText: string;
   recipeId: number;
   userId: string;

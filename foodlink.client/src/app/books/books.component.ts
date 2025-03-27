@@ -93,7 +93,7 @@ export class BooksComponent {
 
   // Ativar modo de edição
   startEditing(book: RecipeBook): void {
-    this.editingBookId = book.idRecipeBook!;
+    this.editingBookId = book.id!;
     this.editedTitle = book.recipeBookTitle;
     this.activeMenu = null; // Fecha o menu ao entrar no modo de edição
   }
@@ -105,7 +105,7 @@ export class BooksComponent {
     if (!this.currentUserId) return;
 
     const updatedBook: RecipeBook = {
-      idRecipeBook: this.editingBookId,
+      id: this.editingBookId,
       recipeBookTitle: this.editedTitle,
       userId: this.currentUserId
     };
@@ -123,7 +123,6 @@ export class BooksComponent {
     );
   }
 
-  // 🔹 Cancelar Edição
   cancelEditing(): void {
     this.editingBookId = null;
     this.editedTitle = '';
@@ -135,7 +134,7 @@ export class BooksComponent {
 
     this.recipeBooksService.deleteRecipeBook(bookId).subscribe(
       () => {
-        this.recipeBooks = this.recipeBooks.filter(book => book.idRecipeBook !== bookId);
+        this.recipeBooks = this.recipeBooks.filter(book => book.id !== bookId);
       },
       (error) => {
         console.error('Error deleting Recipe Book:', error);
