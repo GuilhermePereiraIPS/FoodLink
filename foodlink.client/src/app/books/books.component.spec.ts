@@ -39,6 +39,12 @@ describe('BooksComponent', () => {
     fixture = TestBed.createComponent(BooksComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+    component.getUserId();
+
+    mockRecipeBooksService.createRecipeBook.calls.reset();
+    mockRecipeBooksService.getUserRecipeBooks.calls.reset();
+    mockRecipeBooksService.updateRecipeBook.calls.reset();
+    mockRecipeBooksService.deleteRecipeBook.calls.reset();
   });
 
   it('should create the component', () => {
@@ -46,6 +52,10 @@ describe('BooksComponent', () => {
   });
 
   it('should load user recipe books after fetching user', () => {
+    fixture = TestBed.createComponent(BooksComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+
     expect(mockAccountsService.getCurrentUser).toHaveBeenCalled();
     expect(mockRecipeBooksService.getUserRecipeBooks).toHaveBeenCalledWith('user1');
     expect(component.recipeBooks.length).toBe(2);
