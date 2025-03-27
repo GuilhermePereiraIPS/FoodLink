@@ -189,15 +189,21 @@
 
 .comment-item {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   background: #f8f8f8;
   padding: 10px;
   margin-bottom: 10px;
 }
 
+.comment-body{
+    width: 60vw;
+}
+
+
 .comment-text {
-  font-size: 14px;
-  flex-grow: 1;
+  overflow-wrap: break-word; 
+  word-wrap: break-word;
+  white-space: normal; 
 }
 
 .comment-username {
@@ -249,10 +255,6 @@
   .confirm-add-btn:hover {
     background: #3bb133;
   }
-
-
-
-
 
 
 /* Responsividade */
