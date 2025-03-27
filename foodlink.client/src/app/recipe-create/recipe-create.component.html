@@ -7,26 +7,26 @@
     <div class="recipe-fields">
       <!-- Título -->
       <div class="form-group">
-        <label for="title">Title (required)</label>
+        <label for="title">Title <a style="color:red">(required)</a></label>
         <input type="text" id="title" name="title" ngModel required minlength="2" placeholder="Enter title">
       </div>
 
       <!-- Descrição -->
       <div class="form-group">
-        <label for="description">Description</label>
-        <textarea id="description" name="description" ngModel placeholder="Tell users about your recipe"></textarea>
+        <label for="description">Description <a style="color:red">(required)</a></label>
+        <textarea id="description" name="description" ngModel required placeholder="Tell users about your recipe"></textarea>
       </div>
 
       <!-- Ingredientes -->
       <div class="form-group">
-        <label for="ingredients">Ingredients</label>
-        <textarea id="ingredients" name="ingredients" ngModel placeholder="Ingredients"></textarea>
+        <label for="ingredients">Ingredients <a style="color:red">(required)</a></label>
+        <textarea id="ingredients" name="ingredients" ngModel required placeholder="Ingredients"></textarea>
       </div>
 
       <!-- Instruções -->
       <div class="form-group">
-        <label for="instructions">Preparation</label>
-        <textarea id="instructions" name="instructions" ngModel placeholder="Steps on how to make your recipe"></textarea>
+        <label for="instructions">Preparation <a style="color:red">(required)</a></label>
+        <textarea id="instructions" name="instructions" ngModel required placeholder="Steps on how to make your recipe"></textarea>
       </div>
 
       <!-- Botão de Upload -->
