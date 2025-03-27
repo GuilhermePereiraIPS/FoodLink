@@ -17,7 +17,6 @@ namespace FoodLink.Server.Data
         }
 
         public DbSet<Recipe> Recipes { get; set; } = default!;
-
         public DbSet<Comment> Comments { get; set; }
         public DbSet<RecipeBook> RecipeBooks { get; set; }
 
@@ -28,9 +27,9 @@ namespace FoodLink.Server.Data
             base.OnModelCreating(modelBuilder);
 
             // Configuração inicial (seeding) de dados 
-            modelBuilder.Entity<Recipe>().HasData(
-                new Recipe { Id = 1, Title = "bruh"}
-            );
+            //modelBuilder.Entity<Recipe>().HasData(
+            //    new Recipe { Id = 1, Title = "Amondegas", UserId="213fd-awd12-daww21-23fg"}
+            //);
         }
     }
 }

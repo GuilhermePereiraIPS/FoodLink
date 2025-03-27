@@ -14,8 +14,8 @@
     <ul class="nav-links-right">
       <li><a [routerLink]="['/books']">books</a></li>
       <li><a [routerLink]="['/recipes/create']">create</a></li>
-      <li *ngIf="user"><a [routerLink]="['/profile', user.username]">profile</a></li>
-      <li *ngIf="user"><a [routerLink]="['/profile/edit']">edit</a></li>
+      <li *ngIf="user$ | async as user"><a [routerLink]="['/profile', user.username]">profile</a></li>
+      <li *ngIf="user$ | async as user"><a [routerLink]="['/profile/edit']">edit</a></li>
     </ul>
   </div>
 

@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 
 export interface Recipe {
   id: number;
+  userId: string;
   title: string;
   description: string;
   ingredients: string;

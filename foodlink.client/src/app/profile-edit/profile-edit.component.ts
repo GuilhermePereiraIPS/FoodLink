@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, AbstractControl, ValidatorFn } from '@angular/forms';
 import { AccountsService, User, UserUpdate } from '../services/accounts.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-profile-edit',
@@ -11,12 +12,16 @@ import { AccountsService, User, UserUpdate } from '../services/accounts.service'
 export class ProfileEditComponent implements OnInit {
   public userForm!: FormGroup;
   private userData!: User;
+  public user$: Observable<User | null>; 
 
   constructor(
     private accountsService: AccountsService,
     private router: Router,
     private formBuilder: FormBuilder,
-  ) { }
+
+  ) {
+    this.user$ = this.accountsService.currentUser$;
+  }
 
   ngOnInit(): void {
 
@@ -32,17 +37,19 @@ export class ProfileEditComponent implements OnInit {
       aboutMe: ['']
     }, { validators: this.passwordMatchValidator });
 
-    this.accountsService.getCurrentUser(true).subscribe(
-      (userData) => {
-        this.userForm.patchValue({
-          username: userData.username,
-          email: userData.email,
-          aboutMe: userData.aboutMe
-        });
-        this.userData = userData;
+    this.user$.subscribe(
+      (user) => {
+        if (user) {
+          this.userData = user;
+          this.userForm.patchValue({
+            username: this.userData.username,
+            email: this.userData.email,
+            aboutMe: this.userData.aboutMe
+          });
+        }
       },
       (error) => {
-        console.error('Error loading user data:', error);
+        console.error('Error fetching user data:', error);
       }
     );
   }
