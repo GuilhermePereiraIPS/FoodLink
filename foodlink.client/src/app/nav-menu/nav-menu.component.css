@@ -37,6 +37,7 @@ nav {
       font-size: 16px;
       font-weight: 450;
       transition: 0.3s;
+      cursor: pointer;
     }
 
       nav ul a:hover {

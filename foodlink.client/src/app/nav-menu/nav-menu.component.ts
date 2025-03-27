@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AccountsService, User } from '../services/accounts.service';
 import { Observable } from 'rxjs';
+import { AuthorizeService } from '../api-authorization/authorize.service'; 
+
 
 @Component({
   selector: 'app-nav-menu',
@@ -13,7 +15,7 @@ export class NavMenuComponent {
   menuOpen: boolean = false;
   public user$: Observable<User | null>; 
 
-  constructor(private router: Router, private accountsService: AccountsService) {
+  constructor(private router: Router, private accountsService: AccountsService, private authorizeService: AuthorizeService) {
     this.user$ = this.accountsService.currentUser$;
   }
 
@@ -26,6 +28,7 @@ export class NavMenuComponent {
   }
 
   logout() {
-
+    this.authorizeService.signOut();
+    this.router.navigate(['/signin']); // Redirect after logout
   }
 }
