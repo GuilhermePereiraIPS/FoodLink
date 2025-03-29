@@ -23,17 +23,20 @@ namespace FoodLink.Server.Controllers
         private readonly FoodLinkContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IConfiguration _configuration;
+        private readonly IEmailService _emailService;
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UserAccountsController"/> class.
         /// </summary>
         /// <param name="userManager">The user manager for handling Identity operations.</param>
         /// <param name="configuration">The configuration for accessing app settings (e.g., JWT settings).</param>
-        public UserAccountsController(UserManager<ApplicationUser> userManager, IConfiguration configuration, FoodLinkContext context)
+        public UserAccountsController(UserManager<ApplicationUser> userManager, IConfiguration configuration, FoodLinkContext context, IEmailService emailService)
         {
             _userManager = userManager;
             _configuration = configuration;
             _context = context;
+            _emailService = emailService;
         }
 
         /// <summary>
@@ -51,6 +54,14 @@ namespace FoodLink.Server.Controllers
                 return BadRequest(new { message = "User already exists." });
 
             var user = new ApplicationUser { UserName = model.Name, Email = model.Email};
+
+            // Generate activation token
+            var token = Guid.NewGuid().ToString();
+            user.ActivationToken = token;
+            await _userManager.UpdateAsync(user);
+
+            // Send activation email
+            await _emailService.SendActivationEmailAsync(user.Email, token);
 
             var result = await _userManager.CreateAsync(user, model.Password);
             await _userManager.AddToRoleAsync(user, "Member");
@@ -74,6 +85,8 @@ namespace FoodLink.Server.Controllers
         [HttpPost("api/signin")]
         public async Task<IActionResult> Login([FromBody] UserLoginModel model)
         {
+
+
             var user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null)
             {
@@ -84,7 +97,10 @@ namespace FoodLink.Server.Controllers
             {
                 return BadRequest(new { message = "Invalid email or password." });
             }
-           
+
+            if (!user.EmailConfirmed)
+                return Unauthorized(new { message = "Account not activated" });
+
             // Gerar os claims do utilizador
             var claims = new List<Claim>
             {
@@ -313,6 +329,22 @@ namespace FoodLink.Server.Controllers
                 .ToListAsync();
 
             return Ok(recipes);
+        }
+
+        [HttpGet("activate")]
+        public async Task<IActionResult> ActivateAccount(string token)
+        {
+            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.ActivationToken == token);
+            if (user == null)
+                return BadRequest(new { message = "Invalid or expired token." });
+
+            user.EmailConfirmed = true;
+            user.ActivationToken = null; // Clear token after use
+            var result = await _userManager.UpdateAsync(user);
+            if (!result.Succeeded)
+                return BadRequest(result.Errors);
+
+            return Ok(new { message = "Account activated successfully." });
         }
 
 

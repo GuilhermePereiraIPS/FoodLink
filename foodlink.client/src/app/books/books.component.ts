@@ -11,10 +11,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class BooksComponent {
   public newRecipeBookTitle: string = '';
   public currentUserId: string | undefined;
-  public showForm: boolean = false;
+  public showModalBackdrop: boolean = false;
   public recipeBooks: RecipeBook[] = [];
   public errorMessage: string = '';
   public activeMenu: number | null = null;
+
+  public isEditing: boolean = false;
   public editingBookId: number | null = null;
   public editedTitle: string = '';
   public showDeleteModal: boolean = false;
@@ -58,10 +60,6 @@ export class BooksComponent {
   // Criar um Recipe Book
   createRecipeBook(): void {
 
-    if (!this.newRecipeBookTitle.trim()) {
-      this.errorMessage = '⚠️ Please enter a name for the Recipe Book!'; 
-      return;
-    }
     if (!this.currentUserId) return;
 
     const newBook: RecipeBook = {
@@ -73,7 +71,7 @@ export class BooksComponent {
       (createdBook) => {
         console.log('Recipe Book Created:', createdBook);
         this.newRecipeBookTitle = '';
-        this.showForm = false;
+        this.showModalBackdrop = false;
         this.errorMessage = '';
         this.loadRecipeBooks();
       },
@@ -82,25 +80,26 @@ export class BooksComponent {
   }
 
   // Alternar a exibição do formulário
-  toggleForm(): void {
-    this.showForm = !this.showForm;
+  toggleModalBackdrop(): void {
+    this.showModalBackdrop = !this.showModalBackdrop;
     this.errorMessage = '';
   }
 
-  toggleMenu(bookId: number): void {
-    this.activeMenu = this.activeMenu === bookId ? null : bookId;
+  startAdding(): void {
+    this.isEditing = false;
+    this.toggleModalBackdrop();
   }
 
-  // Ativar modo de edição
   startEditing(book: RecipeBook): void {
     this.editingBookId = book.id!;
+    this.isEditing = true;
     this.editedTitle = book.recipeBookTitle;
-    this.activeMenu = null; // Fecha o menu ao entrar no modo de edição
+
+    this.toggleModalBackdrop();
   }
 
-  // 🔹 Salvar Edição
   saveEditedBook(): void {
-    if (!this.editedTitle.trim() || this.editingBookId === null) return;
+    if (this.editingBookId === null) return;
 
     if (!this.currentUserId) return;
 
@@ -111,22 +110,22 @@ export class BooksComponent {
     };
 
     this.recipeBooksService.updateRecipeBook(updatedBook).subscribe(
-      () => {
+      (editedBook) => {
+        console.log('Recipe Book Edited:', editedBook);
+        this.editingBookId = null; 
+        
         // Atualizar a lista após a edição
         this.loadRecipeBooks();
-        this.editingBookId = null; // Sai do modo de edição
-        this.editedTitle = ''; // Limpa o campo de edição
+        this.toggleModalBackdrop();
       },
       (error) => {
         console.error('Error updating Recipe Book:', error);
       }
     );
+
+    
   }
 
-  cancelEditing(): void {
-    this.editingBookId = null;
-    this.editedTitle = '';
-  }
 
 
   deleteBook(bookId: number): void {

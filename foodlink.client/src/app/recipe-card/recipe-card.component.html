@@ -14,7 +14,8 @@
         <p id="recipe-title">{{ title }}</p>
       </div>
       <div>
-        <p>{{ username }}</p>
+        <p *ngIf="username">{{ username }}</p>
+        <p *ngIf="!username">loading..</p>
         <p>•</p>
         <p>{{ date }}</p>
       </div>

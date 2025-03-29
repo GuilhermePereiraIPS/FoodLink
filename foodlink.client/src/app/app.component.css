@@ -22,16 +22,19 @@ html, body {
   scroll-behavior: smooth;
   background-color: #F7F9F7;
 }
-
-.page-container {
+body {
   display: flex;
   flex-direction: column;
-  min-height: 90vh; /* Ensure it fills viewport */
+  min-height: 100vh; 
 }
 
-.content-wrap {
-  flex: 1 0 auto; /* Grow to fill space, don’t shrink below content */
+.page-container {
+  flex: 1;
+  flex-direction: column;
+  padding: 3vh 15%;
 }
+
+
 
 app-footer {
   flex-shrink: 0; /* Prevent footer from shrinking */

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FoodLink.Server.Migrations
 {
     [DbContext(typeof(FoodLinkContext))]
-    [Migration("20250327184429_initial")]
+    [Migration("20250328201254_initial")]
     partial class initial
     {
         /// <inheritdoc />
@@ -35,6 +35,9 @@ namespace FoodLink.Server.Migrations
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
+
+                    b.Property<string>("ActivationToken")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -160,6 +163,9 @@ namespace FoodLink.Server.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("RecipeBookTitle")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -169,6 +175,8 @@ namespace FoodLink.Server.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
 
                     b.ToTable("RecipeBooks");
                 });
@@ -336,6 +344,13 @@ namespace FoodLink.Server.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("FoodLink.Server.Models.RecipeBook", b =>
+                {
+                    b.HasOne("FoodLink.Server.Models.ApplicationUser", null)
+                        .WithMany("RecipeBooks")
+                        .HasForeignKey("ApplicationUserId");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -389,6 +404,8 @@ namespace FoodLink.Server.Migrations
 
             modelBuilder.Entity("FoodLink.Server.Models.ApplicationUser", b =>
                 {
+                    b.Navigation("RecipeBooks");
+
                     b.Navigation("Recipes");
                 });
 #pragma warning restore 612, 618

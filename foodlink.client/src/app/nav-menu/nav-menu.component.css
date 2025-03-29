@@ -5,28 +5,94 @@
   box-sizing: border-box;
 }
 
+h3 {
+  position: absolute;
+  top: 60%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+hr{
+    margin-top: 10px;
+}
+
+a{
+    cursor:pointer;
+    text-decoration:none;
+}
+
+.user-menu {
+  z-index: 9999;
+  position: absolute;
+  padding:1em 4em 1em 1em;
+  background-color: white;
+  border: 2px solid #082109;
+  border-radius: 3px;
+  user-select: none;
+}
+
+  .user-menu div{
+      display:flex;
+      align-items:baseline;
+      justify-content:flex-start;
+      gap: 5px;
+      margin-top: 10px;
+  }
+
+    .user-menu div:first-child {
+      align-items: flex-start; 
+    }
+
+  .user-menu p, i{
+      font-size: 1.5rem;
+  }
+
+  .user-menu .close-menu {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    cursor:pointer;
+  }
+
+.user-avatar {
+  object-fit: cover;
+  border-radius: 50%;
+  border: 1px solid #082109;
+  width: 70px;
+  background-color: #D9D9D9;
+  cursor:pointer;
+}
+
+.user-avatar-small{
+    width:50px;
+}
 
 nav {
   position: sticky;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   background-color: #45D345;
   width: 100%;
-  height: 15vh;
-  padding: 0 25px 50px 25px;
+  height: 13vh;
+  padding: 0 25px 25px 25px;
   z-index: 1000;
   box-shadow: 0 3px 5px 0 gray;
 }
 
-  nav div:not(.hamburger) {
+
+  nav > div {
     display: flex;
     align-items: center;
+    justify-content: space-between;
+  }
+
+  nav .nav-items {
+    display: flex;
+    align-items:center;
+    gap:12px;
   }
 
   nav ul {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     list-style: none;
     gap: 2vh;
   }
@@ -38,6 +104,10 @@ nav {
       font-weight: 450;
       transition: 0.3s;
       cursor: pointer;
+    }
+
+    nav ul a:active {
+      text-decoration: underline;
     }
 
       nav ul a:hover {

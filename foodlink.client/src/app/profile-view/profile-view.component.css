@@ -16,8 +16,6 @@ p{
 }
 
 .recipes-container {
-  display: flex;
-  align-items: center;
-  gap: 25px;
+  margin-top: 10px;
 }
 

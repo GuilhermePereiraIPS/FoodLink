@@ -13,13 +13,13 @@ import { RecipeBookDetailsComponent } from './recipe-book-details/recipe-book-de
 
 const routes: Routes = [
 
-  { path: 'profile/edit', component: ProfileEditComponent, canActivate: [AuthGuard] },
-  { path: 'profile/:username', component: ProfileViewComponent, canActivate: [AuthGuard] },
-  { path: 'recipes', component: RecipeListComponent, canActivate: [AuthGuard] },
-  { path: 'recipes/create', component: RecipeCreateComponent, canActivate: [AuthGuard] },
+  { path: 'profile/edit', component: ProfileEditComponent, canActivate: [AuthGuard], data: { sectionTitle: 'Edit Profile' } },
+  { path: 'profile/:username', component: ProfileViewComponent, canActivate: [AuthGuard], data: { sectionTitle: 'User Profile' } },
+  { path: 'recipes', component: RecipeListComponent, canActivate: [AuthGuard], data: { sectionTitle: 'Find a great recipe' } },
+  { path: 'recipes/create', component: RecipeCreateComponent, canActivate: [AuthGuard], data: { sectionTitle: 'Create a Recipe' } },
   { path: 'recipes/:id', component: RecipeDetailsComponent, canActivate: [AuthGuard] },
-  { path: 'recipes/edit/:id', component: RecipeEditComponent, canActivate: [AuthGuard] },
-  { path: 'books', component: BooksComponent, canActivate: [AuthGuard] },
+  { path: 'recipes/edit/:id', component: RecipeEditComponent, canActivate: [AuthGuard], data: { sectionTitle: 'Edit Recipe' } },
+  { path: 'books', component: BooksComponent, canActivate: [AuthGuard], data: { sectionTitle: 'Browse recipe books' } },
   { path: 'recipe-books/:id', component: RecipeBookDetailsComponent, canActivate: [AuthGuard] },
 
 

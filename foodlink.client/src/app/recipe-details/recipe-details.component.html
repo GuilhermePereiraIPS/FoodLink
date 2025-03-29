@@ -12,8 +12,8 @@
     </div>
 
     <div class="recipe-actions">
-      <button class="recipe-action-btn" (click)="scrollToRecipe($event)" >Skip to recipe</button>
-      <button class="recipe-action-btn recipe-action-small-btn" (click)="toggleRecipeBookList()">Add to book</button>
+      <button class="action-btn" (click)="scrollToRecipe($event)" >Skip to recipe</button>
+      <button class="action-btn action-small-btn" (click)="toggleRecipeBookList()">Add to book</button>
       <div *ngIf="showRecipeBookList" class="recipe-book-dropdown">
         <label for="selectBook">Select a Recipe Book:</label>
         <select [(ngModel)]="selectedRecipeBook" id="selectBook">
@@ -24,9 +24,9 @@
         <button class="confirm-add-btn" (click)="addToRecipeBook()">Add</button>
       </div>
       <!-- Show Delete button if currentUser is the creator or an Admin -->
-      <button class="recipe-action-btn recipe-action-small-btn" *ngIf="canDeleteRecipe()" (click)="deleteRecipe()">Delete</button>
+      <button class="action-btn action-small-btn" *ngIf="canDeleteRecipe()" (click)="deleteRecipe()">Delete</button>
       <!-- Show Edit button only if currentUser is the creator -->
-      <button class="recipe-action-btn recipe-action-small-btn" *ngIf="canEditRecipe()" (click)="editRecipe()">Edit</button>
+      <button class="action-btn action-small-btn" *ngIf="canEditRecipe()" (click)="editRecipe()">Edit</button>
     </div>
 
   </div>

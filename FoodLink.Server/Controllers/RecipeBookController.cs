@@ -2,6 +2,7 @@
 using FoodLink.Server.Data;
 using FoodLink.Server.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,14 +16,16 @@ namespace FoodLink.Server.Controllers
     public class RecipeBookController : ControllerBase
     {
         private readonly FoodLinkContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RecipeBookController"/> class.
         /// </summary>
         /// <param name="context">The database context for accessing recipe book data.</param>
-        public RecipeBookController(FoodLinkContext context)
+        public RecipeBookController(FoodLinkContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         /// <summary>
@@ -39,8 +42,16 @@ namespace FoodLink.Server.Controllers
                 return BadRequest(new { message = "User ID is required." });
 
             var recipeBooks = await _context.RecipeBooks
-                .Where(rb => rb.UserId == userId)
-                .ToListAsync();
+        .Where(rb => rb.UserId == userId)
+        .Select(rb => new
+        {
+            rb.Id,
+            rb.RecipeBookTitle,
+            rb.UserId,
+            RecipeAmount = _context.RecipeToRB
+                .Count(rt => rt.IdRecipeBook == rb.Id) // count recipes in book
+        })
+        .ToListAsync();
 
             return Ok(recipeBooks);
         }
@@ -60,16 +71,24 @@ namespace FoodLink.Server.Controllers
             if (string.IsNullOrEmpty(recipeBook.RecipeBookTitle))
                 return BadRequest(new { message = "Recipe Book title is required." });
 
-            //var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value; 
-            /*if (userId == null)
-                return Unauthorized(new { message = "User not authenticated." });*/
+            
 
-            // Garante que o Recipe Book pertence ao usuário autenticado
-            //recipeBook.UserId = userId;
+            var user = await _userManager.FindByIdAsync(recipeBook.UserId);
+            if (user == null)
+            {
+                return BadRequest("User not found.");
+            }
+
+            // if Recipes collection not created then create
+            if (user.RecipeBooks == null)
+            {
+                user.RecipeBooks = new List<RecipeBook>();
+            }
+            user.RecipeBooks.Add(recipeBook);
 
             _context.RecipeBooks.Add(recipeBook);
-            await _context.SaveChangesAsync();
 
+            await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetUserRecipeBooks), new { id = recipeBook.Id }, recipeBook);
         }
 

@@ -64,6 +64,9 @@ namespace FoodLink.Server.Controllers
 
             if (orderRecent) 
                 recipes = recipes.OrderByDescending(recipe => recipe.CreateDate);
+            else
+                recipes = recipes.OrderBy(recipe => recipe.CreateDate);
+
 
             return await recipes.ToListAsync();
         }

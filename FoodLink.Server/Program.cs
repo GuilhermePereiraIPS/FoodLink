@@ -7,6 +7,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using FoodLink.Server.Models;
+using Mailjet.Client;
+using Microsoft.Extensions.Options;
+using FoodLink.Server.Controllers;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +20,14 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<FoodLinkContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("FoodLinkContext") ?? throw new InvalidOperationException("Connection string 'FoodLinkContext' not found.")));
 
+builder.Services.Configure<MailjetSettings>(builder.Configuration.GetSection("Mailjet"));
+builder.Services.AddSingleton<IMailjetClient>(sp =>
+{
+    var settings = sp.GetRequiredService<IOptions<MailjetSettings>>().Value;
+    return new MailjetClient(settings.ApiKey, settings.SecretKey);
+});
+
+builder.Services.AddScoped<IEmailService, MailjetEmailService>();
 
 // Add Identity  
 builder.Services
@@ -152,3 +163,12 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.Run();
+
+
+public class MailjetSettings
+{
+    public string ApiKey { get; set; }
+    public string SecretKey { get; set; }
+    public string SenderEmail { get; set; }
+    public string SenderName { get; set; }
+}

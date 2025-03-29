@@ -40,7 +40,7 @@ a {
   overflow: hidden;
   gap: 0px;
   width: 200px; /*same width as image*/
-  height: 100px;
+  max-height: 6vh;
 }
 
   #recipe-details div {
