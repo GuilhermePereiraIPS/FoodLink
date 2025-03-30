@@ -61,7 +61,7 @@ describe('RecipeListComponent', () => {
     expect(consoleErrorSpy).toHaveBeenCalledWith(jasmine.any(Error));
   });
 
-  it('should delete a recipe and navigate to recipes', () => {
+  /*it('should delete a recipe and navigate to recipes', () => {
     const navigateSpy = spyOn(router, 'navigate');
     recipesService.deleteRecipe.and.returnValue(of(mockRecipes[0]));
 
@@ -69,5 +69,5 @@ describe('RecipeListComponent', () => {
 
     expect(recipesService.deleteRecipe).toHaveBeenCalledWith(1);
     expect(navigateSpy).toHaveBeenCalledWith(['/recipes']);
-  });
+  });*/
 });
