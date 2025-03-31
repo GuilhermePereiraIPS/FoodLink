@@ -1,9 +1,11 @@
 <div [ngStyle]="{'display': menuOpen === true ? 'block' : 'none'}" class="user-menu">
 
 
-  <div>
-    <img #userAvatar (click)="toggleMenu($event)" class="user-avatar user-avatar-small" src="assets/user-avatar.png" />
-    <h4 *ngIf="user$ | async as user">{{user.username}}</h4>
+  <div *ngIf="user$ | async as user">
+    <a [routerLink]="['/profile', user.username]">
+      <img #userAvatar class="user-avatar user-avatar-small" src="assets/user-avatar.png" />
+    </a>
+    <h4>{{user.username}}</h4>
   </div>
   <hr />
   <div *ngIf="user$ | async as user">
