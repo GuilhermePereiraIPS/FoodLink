@@ -7,7 +7,10 @@
                        [title]="recipe.title"
                        [description]="recipe.description"
                        [date]="recipe.createDate | date:'shortDate'"
-                       [userId]="recipe.userId">
+                       [userId]="recipe.userId"
+                       [recipeBookId]="recipeBookId"
+                       [onClickRemove]="removeRecipe"
+                       >
       </app-recipe-card>
     </div>
     
