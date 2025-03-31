@@ -331,6 +331,27 @@ namespace FoodLink.Server.Controllers
             return Ok(recipes);
         }
 
+        [HttpGet("api/getUserRecipeBooks")]
+        public async Task<IActionResult> GetUserRecipeBooks([FromQuery] string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                return BadRequest(new { message = "User ID is required." });
+            }
+
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                return NotFound(new { message = "User not found." });
+            }
+
+            var recipeBooks = await _context.RecipeBooks
+                .Where(r => r.UserId == id)
+                .ToListAsync();
+
+            return Ok(recipeBooks);
+        }
+
         [HttpGet("activate")]
         public async Task<IActionResult> ActivateAccount(string token)
         {

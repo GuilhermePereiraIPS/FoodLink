@@ -36,7 +36,8 @@ export class ProfileViewComponent {
       (result) => {
         console.log('User fetched:', result);
         this.user = result;
-        this.getUserRecipes(this.user.id)
+        this.getUserItems(this.user.id)
+
       },
       (error) => {
         console.error(error);
@@ -44,7 +45,7 @@ export class ProfileViewComponent {
     );
   }
 
-  getUserRecipes(userId: string) {
+  getUserItems(userId: string) {
     console.log("yoo")
     this.accountsService.getUserRecipes(userId).subscribe(
 
@@ -55,6 +56,18 @@ export class ProfileViewComponent {
       (error) => {
         console.error('Error fetching recipes:', error);
         this.recipes = []; 
+      }
+    );
+
+    this.accountsService.getUserRecipeBooks(userId).subscribe(
+
+      (recipeBooks) => {
+        console.log('Recipes fetched for user:', recipeBooks);
+        this.recipeBooks = recipeBooks;
+      },
+      (error) => {
+        console.error('Error fetching recipes:', error);
+        this.recipeBooks = [];
       }
     );
   }

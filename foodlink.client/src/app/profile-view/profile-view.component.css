@@ -19,3 +19,82 @@ p{
   margin-top: 10px;
 }
 
+
+.book-image {
+  position: relative;
+  width: 250px;
+  height: 250px;
+}
+
+  .book-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .book-image div {
+    color: white;
+    text-align: center;
+  }
+
+  .book-image .delete-recipe {
+    position: absolute;
+    top: 2px;
+    right: 16px;
+    cursor: pointer;
+    font-size: 40px;
+    filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.8));
+    user-select: none
+  }
+
+  .book-image .edit-recipe {
+    position: absolute;
+    top: 2px;
+    left: 16px;
+    cursor: pointer;
+    font-size: 40px;
+    filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.8));
+    user-select: none
+  }
+
+  .book-image .recipe-count {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    position: absolute;
+    bottom: 8px;
+    right: 16px;
+    background-color: #010A01;
+    border: 1px solid white;
+    padding: 4px 4px;
+    user-select: none;
+    pointer-events: none
+  }
+
+
+.book-details {
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: column;
+  overflow: hidden;
+  gap: 0px;
+  width: 200px; /*same width as image*/
+  max-height: 6vh;
+}
+
+.book-details {
+  display: flex;
+  gap: 5px;
+}
+
+.book-details {
+  color: #8C948C;
+  margin: 0;
+  text-align: left;
+}
+
+.book-title {
+  color: #082109 !important;
+  font-size: 20px;
+  font-weight: 500;
+}
