@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable, throwError, catchError, map, of } from 'rx
 import {jwtDecode } from 'jwt-decode'
 import { Recipe } from './recipes.service';
 import { RecipeBook } from './recipe-books.service';
+import { AuthorizeService } from '../api-authorization/authorize.service'; 
 
 export interface User {
   id: string;
@@ -29,8 +30,12 @@ export class AccountsService {
   private currentUserSubject: BehaviorSubject<User | null> = new BehaviorSubject<User | null>(null);
   public currentUser$: Observable<User | null> = this.currentUserSubject.asObservable();
 
-  constructor(private http: HttpClient) {
-    this.loadCurrentUser();
+  constructor(private http: HttpClient, private authorizeService: AuthorizeService) {
+    this.authorizeService.onStateChanged().subscribe(isAuthenticated => {
+      if (this.authorizeService.isSignedIn()) {
+        this.loadCurrentUser();
+      } 
+    });
   }
 
   private loadCurrentUser(): void {

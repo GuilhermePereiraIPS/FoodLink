@@ -62,7 +62,8 @@ namespace FoodLink.Server.Controllers
             await _userManager.UpdateAsync(user);
 
             // Send activation email
-            await _emailService.SendActivationEmailAsync(user.Email, token);
+            //await _emailService.SendActivationEmailAsync(user.Email, token);
+            user.EmailConfirmed = true;
 
             var result = await _userManager.CreateAsync(user, model.Password);
             await _userManager.AddToRoleAsync(user, "Member");

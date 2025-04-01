@@ -4,9 +4,13 @@
   <div class="recipe-header">
 
     <div class="user-info">
-      <img src="assets/user-avatar.png" class="user-avatar">
+      <a *ngIf="user" [routerLink]="['/profile', user.username]">
+        <img src="assets/user-avatar.png" class="user-avatar">
+      </a>
       <div>
-        <p *ngIf="user">By {{ user.username }}</p>
+        <a *ngIf="user" [routerLink]="['/profile', user.username]">
+          <p *ngIf="user">By {{ user.username }}</p>
+        </a>
         <p class="recipe-date">Created: {{ recipe.createDate | date:'longDate' }}</p>
       </div>
     </div>
@@ -64,7 +68,9 @@
       <div class="comment-item" *ngFor="let comment of comments">
         <img src="assets/user-avatar.png" class="user-avatar user-avatar-small">
         <div class="comment-body">
-          <p class="comment-username"><strong>{{ getUserName(comment.userId) }}</strong></p>
+          <a [routerLink]="['/profile', getUserName(comment.userId)]">
+            <p class="comment-username"><strong>{{ getUserName(comment.userId) }}</strong></p>
+          </a>
           <p class="comment-text">{{ comment.commentText }}</p>
         </div>
         

@@ -2,9 +2,9 @@ a {
   text-decoration: none !important
 }
 
-a p:hover{
+  a p:hover:not(#recipe-description-text) {
     text-decoration: underline
-}
+  }
 
 #recipe-image {
   position: relative;
