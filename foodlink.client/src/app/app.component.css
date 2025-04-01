@@ -35,8 +35,6 @@ body {
   padding: 3vh 15%;
 }
 
-
-
 app-footer {
   flex-shrink: 0; /* Prevent footer from shrinking */
   margin-top: 0 !important; /* Remove the 200px gap */
