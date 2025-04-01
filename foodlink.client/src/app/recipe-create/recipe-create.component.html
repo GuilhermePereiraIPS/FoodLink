@@ -2,40 +2,40 @@
   <div class="recipe-container">
 
     <!-- Esquerda: Campos de Entrada -->
-    <div class="recipe-fields">
-      <!-- Título -->
-      <div class="form-group">
-        <label for="title">Title (required)</label>
-        <input type="text" id="title" name="title" ngModel required minlength="2" placeholder="Enter title">
-      </div>
-
-      <!-- Descrição -->
-      <div class="form-group">
-        <label for="description">Description</label>
-        <textarea id="description" name="description" ngModel placeholder="Tell users about your recipe"></textarea>
-      </div>
-
-      <!-- Ingredientes -->
-      <div class="form-group">
-        <label for="ingredients">Ingredients</label>
-        <textarea id="ingredients" name="ingredients" ngModel placeholder="Ingredients"></textarea>
-      </div>
-
-      <!-- Instruções -->
-      <div class="form-group">
-        <label for="instructions">Preparation</label>
-        <textarea id="instructions" name="instructions" ngModel placeholder="Steps on how to make your recipe"></textarea>
-      </div>
-
-      <!-- Botão de Upload -->
-      <button type="submit" class="upload-btn" [disabled]="!recipeForm.form.valid">Upload Recipe</button>
+  
+    <!-- Título -->
+    <div class="form-group">
+      <label for="title">Title (required)</label>
+      <input type="text" id="title" name="title" ngModel required minlength="2" placeholder="Enter title">
     </div>
+
+    <!-- Descrição -->
+    <div class="form-group">
+      <label for="description">Description</label>
+      <textarea id="description" name="description" ngModel placeholder="Tell users about your recipe"></textarea>
+    </div>
+
+    <!-- Ingredientes -->
+    <div class="form-group">
+      <label for="ingredients">Ingredients</label>
+      <textarea id="ingredients" name="ingredients" ngModel placeholder="Ingredients"></textarea>
+    </div>
+
+    <!-- Instruções -->
+    <div class="form-group">
+      <label for="instructions">Preparation</label>
+      <textarea id="instructions" name="instructions" ngModel placeholder="Steps on how to make your recipe"></textarea>
+    </div>
+
+    <!-- Botão de Upload -->
+    <button type="submit" class="upload-btn" [disabled]="!recipeForm.form.valid">Upload Recipe</button>
+  
 
     <!-- Direita: Imagem e Tags -->
-    <div class="recipe-sidebar">
-      <img src="assets/default-recipe.jpg" alt="Recipe Image" class="recipe-image">
+    <!--<div class="recipe-sidebar">
+    <img src="assets/default-recipe.jpg" alt="Recipe Image" class="recipe-image">
 
-    </div>
+  </div>-->
 
   </div>
 </form>

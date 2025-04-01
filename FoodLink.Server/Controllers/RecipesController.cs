@@ -9,6 +9,7 @@ using FoodLink.Server.Data;
 using FoodLink.Server.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using FoodLink.Server.Services;
 
 
 namespace FoodLink.Server.Controllers
@@ -22,15 +23,17 @@ namespace FoodLink.Server.Controllers
     {
         private readonly FoodLinkContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IPixabayService _pixabayService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RecipesController"/> class.
         /// </summary>
         /// <param name="context">The database context for accessing recipe data.</param>
-        public RecipesController(FoodLinkContext context, UserManager<ApplicationUser> userManager)
+        public RecipesController(FoodLinkContext context, UserManager<ApplicationUser> userManager, IPixabayService pixabayService)
         {
             _context = context;
             _userManager = userManager;
+            _pixabayService = pixabayService;
         }
 
         /// <summary>
@@ -121,6 +124,9 @@ namespace FoodLink.Server.Controllers
             }
             user.Recipes.Add(recipe);
             recipe.CreateDate = DateTime.UtcNow; // CreateDate is set server-side
+
+            // Fetch image URL from Pixabay based on recipe title
+            recipe.ImageUrl = await _pixabayService.GetImageUrlAsync(recipe.Title);
 
             _context.Recipes.Add(recipe);
             await _context.SaveChangesAsync();

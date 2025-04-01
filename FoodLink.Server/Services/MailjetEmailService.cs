@@ -1,4 +1,4 @@
-﻿namespace FoodLink.Server.Controllers
+﻿namespace FoodLink.Server.Services
 {
     using Mailjet.Client;
     using Mailjet.Client.Resources;

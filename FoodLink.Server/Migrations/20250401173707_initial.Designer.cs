@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FoodLink.Server.Migrations
 {
     [DbContext(typeof(FoodLinkContext))]
-    [Migration("20250328201254_initial")]
+    [Migration("20250401173707_initial")]
     partial class initial
     {
         /// <inheritdoc />
@@ -134,6 +134,9 @@ namespace FoodLink.Server.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Ingredients")
                         .HasColumnType("nvarchar(max)");
 
@@ -165,6 +168,9 @@ namespace FoodLink.Server.Migrations
 
                     b.Property<string>("ApplicationUserId")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("RecipeAmount")
+                        .HasColumnType("int");
 
                     b.Property<string>("RecipeBookTitle")
                         .IsRequired()

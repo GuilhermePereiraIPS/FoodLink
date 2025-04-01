@@ -3,7 +3,8 @@
   <a [routerLink]="['/recipes', id]">
     <div id="recipe-image">
 
-      <img src="../../assets/background.png" />
+      <img *ngIf="!imageUrl" src="../../assets/background.png" />
+      <img *ngIf="imageUrl" [src]="imageUrl"/>
 
       <div id="recipe-short-description">
 
@@ -24,7 +25,9 @@
       </a>
     </div>
     <div>
-      <p *ngIf="username">{{ username }}</p>
+      <a *ngIf="username" [routerLink]="['/profile', username]">
+        <p>{{ username }}</p>
+      </a>
       <p *ngIf="!username">loading..</p>
       <p>•</p>
       <p>{{ date }}</p>

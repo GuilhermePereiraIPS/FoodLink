@@ -14,7 +14,7 @@ export class RecipeCardComponent implements OnInit {
   @Input() title: string = '';
   @Input() userId: string = '';
   @Input() date: string | null = null;
-  @Input() imageUrl: string = '';
+  @Input() imageUrl: string | undefined = undefined ;
   @Input() description: string = '';
   @Input() recipeBookId!: number;
   @Input() onClickRemove!: (recipeBookId: number, recipeId: number) => void;

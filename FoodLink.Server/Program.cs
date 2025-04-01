@@ -9,7 +9,7 @@ using Microsoft.OpenApi.Models;
 using FoodLink.Server.Models;
 using Mailjet.Client;
 using Microsoft.Extensions.Options;
-using FoodLink.Server.Controllers;
+using FoodLink.Server.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,8 +26,10 @@ builder.Services.AddSingleton<IMailjetClient>(sp =>
     var settings = sp.GetRequiredService<IOptions<MailjetSettings>>().Value;
     return new MailjetClient(settings.ApiKey, settings.SecretKey);
 });
-
 builder.Services.AddScoped<IEmailService, MailjetEmailService>();
+
+builder.Services.Configure<PixabaySettings>(builder.Configuration.GetSection("Pixabay"));
+builder.Services.AddHttpClient<IPixabayService, PixabayService>();
 
 // Add Identity  
 builder.Services

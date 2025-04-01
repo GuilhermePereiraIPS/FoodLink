@@ -10,6 +10,7 @@ export interface Recipe {
   ingredients: string;
   instructions: string;
   createDate: Date;
+  imageUrl?: string; 
 }
 
 @Injectable({

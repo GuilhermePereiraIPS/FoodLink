@@ -17,10 +17,10 @@ const routes: Routes = [
   { path: 'profile/:username', component: ProfileViewComponent, canActivate: [AuthGuard], data: { sectionTitle: 'User Profile' } },
   { path: 'recipes', component: RecipeListComponent, canActivate: [AuthGuard], data: { sectionTitle: 'Find a great recipe' } },
   { path: 'recipes/create', component: RecipeCreateComponent, canActivate: [AuthGuard], data: { sectionTitle: 'Create a Recipe' } },
-  { path: 'recipes/:id', component: RecipeDetailsComponent, canActivate: [AuthGuard] },
+  { path: 'recipes/:id', component: RecipeDetailsComponent, canActivate: [AuthGuard], data: { sectionTitle: 'Recipe' } },
   { path: 'recipes/edit/:id', component: RecipeEditComponent, canActivate: [AuthGuard], data: { sectionTitle: 'Edit Recipe' } },
   { path: 'books', component: BooksComponent, canActivate: [AuthGuard], data: { sectionTitle: 'Browse recipe books' } },
-  { path: 'recipe-books/:id', component: RecipeBookDetailsComponent, canActivate: [AuthGuard] },
+  { path: 'recipe-books/:id', component: RecipeBookDetailsComponent, canActivate: [AuthGuard], data: { sectionTitle: 'View Recipe Book' } },
 
 
   { path: '', redirectTo: 'signin', pathMatch: 'full' },

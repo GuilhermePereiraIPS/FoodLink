@@ -2,6 +2,10 @@ a {
   text-decoration: none !important
 }
 
+a p:hover{
+    text-decoration: underline
+}
+
 #recipe-image {
   position: relative;
   width: 200px;
