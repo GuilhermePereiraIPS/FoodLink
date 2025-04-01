@@ -90,13 +90,6 @@ describe('RecipeDetailsComponent', () => {
   });
 
   it('should load comments', () => {
-    fixture = TestBed.createComponent(RecipeDetailsComponent);
-    component = fixture.componentInstance;
-
-    component.comments = [];
-
-    fixture.detectChanges();
-
     expect(component.comments.length).toBe(1);
     expect(component.comments[0].commentText).toBe('Great!');
   });
@@ -108,7 +101,8 @@ describe('RecipeDetailsComponent', () => {
   });
 
   it('should fetch user recipe books', () => {
-    
+    component.comments = [];
+    component.getComments();
 
     expect(component.userRecipeBooks.length).toBe(1);
     expect(component.userRecipeBooks[0].recipeBookTitle).toBe('Favorites');
