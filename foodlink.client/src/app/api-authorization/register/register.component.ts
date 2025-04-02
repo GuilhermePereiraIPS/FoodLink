@@ -50,7 +50,7 @@ export class RegisterComponent implements OnInit {
 
   public register(): void {
     if (!this.registerForm.valid) {
-      alert('Por favor, preencha todos os campos corretamente.');
+      alert('Please fill al fields correctly');
       return;
     }
 
@@ -65,10 +65,10 @@ export class RegisterComponent implements OnInit {
       next: (success: boolean) => {
         if (success) {
           this.registerSucceeded = true;
-          alert('Conta criada com sucesso!');
+          alert('Account created sucessfully!');
         } else {
           this.registerFailed = true;
-          alert('Erro ao criar conta. Verifique os dados.');
+          alert('Error creating account. Verify fields.');
         }
       },
       error: (error) => {
@@ -77,19 +77,7 @@ export class RegisterComponent implements OnInit {
 
         const backendMessage = error?.error?.message;
 
-        let msg = 'Erro ao criar conta. Tente novamente.';
-
-        if (backendMessage === 'User already exists.') {
-          msg = 'Esta conta já existe.';
-        } else if (backendMessage === 'Invalid email or password.') {
-          msg = 'Email ou palavra-passe incorretos.';
-        } else if (backendMessage) {
-          msg = backendMessage;
-        } else if (error.status === 400) {
-          msg = 'Dados inválidos. Verifique os campos.';
-        }
-
-        alert(msg);
+        alert(backendMessage);
 
         
       }

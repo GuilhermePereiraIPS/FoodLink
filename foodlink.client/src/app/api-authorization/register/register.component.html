@@ -12,11 +12,11 @@
 
         <div class="form-group">
           <label for="name">Username</label>
-          <input type="text" id="name" formControlName="name" placeholder="use" />
+          <input type="text" id="name" formControlName="name" placeholder="Enter username" />
         </div>
 
         <div class="form-group">
-          <label for="password">Password <span class="validation-error" *ngIf="registerForm.get('password')?.invalid">Must have at least 8 characters!</span></label>
+          <label for="password">Password <span class="validation-error" *ngIf="registerForm.get('password')?.invalid">Must have at least 6 characters and a special character!</span></label>
           <input type="password" id="password" formControlName="password" placeholder="Enter Password" />
         </div>
 
@@ -37,7 +37,8 @@
 <div *ngIf="registerSucceeded">
   <h4>Registration succeeded</h4>
   <div>
-    Please <a href="signin">sign in</a> to continue.
+    Please check your email to activate your account.<br />
+    <a href="signin">sign in</a>
   </div>
 </div>
 

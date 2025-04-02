@@ -12,6 +12,7 @@ using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using FoodLink.Server.Data;
 using FoodLink.Server.Services;
+using Resend;
 
 namespace FoodLink.Server.Controllers
 {
@@ -24,7 +25,7 @@ namespace FoodLink.Server.Controllers
         private readonly FoodLinkContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IConfiguration _configuration;
-        private readonly IEmailService _emailService;
+        private readonly IResend _resend;
 
 
         /// <summary>
@@ -32,12 +33,12 @@ namespace FoodLink.Server.Controllers
         /// </summary>
         /// <param name="userManager">The user manager for handling Identity operations.</param>
         /// <param name="configuration">The configuration for accessing app settings (e.g., JWT settings).</param>
-        public UserAccountsController(UserManager<ApplicationUser> userManager, IConfiguration configuration, FoodLinkContext context, IEmailService emailService)
+        public UserAccountsController(UserManager<ApplicationUser> userManager, IConfiguration configuration, FoodLinkContext context, IResend resend)
         {
             _userManager = userManager;
             _configuration = configuration;
             _context = context;
-            _emailService = emailService;
+            _resend = resend;
         }
 
         /// <summary>
@@ -50,26 +51,44 @@ namespace FoodLink.Server.Controllers
         [HttpPost("api/signup")]
         public async Task<IActionResult> Register([FromBody] UserRegistrationModel model)
         {
-            var userExists = await _userManager.FindByEmailAsync(model.Email);
-            if (userExists != null)
-                return BadRequest(new { message = "User already exists." });
+            var emailExists = await _userManager.FindByEmailAsync(model.Email);
+            if (emailExists != null)
+                return BadRequest(new { message = "Email is already in use." });
+            var usernameExists = await _userManager.FindByNameAsync(model.Name);
+            if (usernameExists != null)
+                return BadRequest(new { message = "Username is already in use." });
 
-            var user = new ApplicationUser { UserName = model.Name, Email = model.Email};
+
+            var user = new ApplicationUser { UserName = model.Name, Email = model.Email };
 
             // Generate activation token
             var token = Guid.NewGuid().ToString();
             user.ActivationToken = token;
             await _userManager.UpdateAsync(user);
 
-            // Send activation email
-            //await _emailService.SendActivationEmailAsync(user.Email, token);
-            user.EmailConfirmed = true;
 
             var result = await _userManager.CreateAsync(user, model.Password);
             await _userManager.AddToRoleAsync(user, "Member");
 
+            // Send activation email
+            var baseUrl = _configuration["AppSettings:BaseUrl"] ?? "https://foodlinks.azurewebsites.net";
+            var activationLink = $"{baseUrl}/activate?token={token}";
+            var message = new EmailMessage();
+            message.From = "onboarding@resend.dev";
+            message.To.Add(user.Email);
+            message.Subject = "Verification email";
+            message.TextBody = "uyo";
+            message.HtmlBody = $"<p>Hello {user.UserName},</p>" +
+                   "<p>Please activate your account by clicking the button below:</p>" +
+                   $"<a href=\"{activationLink}\" style=\"background-color: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;\">Activate Account</a>" +
+                   "<p>If you did not register, please ignore this email.</p>" +
+                   "<p>Best regards,<br>The FoodLink Team</p>";
+
+            var resp = await _resend.EmailSendAsync(message);
+            user.EmailConfirmed = false;
+
             if (result.Succeeded)
-            {                
+            {
                 return Ok(new { message = "User registered successfully." });
             }
 
@@ -233,7 +252,7 @@ namespace FoodLink.Server.Controllers
 
             ApplicationUser user = await GetCurrentUser();
             if (user == null) return NotFound(new { message = "User not found." });
-            
+
             // Username
             if (!string.IsNullOrEmpty(model.Username) && model.Username != user.UserName)
             {
@@ -354,12 +373,12 @@ namespace FoodLink.Server.Controllers
             return Ok(recipeBooks);
         }
 
-        [HttpGet("activate")]
-        public async Task<IActionResult> ActivateAccount(string token)
+        [HttpGet("api/activate")]
+        public async Task<IActionResult> ActivateAccount([FromQuery] string token)
         {
             var user = await _userManager.Users.FirstOrDefaultAsync(u => u.ActivationToken == token);
             if (user == null)
-                return BadRequest(new { message = "Invalid or expired token." });
+                return BadRequest(new { message = $"Invalid or expired token. {token}" });
 
             user.EmailConfirmed = true;
             user.ActivationToken = null; // Clear token after use
@@ -439,6 +458,6 @@ namespace FoodLink.Server.Controllers
         public string Name { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
-        
+
     }
 }

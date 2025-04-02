@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { ActivatedRouteSnapshot, RouterModule, Routes } from '@angular/router';
 import { RecipeListComponent } from './recipe-list/recipe-list.component'
 import { RecipeDetailsComponent } from './recipe-details/recipe-details.component'
 import { RecipeCreateComponent } from './recipe-create/recipe-create.component'
@@ -9,6 +9,7 @@ import { ProfileViewComponent } from './profile-view/profile-view.component';
 import { BooksComponent } from './books/books.component';
 import { AuthGuard } from './api-authorization/authorize.guard';
 import { RecipeBookDetailsComponent } from './recipe-book-details/recipe-book-details.component';
+import { ActivateComponent } from './activate/activate.component';
 
 
 const routes: Routes = [
@@ -24,6 +25,12 @@ const routes: Routes = [
 
 
   { path: '', redirectTo: 'signin', pathMatch: 'full' },
+
+  // Handle /activate by forcing a full page reload to hit the API
+  {
+    path: 'activate',
+    component: ActivateComponent,
+  },
   //{ path: '**', redirectTo: 'signin' },
   //{ path: '/recipes', component: RecipeListComponent}
 ];

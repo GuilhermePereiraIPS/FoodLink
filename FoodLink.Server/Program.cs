@@ -1,16 +1,12 @@
 using FoodLink.Server.Data;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using FoodLink.Server.Models;
-using Mailjet.Client;
-using Microsoft.Extensions.Options;
 using FoodLink.Server.Services;
-
+using Resend;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,14 +16,16 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<FoodLinkContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("FoodLinkContext") ?? throw new InvalidOperationException("Connection string 'FoodLinkContext' not found.")));
 
-builder.Services.Configure<MailjetSettings>(builder.Configuration.GetSection("Mailjet"));
-builder.Services.AddSingleton<IMailjetClient>(sp =>
+//Add resend
+builder.Services.AddOptions();
+builder.Services.AddHttpClient<ResendClient>();
+builder.Services.Configure<ResendClientOptions>(o =>
 {
-    var settings = sp.GetRequiredService<IOptions<MailjetSettings>>().Value;
-    return new MailjetClient(settings.ApiKey, settings.SecretKey);
+    o.ApiToken = "re_D3FYcTyj_M7YzJuhZbLksvz2WZGVb12SE";
 });
-builder.Services.AddScoped<IEmailService, MailjetEmailService>();
+builder.Services.AddTransient<IResend, ResendClient>();
 
+//Add pixabay
 builder.Services.Configure<PixabaySettings>(builder.Configuration.GetSection("Pixabay"));
 builder.Services.AddHttpClient<IPixabayService, PixabayService>();
 
@@ -118,6 +116,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseAuthentication();
+app.UseRouting();
+
 app.UseAuthorization();
 
 app.MapControllers();
@@ -126,8 +126,7 @@ app
     .MapGroup("/api")
     .MapIdentityApi<ApplicationUser>();
 
-app.MapFallbackToFile("/index.html");
-
+app.MapFallbackToFile("index.html");
 
 using (var scope = app.Services.CreateScope())
 {
@@ -166,11 +165,3 @@ using (var scope = app.Services.CreateScope())
 
 app.Run();
 
-
-public class MailjetSettings
-{
-    public string ApiKey { get; set; }
-    public string SecretKey { get; set; }
-    public string SenderEmail { get; set; }
-    public string SenderName { get; set; }
-}

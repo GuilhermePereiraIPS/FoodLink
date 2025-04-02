@@ -20,7 +20,6 @@ export class AppComponent implements OnInit {
 
 
   ngOnInit() {
-
     // Redirect if on root
     if (this.router.url == '/') {
       if (this.authService.isSignedIn()) {
@@ -30,7 +29,7 @@ export class AppComponent implements OnInit {
 
     this.router.events.subscribe(() => {
       // Esconder o footer quando a página for /signin
-      this.showNavElements = !['/signin', '/register'].includes(this.router.url);
+      this.showNavElements = !['/signin', '/register', '/activate'].includes(this.router.url);
     });
   }
 }

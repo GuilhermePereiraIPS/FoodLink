@@ -22,6 +22,7 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="microsoft.visualstudio.web.codegeneration.design" Version="8.0.0" />
+		<PackageReference Include="Resend" Version="0.1.0" />
 		<PackageReference Include="swashbuckle.aspnetcore" Version="6.5.0" />
 	</ItemGroup>
 
