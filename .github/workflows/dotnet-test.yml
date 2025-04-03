@@ -20,7 +20,7 @@ jobs:
         dotnet-version: '8.0.x'
 
     - name: Restaurar dependências
-      run: dotnet restore
+      run: dotnet restore FoodLink.Server/FoodLink.Server.csproj
 
     - name: Correr testes
       run: dotnet test FoodLink.tests/FoodLink.tests.csproj --logger "trx"
