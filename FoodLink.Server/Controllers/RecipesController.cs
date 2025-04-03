@@ -99,9 +99,9 @@ namespace FoodLink.Server.Controllers
         /// Creates a new recipe.
         /// </summary>
         /// <param name="recipe">The recipe object to be created.</param>
-        /// <returns>An <see cref="ActionResult{T}"/> containing the created recipe.</returns>
+        /// <returns>An <see cref="ActionResult{T}"/> containing the created recipe or an error message.</returns>
         /// <response code="201">Recipe created successfully, returns the created recipe.</response>
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /// <response code="400">User ID is required or user not found.</response>
         [Authorize]
         [HttpPost]
         public async Task<ActionResult<Recipe>> PostRecipe(Recipe recipe)
@@ -201,7 +201,7 @@ namespace FoodLink.Server.Controllers
         /// Checks if a recipe exists by its ID.
         /// </summary>
         /// <param name="id">The ID of the recipe to check.</param>
-        /// <returns>A boolean indicating whether the recipe exists.</returns>
+        /// <returns>A boolean indicating whether the recipe exists: true if it does, false otherwise.</returns>
         private bool RecipeExists(int id)
         {
             return _context.Recipes.Any(e => e.Id == id);

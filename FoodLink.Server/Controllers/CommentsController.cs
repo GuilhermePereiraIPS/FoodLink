@@ -41,6 +41,13 @@ namespace FoodLink.Server.Controllers
                 .ToListAsync();
         }
 
+        /// <summary>
+        /// Retrieves a specific comment by its ID.
+        /// </summary>
+        /// <param name="commentId">The ID of the comment to retrieve.</param>
+        /// <returns>An <see cref="ActionResult{T}"/> containing the requested comment or a not found response.</returns>
+        /// <response code="200">Comment retrieved successfully.</response>
+        /// <response code="404">Comment not found.</response>
         [HttpGet("{commentId}")]
         public async Task<ActionResult<Comment>> GetComment(int commentId)
         {

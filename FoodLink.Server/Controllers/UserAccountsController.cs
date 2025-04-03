@@ -66,26 +66,25 @@ namespace FoodLink.Server.Controllers
             user.ActivationToken = token;
             await _userManager.UpdateAsync(user);
 
+            // Send activation email
+            //var baseUrl = _configuration["AppSettings:BaseUrl"] ?? "https://foodlinks.azurewebsites.net";
+            //var activationLink = $"{baseUrl}/activate?token={token}";
+            //var message = new EmailMessage();
+            //message.From = "onboarding@resend.dev";
+            //message.To.Add(model.Email);
+            //message.Subject = "Verification email";
+            //message.HtmlBody = $"<p>Hello {model.Name},</p>" +
+            //       "<p>Please activate your account by clicking the button below:</p>" +
+            //       $"<a href=\"{activationLink}\" style=\"background-color: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;\">Activate Account</a>" +
+            //       "<p>If you did not register, please ignore this email.</p>" +
+            //       "<p>Best regards,<br>The FoodLink Team</p>";
+
+            //var resp = await _resend.EmailSendAsync(message);
+            //user.EmailConfirmed = false;
+            user.EmailConfirmed = true;
 
             var result = await _userManager.CreateAsync(user, model.Password);
             await _userManager.AddToRoleAsync(user, "Member");
-
-            // Send activation email
-            var baseUrl = _configuration["AppSettings:BaseUrl"] ?? "https://foodlinks.azurewebsites.net";
-            var activationLink = $"{baseUrl}/activate?token={token}";
-            var message = new EmailMessage();
-            message.From = "onboarding@resend.dev";
-            message.To.Add(user.Email);
-            message.Subject = "Verification email";
-            message.TextBody = "uyo";
-            message.HtmlBody = $"<p>Hello {user.UserName},</p>" +
-                   "<p>Please activate your account by clicking the button below:</p>" +
-                   $"<a href=\"{activationLink}\" style=\"background-color: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;\">Activate Account</a>" +
-                   "<p>If you did not register, please ignore this email.</p>" +
-                   "<p>Best regards,<br>The FoodLink Team</p>";
-
-            var resp = await _resend.EmailSendAsync(message);
-            user.EmailConfirmed = false;
 
             if (result.Succeeded)
             {
@@ -309,7 +308,7 @@ namespace FoodLink.Server.Controllers
         /// <summary>
         /// Retrieves a list of all users with their IDs and usernames.
         /// </summary>
-        /// <returns>An <see cref="IActionResult"/> containing a list of user objects.</returns>
+        /// <returns>An <see cref="IActionResult"/> containing a list of user objects with ID and username.</returns>
         /// <response code="200">List of users retrieved successfully.</response>
         [HttpGet("api/users")]
         public IActionResult GetAllUsers()
@@ -327,8 +326,8 @@ namespace FoodLink.Server.Controllers
         /// Retrieves all recipes associated with a user by their ID.
         /// </summary>
         /// <param name="id">The ID of the user whose recipes are to be retrieved.</param>
-        /// <returns>An <see cref="IActionResult"/> containing the list of recipes or an error.</returns>
-        /// <response code="200">Recipes retrieved successfully.</response>
+        /// <returns>An <see cref="IActionResult"/> containing the list of recipes or an error message.</returns>
+        /// <response code="200">Recipes retrieved successfully, returns the list of recipes.</response>
         /// <response code="400">User ID is required but not provided.</response>
         /// <response code="404">User not found.</response>
         [HttpGet("api/getUserRecipes")]
@@ -352,6 +351,14 @@ namespace FoodLink.Server.Controllers
             return Ok(recipes);
         }
 
+        /// <summary>
+        /// Retrieves all recipe books associated with a user by their ID.
+        /// </summary>
+        /// <param name="id">The ID of the user whose recipe books are to be retrieved.</param>
+        /// <returns>An <see cref="IActionResult"/> containing the list of recipe books or an error message.</returns>
+        /// <response code="200">Recipe books retrieved successfully, returns the list of recipe books.</response>
+        /// <response code="400">User ID is required but not provided.</response>
+        /// <response code="404">User not found.</response>
         [HttpGet("api/getUserRecipeBooks")]
         public async Task<IActionResult> GetUserRecipeBooks([FromQuery] string id)
         {
@@ -373,6 +380,13 @@ namespace FoodLink.Server.Controllers
             return Ok(recipeBooks);
         }
 
+        /// <summary>
+        /// Activates a user account using a provided activation token.
+        /// </summary>
+        /// <param name="token">The activation token sent to the user's email.</param>
+        /// <returns>An <see cref="IActionResult"/> indicating success or an error message.</returns>
+        /// <response code="200">Account activated successfully, returns a confirmation message.</response>
+        /// <response code="400">Invalid or expired token provided.</response>
         [HttpGet("api/activate")]
         public async Task<IActionResult> ActivateAccount([FromQuery] string token)
         {
@@ -395,7 +409,7 @@ namespace FoodLink.Server.Controllers
         /// </summary>
         /// <param name="user">The user whose password is to be verified.</param>
         /// <param name="password">The password to check.</param>
-        /// <returns>A <see cref="Task{TResult}"/> representing the result of the password verification.</returns>
+        /// <returns>A <see cref="Task{TResult}"/> representing a boolean result: true if the password is valid, false otherwise.</returns>
         private async Task<bool> IsPasswordValid(ApplicationUser user, string password)
         {
             return await _userManager.CheckPasswordAsync(user, password);

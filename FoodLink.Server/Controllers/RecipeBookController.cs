@@ -165,7 +165,7 @@ namespace FoodLink.Server.Controllers
         /// </summary>
         /// <param name="id">The ID of the recipe book.</param>
         /// <returns>An <see cref="IActionResult"/> containing a list of recipes in the recipe book.</returns>
-        /// <response code="200">Recipes retrieved successfully.</response>
+        /// <response code="200">Recipes retrieved successfully, returns the list of recipes.</response>
         [HttpGet("{id}/recipes")]
         public IActionResult GetRecipesByBook(int id)
         {
@@ -185,8 +185,8 @@ namespace FoodLink.Server.Controllers
         /// </summary>
         /// <param name="idRecipeBook">The ID of the recipe book.</param>
         /// <param name="idRecipe">The ID of the recipe to remove.</param>
-        /// <returns>An <see cref="IActionResult"/> indicating the result of the removal.</returns>
-        /// <response code="200">Recipe removed successfully.</response>
+        /// <returns>An <see cref="IActionResult"/> containing a success message or an error if the recipe is not found in the book.</returns>
+        /// <response code="200">Recipe removed successfully, returns a confirmation message.</response>
         /// <response code="404">Recipe not found in the specified recipe book.</response>
         [HttpDelete("{idRecipeBook}/recipes/{idRecipe}")]
         public IActionResult RemoveRecipeFromBook(int idRecipeBook, int idRecipe)
