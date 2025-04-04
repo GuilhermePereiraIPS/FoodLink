@@ -155,7 +155,7 @@ namespace FoodLink.Server.Controllers
                 .Join(_context.Recipes,
                       rtb => rtb.IdRecipe,
                       r => r.Id,
-                      (rtb, recipe) => recipe) 
+                      (rtb, recipe) => recipe)
                 .ToList();
 
             return Ok(recipes);
