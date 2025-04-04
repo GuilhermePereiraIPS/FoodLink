@@ -7,20 +7,31 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodLink.Server.Controllers
 {
+    /// <summary>
+    /// Controller responsible for managing recipe books and their associated recipes.
+    /// </summary>
     [Route("api/recipebooks")]
     [ApiController]
     public class RecipeBookController : ControllerBase
     {
         private readonly FoodLinkContext _context;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RecipeBookController"/> class.
+        /// </summary>
+        /// <param name="context">The database context for accessing recipe book data.</param>
         public RecipeBookController(FoodLinkContext context)
         {
             _context = context;
         }
 
         /// <summary>
-        /// Obtém todos os Recipe Books do usuário autenticado
+        /// Retrieves all recipe books for a specified user.
         /// </summary>
+        /// <param name="userId">The ID of the user whose recipe books are to be retrieved.</param>
+        /// <returns>An <see cref="IActionResult"/> containing a list of recipe books.</returns>
+        /// <response code="200">Recipe books retrieved successfully.</response>
+        /// <response code="400">User ID is required but not provided.</response>
         [HttpGet]
         public async Task<IActionResult> GetUserRecipeBooks([FromQuery] string userId)
         {
@@ -35,8 +46,12 @@ namespace FoodLink.Server.Controllers
         }
 
         /// <summary>
-        /// Cria um novo Recipe Book
+        /// Creates a new recipe book.
         /// </summary>
+        /// <param name="recipeBook">The recipe book object to be created.</param>
+        /// <returns>An <see cref="IActionResult"/> containing the created recipe book or an error message.</returns>
+        /// <response code="201">Recipe book created successfully, returns the created recipe book.</response>
+        /// <response code="400">Recipe book title is required but not provided.</response>
         [HttpPost]
         public async Task<IActionResult> CreateRecipeBook([FromBody] RecipeBook recipeBook)
         {
@@ -55,13 +70,23 @@ namespace FoodLink.Server.Controllers
             _context.RecipeBooks.Add(recipeBook);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetUserRecipeBooks), new { id = recipeBook.IdRecipeBook }, recipeBook);
+            return CreatedAtAction(nameof(GetUserRecipeBooks), new { id = recipeBook.Id }, recipeBook);
         }
 
+        /// <summary>
+        /// Updates an existing recipe book.
+        /// </summary>
+        /// <param name="id">The ID of the recipe book to update.</param>
+        /// <param name="updatedBook">The updated recipe book data.</param>
+        /// <returns>An <see cref="IActionResult"/> indicating the result of the update.</returns>
+        /// <response code="200">Recipe book updated successfully, returns the updated recipe book.</response>
+        /// <response code="400">Invalid recipe book data or ID mismatch.</response>
+        /// <response code="404">Recipe book not found.</response>
+        /// <response code="500">Internal server error occurred during update.</response>
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateRecipeBook(int id, [FromBody] RecipeBook updatedBook)
         {
-            if (updatedBook == null || id != updatedBook.IdRecipeBook)
+            if (updatedBook == null || id != updatedBook.Id)
             {
                 return BadRequest("Invalid Recipe Book data.");
             }
@@ -86,6 +111,14 @@ namespace FoodLink.Server.Controllers
             }
         }
 
+        /// <summary>
+        /// Deletes a recipe book by its ID.
+        /// </summary>
+        /// <param name="id">The ID of the recipe book to delete.</param>
+        /// <returns>An <see cref="IActionResult"/> indicating the result of the deletion.</returns>
+        /// <response code="200">Recipe book deleted successfully.</response>
+        /// <response code="404">Recipe book not found.</response>
+        /// <response code="500">Internal server error occurred during deletion.</response>
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteRecipeBook(int id)
         {
@@ -108,6 +141,12 @@ namespace FoodLink.Server.Controllers
             }
         }
 
+        /// <summary>
+        /// Retrieves all recipes associated with a specific recipe book.
+        /// </summary>
+        /// <param name="id">The ID of the recipe book.</param>
+        /// <returns>An <see cref="IActionResult"/> containing a list of recipes in the recipe book.</returns>
+        /// <response code="200">Recipes retrieved successfully.</response>
         [HttpGet("{id}/recipes")]
         public IActionResult GetRecipesByBook(int id)
         {
@@ -116,12 +155,20 @@ namespace FoodLink.Server.Controllers
                 .Join(_context.Recipes,
                       rtb => rtb.IdRecipe,
                       r => r.Id,
-                      (rtb, recipe) => recipe) 
+                      (rtb, recipe) => recipe)
                 .ToList();
 
             return Ok(recipes);
         }
 
+        /// <summary>
+        /// Removes a recipe from a recipe book.
+        /// </summary>
+        /// <param name="idRecipeBook">The ID of the recipe book.</param>
+        /// <param name="idRecipe">The ID of the recipe to remove.</param>
+        /// <returns>An <see cref="IActionResult"/> indicating the result of the removal.</returns>
+        /// <response code="200">Recipe removed successfully.</response>
+        /// <response code="404">Recipe not found in the specified recipe book.</response>
         [HttpDelete("{idRecipeBook}/recipes/{idRecipe}")]
         public IActionResult RemoveRecipeFromBook(int idRecipeBook, int idRecipe)
         {
