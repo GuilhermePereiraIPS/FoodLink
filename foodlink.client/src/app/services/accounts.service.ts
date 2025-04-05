@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, throwError, catchError, map, of } from 'rxjs';
 import {jwtDecode } from 'jwt-decode'
 import { Recipe } from './recipes.service';
+import { RecipeBook } from './recipe-books.service';
+import { AuthorizeService } from '../api-authorization/authorize.service'; 
 
 export interface User {
   id: string;
@@ -28,8 +30,12 @@ export class AccountsService {
   private currentUserSubject: BehaviorSubject<User | null> = new BehaviorSubject<User | null>(null);
   public currentUser$: Observable<User | null> = this.currentUserSubject.asObservable();
 
-  constructor(private http: HttpClient) {
-    this.loadCurrentUser();
+  constructor(private http: HttpClient, private authorizeService: AuthorizeService) {
+    this.authorizeService.onStateChanged().subscribe(isAuthenticated => {
+      if (this.authorizeService.isSignedIn()) {
+        this.loadCurrentUser();
+      } 
+    });
   }
 
   private loadCurrentUser(): void {
@@ -56,6 +62,16 @@ export class AccountsService {
       catchError(error => {
         console.error(`Error fetching recipes for user ${userId}:`, error);
         return of([]); 
+      })
+    );
+  }
+
+  getUserRecipeBooks(userId: string): Observable<RecipeBook[]> {
+    let params = new HttpParams().set('id', userId); // Match backend's [FromQuery] string id
+    return this.http.get<RecipeBook[]>('api/getUserRecipeBooks', { params }).pipe(
+      catchError(error => {
+        console.error(`Error fetching recipes for user ${userId}:`, error);
+        return of([]);
       })
     );
   }

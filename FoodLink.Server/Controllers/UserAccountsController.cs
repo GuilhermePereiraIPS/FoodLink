@@ -11,6 +11,8 @@ using System.Text;
 using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using FoodLink.Server.Data;
+using FoodLink.Server.Services;
+using Resend;
 
 namespace FoodLink.Server.Controllers
 {
@@ -23,17 +25,20 @@ namespace FoodLink.Server.Controllers
         private readonly FoodLinkContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IConfiguration _configuration;
+        private readonly IResend _resend;
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UserAccountsController"/> class.
         /// </summary>
         /// <param name="userManager">The user manager for handling Identity operations.</param>
         /// <param name="configuration">The configuration for accessing app settings (e.g., JWT settings).</param>
-        public UserAccountsController(UserManager<ApplicationUser> userManager, IConfiguration configuration, FoodLinkContext context)
+        public UserAccountsController(UserManager<ApplicationUser> userManager, IConfiguration configuration, FoodLinkContext context, IResend resend)
         {
             _userManager = userManager;
             _configuration = configuration;
             _context = context;
+            _resend = resend;
         }
 
         /// <summary>
@@ -46,17 +51,43 @@ namespace FoodLink.Server.Controllers
         [HttpPost("api/signup")]
         public async Task<IActionResult> Register([FromBody] UserRegistrationModel model)
         {
-            var userExists = await _userManager.FindByEmailAsync(model.Email);
-            if (userExists != null)
-                return BadRequest(new { message = "User already exists." });
+            var emailExists = await _userManager.FindByEmailAsync(model.Email);
+            if (emailExists != null)
+                return BadRequest(new { message = "Email is already in use." });
+            var usernameExists = await _userManager.FindByNameAsync(model.Name);
+            if (usernameExists != null)
+                return BadRequest(new { message = "Username is already in use." });
 
-            var user = new ApplicationUser { UserName = model.Name, Email = model.Email};
+
+            var user = new ApplicationUser { UserName = model.Name, Email = model.Email };
+
+            // Generate activation token
+            var token = Guid.NewGuid().ToString();
+            user.ActivationToken = token;
+            await _userManager.UpdateAsync(user);
+
+            // Send activation email
+            //var baseUrl = _configuration["AppSettings:BaseUrl"] ?? "https://foodlinks.azurewebsites.net";
+            //var activationLink = $"{baseUrl}/activate?token={token}";
+            //var message = new EmailMessage();
+            //message.From = "onboarding@resend.dev";
+            //message.To.Add(model.Email);
+            //message.Subject = "Verification email";
+            //message.HtmlBody = $"<p>Hello {model.Name},</p>" +
+            //       "<p>Please activate your account by clicking the button below:</p>" +
+            //       $"<a href=\"{activationLink}\" style=\"background-color: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;\">Activate Account</a>" +
+            //       "<p>If you did not register, please ignore this email.</p>" +
+            //       "<p>Best regards,<br>The FoodLink Team</p>";
+
+            //var resp = await _resend.EmailSendAsync(message);
+            //user.EmailConfirmed = false;
+            user.EmailConfirmed = true;
 
             var result = await _userManager.CreateAsync(user, model.Password);
             await _userManager.AddToRoleAsync(user, "Member");
 
             if (result.Succeeded)
-            {                
+            {
                 return Ok(new { message = "User registered successfully." });
             }
 
@@ -74,6 +105,8 @@ namespace FoodLink.Server.Controllers
         [HttpPost("api/signin")]
         public async Task<IActionResult> Login([FromBody] UserLoginModel model)
         {
+
+
             var user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null)
             {
@@ -84,7 +117,10 @@ namespace FoodLink.Server.Controllers
             {
                 return BadRequest(new { message = "Invalid email or password." });
             }
-           
+
+            if (!user.EmailConfirmed)
+                return Unauthorized(new { message = "Account not activated" });
+
             // Gerar os claims do utilizador
             var claims = new List<Claim>
             {
@@ -215,7 +251,7 @@ namespace FoodLink.Server.Controllers
 
             ApplicationUser user = await GetCurrentUser();
             if (user == null) return NotFound(new { message = "User not found." });
-            
+
             // Username
             if (!string.IsNullOrEmpty(model.Username) && model.Username != user.UserName)
             {
@@ -242,6 +278,12 @@ namespace FoodLink.Server.Controllers
                 user.AboutMe = model.AboutMe;
             }
 
+            var passwordValid = await _userManager.CheckPasswordAsync(user, model.CurrentPassword);
+            if (!passwordValid)
+            {
+                return BadRequest(new { message = "Current password is incorrect." });
+            }
+
             // Password
             if (!string.IsNullOrEmpty(model.Password))
             {
@@ -252,14 +294,6 @@ namespace FoodLink.Server.Controllers
                     return BadRequest(passwordChangeResult.Errors);
                 }
             }
-            
-
-            var passwordValid = await _userManager.CheckPasswordAsync(user, model.CurrentPassword);
-            if (!passwordValid)
-            {
-                return BadRequest(new { message = "Current password is incorrect." });
-            }
-
 
             var updateResult = await _userManager.UpdateAsync(user);
 
@@ -274,7 +308,7 @@ namespace FoodLink.Server.Controllers
         /// <summary>
         /// Retrieves a list of all users with their IDs and usernames.
         /// </summary>
-        /// <returns>An <see cref="IActionResult"/> containing a list of user objects.</returns>
+        /// <returns>An <see cref="IActionResult"/> containing a list of user objects with ID and username.</returns>
         /// <response code="200">List of users retrieved successfully.</response>
         [HttpGet("api/users")]
         public IActionResult GetAllUsers()
@@ -292,8 +326,8 @@ namespace FoodLink.Server.Controllers
         /// Retrieves all recipes associated with a user by their ID.
         /// </summary>
         /// <param name="id">The ID of the user whose recipes are to be retrieved.</param>
-        /// <returns>An <see cref="IActionResult"/> containing the list of recipes or an error.</returns>
-        /// <response code="200">Recipes retrieved successfully.</response>
+        /// <returns>An <see cref="IActionResult"/> containing the list of recipes or an error message.</returns>
+        /// <response code="200">Recipes retrieved successfully, returns the list of recipes.</response>
         /// <response code="400">User ID is required but not provided.</response>
         /// <response code="404">User not found.</response>
         [HttpGet("api/getUserRecipes")]
@@ -317,13 +351,65 @@ namespace FoodLink.Server.Controllers
             return Ok(recipes);
         }
 
+        /// <summary>
+        /// Retrieves all recipe books associated with a user by their ID.
+        /// </summary>
+        /// <param name="id">The ID of the user whose recipe books are to be retrieved.</param>
+        /// <returns>An <see cref="IActionResult"/> containing the list of recipe books or an error message.</returns>
+        /// <response code="200">Recipe books retrieved successfully, returns the list of recipe books.</response>
+        /// <response code="400">User ID is required but not provided.</response>
+        /// <response code="404">User not found.</response>
+        [HttpGet("api/getUserRecipeBooks")]
+        public async Task<IActionResult> GetUserRecipeBooks([FromQuery] string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                return BadRequest(new { message = "User ID is required." });
+            }
+
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                return NotFound(new { message = "User not found." });
+            }
+
+            var recipeBooks = await _context.RecipeBooks
+                .Where(r => r.UserId == id)
+                .ToListAsync();
+
+            return Ok(recipeBooks);
+        }
+
+        /// <summary>
+        /// Activates a user account using a provided activation token.
+        /// </summary>
+        /// <param name="token">The activation token sent to the user's email.</param>
+        /// <returns>An <see cref="IActionResult"/> indicating success or an error message.</returns>
+        /// <response code="200">Account activated successfully, returns a confirmation message.</response>
+        /// <response code="400">Invalid or expired token provided.</response>
+        [HttpGet("api/activate")]
+        public async Task<IActionResult> ActivateAccount([FromQuery] string token)
+        {
+            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.ActivationToken == token);
+            if (user == null)
+                return BadRequest(new { message = $"Invalid or expired token. {token}" });
+
+            user.EmailConfirmed = true;
+            user.ActivationToken = null; // Clear token after use
+            var result = await _userManager.UpdateAsync(user);
+            if (!result.Succeeded)
+                return BadRequest(result.Errors);
+
+            return Ok(new { message = "Account activated successfully." });
+        }
+
 
         /// <summary>
         /// Verifies if the provided password is correct for the given user.
         /// </summary>
         /// <param name="user">The user whose password is to be verified.</param>
         /// <param name="password">The password to check.</param>
-        /// <returns>A <see cref="Task{TResult}"/> representing the result of the password verification.</returns>
+        /// <returns>A <see cref="Task{TResult}"/> representing a boolean result: true if the password is valid, false otherwise.</returns>
         private async Task<bool> IsPasswordValid(ApplicationUser user, string password)
         {
             return await _userManager.CheckPasswordAsync(user, password);
@@ -386,6 +472,6 @@ namespace FoodLink.Server.Controllers
         public string Name { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
-        
+
     }
 }

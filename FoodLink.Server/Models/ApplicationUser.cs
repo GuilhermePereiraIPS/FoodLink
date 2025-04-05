@@ -7,7 +7,8 @@ namespace FoodLink.Server.Models
     {
         public string? AboutMe { get; set; }
         public List<Recipe>? Recipes { get; set; }
+        public List<RecipeBook>? RecipeBooks { get; set; }
 
-
+        public string? ActivationToken { get; set; }
     }
 }

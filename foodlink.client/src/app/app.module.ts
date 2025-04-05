@@ -22,6 +22,7 @@ import { ProfileEditComponent } from './profile-edit/profile-edit.component';
 import { BooksComponent } from './books/books.component';
 import { RecipeBookDetailsComponent } from './recipe-book-details/recipe-book-details.component';
 import { RecipeCardComponent } from './recipe-card/recipe-card.component';
+import { ActivateComponent } from './activate/activate.component';
 
 
 @NgModule({
@@ -38,6 +39,7 @@ import { RecipeCardComponent } from './recipe-card/recipe-card.component';
     BooksComponent,
     RecipeBookDetailsComponent,
     RecipeCardComponent,
+    ActivateComponent,
   ],
   imports: [
     BrowserModule, HttpClientModule,

@@ -12,5 +12,7 @@ namespace FoodLink.Server.Models
 
         [Required]
         public string UserId { get; set; }
+
+        public int RecipeAmount { get; set; }
     }
 }

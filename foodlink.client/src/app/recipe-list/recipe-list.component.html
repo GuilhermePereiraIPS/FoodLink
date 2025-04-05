@@ -1,9 +1,7 @@
-<div class="recipe-list-container">
+<div>
 
   <div id="search-container">
-    <!-- Título da Página -->
-    <h2 class="recipe-page-title">Find a great recipe</h2>
-
+    
     <!-- Search Bar -->
     <div class="search-bar">
       <input type="text"
@@ -15,26 +13,28 @@
     </div>
   </div>
 
-  <!-- Botão para ordenar -->
+  <!-- Botões para ordenar -->
   <ul id="order-list">
-    <li (click)="setOrderRecent()">
+    <li (click)="setOrderNewest()">
       <input id="latest" checked="checked" type="radio" name="order"/>
       <label for="latest">Latest</label>
     </li>
-    <li (click)="setOrderRated()">
+    <li (click)="setOrderOldest()">
       <input id="brated"  type="radio" name="order"/>
-      <label for="brated">Best Rated</label>
+      <label for="brated">Oldest</label>
     </li>
   </ul>
 
   <!-- Grid de receitas -->
   <div class="recipe-grid" *ngIf="recipes">
-    <div *ngFor="let recipe of recipes" class="recipe-card">
+    <div *ngFor="let recipe of recipes">
         <app-recipe-card [id]="recipe.id"
                          [title]="recipe.title"
                          [description]="recipe.description"
                          [date]="recipe.createDate | date:'shortDate'"
-                         [userId]="recipe.userId">
+                         [userId]="recipe.userId"
+                         [imageUrl]="recipe.imageUrl"
+                         >
         </app-recipe-card>
       
 

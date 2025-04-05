@@ -31,7 +31,7 @@ export class SignInComponent implements OnInit {
   public signIn(event: Event): void {
     event.preventDefault();
     if (!this.loginForm.valid) {
-      alert('Por favor, preencha o e-mail e a palavra-passe corretamente.');
+      alert('Please fill the email and password fields');
       return;
     }
 
@@ -41,7 +41,7 @@ export class SignInComponent implements OnInit {
     this.authService.signIn(email, password).subscribe({
       next: (response) => {
         if (response) {
-          alert('Sessão iniciada com sucesso!');
+          alert('Login sucessful!');
           this.router.navigateByUrl("/recipes");
         }
       },
@@ -50,18 +50,7 @@ export class SignInComponent implements OnInit {
         console.error('Erro no login:', err);
 
         const backendMessage = err?.error?.message;
-
-        let msg = 'Erro ao iniciar sessão. Tente novamente.';
-
-        if (backendMessage === 'Invalid email or password.') {
-          msg = 'Email ou palavra-passe incorretos.';
-        } else if (backendMessage) {
-          msg = backendMessage;
-        } else if (err.status === 400) {
-          msg = 'Dados inválidos. Verifique os campos.';
-        }
-
-        alert(msg);
+        alert(backendMessage);
       }
     });
   }

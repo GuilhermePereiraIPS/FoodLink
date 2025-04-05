@@ -9,6 +9,7 @@ using FoodLink.Server.Data;
 using FoodLink.Server.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using FoodLink.Server.Services;
 
 
 namespace FoodLink.Server.Controllers
@@ -22,15 +23,17 @@ namespace FoodLink.Server.Controllers
     {
         private readonly FoodLinkContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IPixabayService _pixabayService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RecipesController"/> class.
         /// </summary>
         /// <param name="context">The database context for accessing recipe data.</param>
-        public RecipesController(FoodLinkContext context, UserManager<ApplicationUser> userManager)
+        public RecipesController(FoodLinkContext context, UserManager<ApplicationUser> userManager, IPixabayService pixabayService)
         {
             _context = context;
             _userManager = userManager;
+            _pixabayService = pixabayService;
         }
 
         /// <summary>
@@ -64,6 +67,9 @@ namespace FoodLink.Server.Controllers
 
             if (orderRecent) 
                 recipes = recipes.OrderByDescending(recipe => recipe.CreateDate);
+            else
+                recipes = recipes.OrderBy(recipe => recipe.CreateDate);
+
 
             return await recipes.ToListAsync();
         }
@@ -93,9 +99,9 @@ namespace FoodLink.Server.Controllers
         /// Creates a new recipe.
         /// </summary>
         /// <param name="recipe">The recipe object to be created.</param>
-        /// <returns>An <see cref="ActionResult{T}"/> containing the created recipe.</returns>
+        /// <returns>An <see cref="ActionResult{T}"/> containing the created recipe or an error message.</returns>
         /// <response code="201">Recipe created successfully, returns the created recipe.</response>
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /// <response code="400">User ID is required or user not found.</response>
         [Authorize]
         [HttpPost]
         public async Task<ActionResult<Recipe>> PostRecipe(Recipe recipe)
@@ -118,6 +124,9 @@ namespace FoodLink.Server.Controllers
             }
             user.Recipes.Add(recipe);
             recipe.CreateDate = DateTime.UtcNow; // CreateDate is set server-side
+
+            // Fetch image URL from Pixabay based on recipe title
+            recipe.ImageUrl = await _pixabayService.GetImageUrlAsync(recipe.Title);
 
             _context.Recipes.Add(recipe);
             await _context.SaveChangesAsync();
@@ -192,7 +201,7 @@ namespace FoodLink.Server.Controllers
         /// Checks if a recipe exists by its ID.
         /// </summary>
         /// <param name="id">The ID of the recipe to check.</param>
-        /// <returns>A boolean indicating whether the recipe exists.</returns>
+        /// <returns>A boolean indicating whether the recipe exists: true if it does, false otherwise.</returns>
         private bool RecipeExists(int id)
         {
             return _context.Recipes.Any(e => e.Id == id);

@@ -1,5 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AccountsService, User } from '../services/accounts.service';
+import { RecipeBooksService } from '../services/recipe-books.service';
+import { RecipeBookDetailsComponent } from '../recipe-book-details/recipe-book-details.component'
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-recipe-card',
@@ -11,15 +14,17 @@ export class RecipeCardComponent implements OnInit {
   @Input() title: string = '';
   @Input() userId: string = '';
   @Input() date: string | null = null;
-  @Input() imageUrl: string = '';
+  @Input() imageUrl: string | undefined = undefined ;
   @Input() description: string = '';
+  @Input() recipeBookId!: number;
+  @Input() onClickRemove!: (recipeBookId: number, recipeId: number) => void;
 
   username!: string
 
-  constructor(private accountsService: AccountsService) { }
+  constructor(private accountsService: AccountsService, private recipeBooksService: RecipeBooksService) { }
 
   ngOnInit(): void {
-    if (this.userId) {
+    if (this.userId) { 
       this.getUser(this.userId); 
     }
   }
@@ -35,5 +40,11 @@ export class RecipeCardComponent implements OnInit {
         this.username = 'Unknown User'; 
       }
     );
+  }
+
+  onRemoveClick() {
+    if (this.onClickRemove) {
+      this.onClickRemove(this.recipeBookId, this.id);  
+    }
   }
 }

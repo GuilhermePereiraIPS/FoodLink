@@ -13,14 +13,16 @@
   <div>
     <h4>Recipes</h4>
     <!--recipes-->
-    <div class="recipes-container">
+    <div class="recipe-grid">
       <div *ngFor="let recipe of recipes" class="recipe-card">
           <app-recipe-card
                            [id]="recipe.id"
                            [title]="recipe.title"
                            [description]="recipe.description"
                            [date]="recipe.createDate | date:'shortDate'"
-                           [userId]="recipe.userId">
+                           [userId]="recipe.userId"
+                           [imageUrl]="recipe.imageUrl"
+                           >
           </app-recipe-card>
       </div>
     </div>
@@ -29,5 +31,29 @@
   <div>
     <h4>Recipe Books</h4>
     <!--recipe books-->
+    <div class="recipe-grid">
+      <div *ngFor="let book of recipeBooks">
+
+
+        <div class="book-container">
+          <div class="book-image">
+            <a [routerLink]="['/recipe-books', book.id]">
+              <img src="../../assets/background.png" />
+            </a>
+
+            <div class="recipe-count">
+              <i class="fa-solid fa-list"></i>
+              {{ book.recipeAmount || 0 }} {{ (book.recipeAmount || 0) === 1 ? 'recipe' : 'recipes' }}
+            </div>
+          </div>
+          <div class="book-details">
+            <div>
+              <p class="book-title">{{ book.recipeBookTitle }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
   </div>
 </div>

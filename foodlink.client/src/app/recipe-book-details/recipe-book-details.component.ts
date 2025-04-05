@@ -9,7 +9,7 @@ import { RecipeBooksService } from '../services/recipe-books.service';
   styleUrls: ['./recipe-book-details.component.css']
 })
 export class RecipeBookDetailsComponent implements OnInit {
-  recipeBookId!: number;
+  public recipeBookId!: number;
   recipes: any[] = [];
   recipeBookTitle: string = '';
 
@@ -49,16 +49,25 @@ export class RecipeBookDetailsComponent implements OnInit {
     );
   }
 
-  removeRecipe(idRecipe: number) {
-    if (!this.recipeBookId) return;
+  removeRecipe(recipeBookId: number, recipeId: number) {
 
     const confirmDelete = confirm("Are you sure you want to remove this recipe from the book?");
     if (!confirmDelete) return;
 
-    this.recipeBooksService.removeRecipeFromBook(this.recipeBookId, idRecipe).subscribe(
+    console.log(recipeBookId + " " + recipeId)
+
+    this.recipeBooksService.removeRecipeFromBook(recipeBookId, recipeId).subscribe(
       () => {
-       
-        this.recipes = this.recipes.filter(recipe => recipe.id !== idRecipe);
+        this.recipes = this.recipes.filter(recipe => recipe.id !== recipeId);
+
+        this.recipeBooksService.getRecipesByRecipeBook(this.recipeBookId).subscribe(
+          (recipes) => {
+            this.recipes = recipes;
+          },
+          (error) => {
+            console.error('Error loading recipes:', error);
+          }
+        );
       },
       (error) => {
         console.error("Error removing recipe:", error);

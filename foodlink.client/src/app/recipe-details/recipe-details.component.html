@@ -4,16 +4,20 @@
   <div class="recipe-header">
 
     <div class="user-info">
-      <img src="assets/user-avatar.png" class="user-avatar">
+      <a *ngIf="user" [routerLink]="['/profile', user.username]">
+        <img src="assets/user-avatar.png" class="user-avatar">
+      </a>
       <div>
-        <p *ngIf="user">By {{ user.username }}</p>
+        <a *ngIf="user" [routerLink]="['/profile', user.username]">
+          <p *ngIf="user">By {{ user.username }}</p>
+        </a>
         <p class="recipe-date">Created: {{ recipe.createDate | date:'longDate' }}</p>
       </div>
     </div>
 
     <div class="recipe-actions">
-      <button class="recipe-action-btn" (click)="scrollToRecipe($event)" >Skip to recipe</button>
-      <button class="recipe-action-btn recipe-action-small-btn" (click)="toggleRecipeBookList()">Add to book</button>
+      <button class="action-btn" (click)="scrollToRecipe($event)" >Skip to recipe</button>
+      <button class="action-btn action-small-btn" (click)="toggleRecipeBookList()">Add to book</button>
       <div *ngIf="showRecipeBookList" class="recipe-book-dropdown">
         <label for="selectBook">Select a Recipe Book:</label>
         <select [(ngModel)]="selectedRecipeBook" id="selectBook">
@@ -24,9 +28,9 @@
         <button class="confirm-add-btn" (click)="addToRecipeBook()">Add</button>
       </div>
       <!-- Show Delete button if currentUser is the creator or an Admin -->
-      <button class="recipe-action-btn recipe-action-small-btn" *ngIf="canDeleteRecipe()" (click)="deleteRecipe()">Delete</button>
+      <button class="action-btn action-small-btn" *ngIf="canDeleteRecipe()" (click)="deleteRecipe()">Delete</button>
       <!-- Show Edit button only if currentUser is the creator -->
-      <button class="recipe-action-btn recipe-action-small-btn" *ngIf="canEditRecipe()" (click)="editRecipe()">Edit</button>
+      <button class="action-btn action-small-btn" *ngIf="canEditRecipe()" (click)="editRecipe()">Edit</button>
     </div>
 
   </div>
@@ -64,7 +68,9 @@
       <div class="comment-item" *ngFor="let comment of comments">
         <img src="assets/user-avatar.png" class="user-avatar user-avatar-small">
         <div class="comment-body">
-          <p class="comment-username"><strong>{{ getUserName(comment.userId) }}</strong></p>
+          <a [routerLink]="['/profile', getUserName(comment.userId)]">
+            <p class="comment-username"><strong>{{ getUserName(comment.userId) }}</strong></p>
+          </a>
           <p class="comment-text">{{ comment.commentText }}</p>
         </div>
         

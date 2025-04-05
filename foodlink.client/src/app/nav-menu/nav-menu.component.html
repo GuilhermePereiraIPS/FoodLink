@@ -1,27 +1,60 @@
+<div [ngStyle]="{'display': menuOpen === true ? 'block' : 'none'}" class="user-menu">
+
+
+  <div *ngIf="user$ | async as user">
+    <a [routerLink]="['/profile', user.username]">
+      <img #userAvatar class="user-avatar user-avatar-small" src="assets/user-avatar.png" />
+    </a>
+    <h4>{{user.username}}</h4>
+  </div>
+  <hr />
+  <div *ngIf="user$ | async as user">
+    <i class="fa-solid fa-user"></i>
+    <a [routerLink]="['/profile', user.username]"><p>Profile</p></a>
+  </div>
+  <div *ngIf="user$ | async as user">
+    <i class="fa-solid fa-pen"></i>
+    <a [routerLink]="['/profile/edit']"><p>Edit</p></a>
+  </div>
+  <div *ngIf="user$ | async as user">
+    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+    <a (click)="logout()"><p>Logout</p></a>
+  </div>
+
+  <i (click)="toggleMenu($event)" class="close-menu fa-solid fa-x"></i>
+</div>
+
 
 <nav>
-  <!-- Logo + Browse alinhado à esquerda -->
   <div>
-    <a [routerLink]="['/recipes']">
-      <img class="logo" src="../../assets/logo.png" />
-    </a>
-    <ul class="nav-links">
-      <li><a [routerLink]="['/recipes']">browse</a></li>
-    </ul>
-  </div>
-  <!-- Links à direita -->
-  <div>
-    <ul class="nav-links-right">
-      <li><a [routerLink]="['/books']">books</a></li>
-      <li><a [routerLink]="['/recipes/create']">create</a></li>
-      <li *ngIf="user$ | async as user"><a [routerLink]="['/profile', user.username]">profile</a></li>
-      <li *ngIf="user$ | async as user"><a [routerLink]="['/profile/edit']">edit</a></li>
-      <li><a (click)="logout()">logout</a></li>
-    </ul>
-  </div>
+    <!-- Logo + Browse alinhado à esquerda -->
+    <div class="nav-items">
+      <a [routerLink]="['/recipes']">
+        <img class="logo" src="../../assets/logo.png" />
+      </a>
+      <ul class="nav-links">
+        <li><a [routerLink]="['/recipes']">browse</a></li>
+      </ul>
+    </div>
+    <!-- Links à direita -->
+    <div class="nav-items">
+      <div>
+        <ul class="nav-links-right">
+          <li><a [routerLink]="['/books']">books</a></li>
+          <li><a [routerLink]="['/recipes/create']">create</a></li>
+        </ul>
+      </div>
+      <div>
+        <img #userAvatar (click)="toggleMenu($event)" class="user-avatar" src="assets/user-avatar.png" />
+      </div>
+      
+    </div>
 
-  <!-- Mobile -->
-  <div class="hamburger" (click)="toggleMenu()">☰</div>
+    <!-- Mobile -->
+    <!--<div class="hamburger" (click)="toggleMenu()">☰</div>-->
+  </div>
+  
+  <h3>{{sectionTitle}}</h3>
 
 
 </nav>

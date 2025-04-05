@@ -7,6 +7,7 @@ export interface RecipeBook {
   id?: number;
   recipeBookTitle: string;
   userId: string;
+  recipeAmount?: number;
 }
 
 @Injectable({

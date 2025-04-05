@@ -11,6 +11,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Mailjet.Api" Version="3.0.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
 		<PackageReference Include="microsoft.aspnetcore.components.quickgrid.entityframeworkadapter" Version="8.0.1" />
 		<PackageReference Include="microsoft.aspnetcore.identity.entityframeworkcore" Version="8.0.1" />
@@ -21,6 +22,7 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="microsoft.visualstudio.web.codegeneration.design" Version="8.0.0" />
+		<PackageReference Include="Resend" Version="0.1.0" />
 		<PackageReference Include="swashbuckle.aspnetcore" Version="6.5.0" />
 	</ItemGroup>
 
