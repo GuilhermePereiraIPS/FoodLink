@@ -136,7 +136,15 @@ namespace FoodLink.Tests.Controllers
                 .Options;
 
             using var context = new FoodLinkContext(options);
-            context.Recipes.Add(new Recipe { Id = 1, Title = "Test Recipe" });
+            context.Recipes.Add(new Recipe { Id = 1, Title = "Test Recipe", UserId = "user1"});
+
+            context.RecipeBooks.Add(new RecipeBook
+            {
+                Id = 1,
+                RecipeBookTitle = "Book",
+                UserId = "user1"
+            });
+
             context.RecipeToRB.Add(new RecipeToRB { IdRecipeBook = 1, IdRecipe = 1 });
             context.SaveChanges();
 

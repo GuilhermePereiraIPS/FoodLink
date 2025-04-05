@@ -27,7 +27,8 @@ namespace FoodLink.Tests.Controllers
                 Description = "desc",
                 Ingredients = "ing",
                 Instructions = "inst",
-                CreateDate = DateTime.Now
+                CreateDate = DateTime.Now,
+                UserId = "user1"
             });
 
             context.RecipeBooks.Add(new RecipeBook

@@ -1,49 +1,51 @@
-﻿#nullable disable
-using Xunit;
+﻿using Xunit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Moq;
 using FoodLink.Server.Controllers;
 using FoodLink.Server.Models;
-using System.Threading.Tasks;
+using FoodLink.Server.Data;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 public class UserAccountsControllerTests
 {
     private readonly Mock<UserManager<ApplicationUser>> _userManagerMock;
     private readonly Mock<IConfiguration> _configurationMock;
+    private readonly FoodLinkContext _context;
     private readonly UserAccountsController _controller;
 
     public UserAccountsControllerTests()
     {
+        // Mock UserManager
         var userStore = new Mock<IUserStore<ApplicationUser>>();
         var identityOptions = new Mock<Microsoft.Extensions.Options.IOptions<IdentityOptions>>();
         identityOptions.Setup(o => o.Value).Returns(new IdentityOptions());
 
-        var passwordHasher = new Mock<IPasswordHasher<ApplicationUser>>();
-        var userValidators = new List<IUserValidator<ApplicationUser>>();
-        var passwordValidators = new List<IPasswordValidator<ApplicationUser>>();
-        var normalizer = new Mock<ILookupNormalizer>();
-        var describer = new IdentityErrorDescriber();
-        var services = new Mock<IServiceProvider>();
-        var logger = new Mock<Microsoft.Extensions.Logging.ILogger<UserManager<ApplicationUser>>>();
-
         _userManagerMock = new Mock<UserManager<ApplicationUser>>(
             userStore.Object,
             identityOptions.Object,
-            passwordHasher.Object,
-            userValidators,
-            passwordValidators,
-            normalizer.Object,
-            describer,
-            services.Object,
-            logger.Object
+            new Mock<IPasswordHasher<ApplicationUser>>().Object,
+            new List<IUserValidator<ApplicationUser>>(),
+            new List<IPasswordValidator<ApplicationUser>>(),
+            new Mock<ILookupNormalizer>().Object,
+            new IdentityErrorDescriber(),
+            new Mock<IServiceProvider>().Object,
+            new Mock<Microsoft.Extensions.Logging.ILogger<UserManager<ApplicationUser>>>().Object
         );
 
         _configurationMock = new Mock<IConfiguration>();
-        _controller = new UserAccountsController(_userManagerMock.Object, _configurationMock.Object);
+
+        var options = new DbContextOptionsBuilder<FoodLinkContext>()
+            .UseInMemoryDatabase(Guid.NewGuid().ToString())
+            .Options;
+
+        _context = new FoodLinkContext(options);
+
+        _controller = new UserAccountsController(_userManagerMock.Object, _configurationMock.Object, _context);
     }
 
     [Fact]

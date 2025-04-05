@@ -7,11 +7,22 @@ using FoodLink.Server.Controllers;
 using FoodLink.Server.Models;
 using FoodLink.Server.Data;
 using System;
+using Microsoft.AspNetCore.Identity;
+using Moq;
+using System.Linq;
 
 namespace FoodLink.Tests.Controllers
 {
     public class RecipesControllerTests
     {
+        private static Mock<UserManager<ApplicationUser>> GetMockUserManager()
+        {
+            var store = new Mock<IUserStore<ApplicationUser>>();
+            return new Mock<UserManager<ApplicationUser>>(
+                store.Object, null, null, null, null, null, null, null, null
+            );
+        }
+
         private FoodLinkContext GetContextWithSeedData()
         {
             var options = new DbContextOptionsBuilder<FoodLinkContext>()
@@ -19,13 +30,12 @@ namespace FoodLink.Tests.Controllers
                 .Options;
 
             var context = new FoodLinkContext(options);
-
             context.Recipes.AddRange(
-                new Recipe { Id = 1, Title = "Recipe 1" },
-                new Recipe { Id = 2, Title = "Recipe 2" }
+                new Recipe { Id = 1, Title = "Recipe 1", UserId = "user1" },
+                new Recipe { Id = 2, Title = "Recipe 2", UserId = "user2" }
             );
-
             context.SaveChanges();
+
             return context;
         }
 
@@ -33,7 +43,8 @@ namespace FoodLink.Tests.Controllers
         public async Task GetRecipes_ReturnsAllRecipes()
         {
             using var context = GetContextWithSeedData();
-            var controller = new RecipesController(context);
+            var userManagerMock = GetMockUserManager();
+            var controller = new RecipesController(context, userManagerMock.Object);
 
             var result = await controller.GetRecipes();
             var recipes = Assert.IsType<List<Recipe>>(result.Value);
@@ -45,7 +56,8 @@ namespace FoodLink.Tests.Controllers
         public async Task GetRecipe_ReturnsCorrectRecipe()
         {
             using var context = GetContextWithSeedData();
-            var controller = new RecipesController(context);
+            var userManagerMock = GetMockUserManager();
+            var controller = new RecipesController(context, userManagerMock.Object);
 
             var result = await controller.GetRecipe(1);
             var recipe = Assert.IsType<Recipe>(result.Value);
@@ -61,7 +73,12 @@ namespace FoodLink.Tests.Controllers
                 .Options;
 
             using var context = new FoodLinkContext(options);
-            var controller = new RecipesController(context);
+            var userManagerMock = GetMockUserManager();
+
+            var user = new ApplicationUser { Id = "user1", UserName = "testuser", Recipes = new List<Recipe>() };
+            userManagerMock.Setup(u => u.FindByIdAsync("user1")).ReturnsAsync(user);
+
+            var controller = new RecipesController(context, userManagerMock.Object);
 
             var newRecipe = new Recipe
             {
@@ -69,23 +86,23 @@ namespace FoodLink.Tests.Controllers
                 Description = "Desc",
                 Ingredients = "Ingredients",
                 Instructions = "Instructions",
-                CreateDate = DateTime.Now
+                UserId = "user1"
             };
 
             var result = await controller.PostRecipe(newRecipe);
-
             var actionResult = Assert.IsType<CreatedAtActionResult>(result.Result);
-
             var created = Assert.IsType<Recipe>(actionResult.Value);
 
             Assert.Equal("New Recipe", created.Title);
+            Assert.Equal("user1", created.UserId);
         }
 
         [Fact]
         public async Task DeleteRecipe_RemovesRecipe()
         {
             using var context = GetContextWithSeedData();
-            var controller = new RecipesController(context);
+            var userManagerMock = GetMockUserManager();
+            var controller = new RecipesController(context, userManagerMock.Object);
 
             var result = await controller.DeleteRecipe(1);
 
@@ -96,16 +113,33 @@ namespace FoodLink.Tests.Controllers
         [Fact]
         public async Task PutRecipe_UpdatesRecipe()
         {
-            using var context = GetContextWithSeedData();
-            var controller = new RecipesController(context);
+            var options = new DbContextOptionsBuilder<FoodLinkContext>()
+                .UseInMemoryDatabase(Guid.NewGuid().ToString())
+                .Options;
+
+            using var context = new FoodLinkContext(options);
+            context.Recipes.Add(new Recipe
+            {
+                Id = 1,
+                Title = "Original",
+                Description = "Old Desc",
+                Ingredients = "Old Ing",
+                Instructions = "Old Instr",
+                UserId = "user1"
+            });
+            context.SaveChanges();
+
+            var userManagerMock = GetMockUserManager();
+            var controller = new RecipesController(context, userManagerMock.Object);
 
             var updated = new Recipe
             {
                 Id = 1,
                 Title = "Updated Title",
-                Description = "Updated Description",
-                Ingredients = "Updated Ingredients",
-                Instructions = "Updated Instructions"
+                Description = "Updated Desc",
+                Ingredients = "Updated Ing",
+                Instructions = "Updated Instr",
+                UserId = "user1"
             };
 
             var result = await controller.PutRecipe(1, updated);
