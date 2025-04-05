@@ -45,7 +45,7 @@ namespace FoodLink.Tests.Controllers
         {
             using var context = GetContextWithSeedData();
             var userManagerMock = GetMockUserManager();
-            var pixabayServiceMock = new Mock<PixabayService>();
+            var pixabayServiceMock = new Mock<IPixabayService>();
             var controller = new RecipesController(context, userManagerMock.Object, pixabayServiceMock.Object);
 
             var result = await controller.GetRecipes();
@@ -58,8 +58,8 @@ namespace FoodLink.Tests.Controllers
         public async Task GetRecipe_ReturnsCorrectRecipe()
         {
             using var context = GetContextWithSeedData();
-            var pixabayServiceMock = new Mock<PixabayService>();
             var userManagerMock = GetMockUserManager();
+            var pixabayServiceMock = new Mock<IPixabayService>();
             var controller = new RecipesController(context, userManagerMock.Object, pixabayServiceMock.Object);
 
             var result = await controller.GetRecipe(1);
@@ -81,7 +81,10 @@ namespace FoodLink.Tests.Controllers
             var user = new ApplicationUser { Id = "user1", UserName = "testuser", Recipes = new List<Recipe>() };
             userManagerMock.Setup(u => u.FindByIdAsync("user1")).ReturnsAsync(user);
 
-            var pixabayServiceMock = new Mock<PixabayService>();
+            var pixabayServiceMock = new Mock<IPixabayService>();
+            pixabayServiceMock.Setup(p => p.GetImageUrlAsync(It.IsAny<string>()))
+                              .ReturnsAsync("https://fakeimage.com/image.jpg");
+
             var controller = new RecipesController(context, userManagerMock.Object, pixabayServiceMock.Object);
 
             var newRecipe = new Recipe
@@ -99,6 +102,7 @@ namespace FoodLink.Tests.Controllers
 
             Assert.Equal("New Recipe", created.Title);
             Assert.Equal("user1", created.UserId);
+            Assert.Equal("https://fakeimage.com/image.jpg", created.ImageUrl);
         }
 
         [Fact]
@@ -106,7 +110,7 @@ namespace FoodLink.Tests.Controllers
         {
             using var context = GetContextWithSeedData();
             var userManagerMock = GetMockUserManager();
-            var pixabayServiceMock = new Mock<PixabayService>();
+            var pixabayServiceMock = new Mock<IPixabayService>();
             var controller = new RecipesController(context, userManagerMock.Object, pixabayServiceMock.Object);
 
             var result = await controller.DeleteRecipe(1);
@@ -135,7 +139,7 @@ namespace FoodLink.Tests.Controllers
             context.SaveChanges();
 
             var userManagerMock = GetMockUserManager();
-            var pixabayServiceMock = new Mock<PixabayService>();
+            var pixabayServiceMock = new Mock<IPixabayService>();
             var controller = new RecipesController(context, userManagerMock.Object, pixabayServiceMock.Object);
 
             var updated = new Recipe

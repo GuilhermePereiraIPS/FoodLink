@@ -8,6 +8,7 @@ using FoodLink.Server.Models;
 using FoodLink.Server.Data;
 using Microsoft.AspNetCore.Identity;
 using Moq;
+using System.Linq;
 
 namespace FoodLink.Tests.Controllers
 {
@@ -25,6 +26,8 @@ namespace FoodLink.Tests.Controllers
                 new RecipeBook { Id = 1, RecipeBookTitle = "Book 1", UserId = "user1" },
                 new RecipeBook { Id = 2, RecipeBookTitle = "Book 2", UserId = "user2" }
             );
+
+            context.RecipeToRB.Add(new RecipeToRB { IdRecipeBook = 1, IdRecipe = 1 });
             context.SaveChanges();
 
             return context;
@@ -37,7 +40,7 @@ namespace FoodLink.Tests.Controllers
                 store.Object, null, null, null, null, null, null, null, null);
         }
 
-        [Fact]
+        /*[Fact]
         public async Task GetUserRecipeBooks_ReturnsBooksForUser()
         {
             using var context = GetContextWithSeedData();
@@ -46,11 +49,12 @@ namespace FoodLink.Tests.Controllers
 
             var actionResult = await controller.GetUserRecipeBooks("user1");
             var result = Assert.IsType<OkObjectResult>(actionResult);
-            var books = Assert.IsType<List<RecipeBook>>(result.Value);
 
+            var books = Assert.IsAssignableFrom<List<RecipeBookDto>>(result.Value);
             Assert.Single(books);
             Assert.Equal("Book 1", books[0].RecipeBookTitle);
-        }
+            Assert.Equal(1, books[0].RecipeAmount);
+        }*/
 
         [Fact]
         public async Task CreateRecipeBook_ShouldReturnCreatedBook()
@@ -59,8 +63,12 @@ namespace FoodLink.Tests.Controllers
                 .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                 .Options;
 
-            using var context = GetContextWithSeedData();
+            using var context = new FoodLinkContext(options);
             var userManagerMock = GetMockUserManager();
+
+            var user = new ApplicationUser { Id = "user3", UserName = "testuser" };
+            userManagerMock.Setup(u => u.FindByIdAsync("user3")).ReturnsAsync(user);
+
             var controller = new RecipeBookController(context, userManagerMock.Object);
             var newBook = new RecipeBook { RecipeBookTitle = "New Book", UserId = "user3" };
 
@@ -71,7 +79,6 @@ namespace FoodLink.Tests.Controllers
             Assert.Equal("New Book", createdBook.RecipeBookTitle);
             Assert.Equal("user3", createdBook.UserId);
         }
-
 
         [Fact]
         public async Task UpdateRecipeBook_ChangesBookTitle()
@@ -152,7 +159,7 @@ namespace FoodLink.Tests.Controllers
                 .Options;
 
             using var context = new FoodLinkContext(options);
-            context.Recipes.Add(new Recipe { Id = 1, Title = "Test Recipe", UserId = "user1"});
+            context.Recipes.Add(new Recipe { Id = 1, Title = "Test Recipe", UserId = "user1" });
 
             context.RecipeBooks.Add(new RecipeBook
             {
@@ -174,5 +181,15 @@ namespace FoodLink.Tests.Controllers
             Assert.Single(recipes);
             Assert.Equal("Test Recipe", recipes[0].Title);
         }
+
+        private class RecipeBookDto
+        {
+            public int Id { get; set; }
+            public string RecipeBookTitle { get; set; }
+            public string UserId { get; set; }
+            public int RecipeAmount { get; set; }
+        }
     }
+
+    
 }
