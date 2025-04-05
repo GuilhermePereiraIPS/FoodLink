@@ -33,12 +33,11 @@ namespace FoodLink.Server.Controllers
         /// </summary>
         /// <param name="userManager">The user manager for handling Identity operations.</param>
         /// <param name="configuration">The configuration for accessing app settings (e.g., JWT settings).</param>
-        public UserAccountsController(UserManager<ApplicationUser> userManager, IConfiguration configuration, FoodLinkContext context, IResend resend)
+        public UserAccountsController(UserManager<ApplicationUser> userManager, IConfiguration configuration, FoodLinkContext context)
         {
             _userManager = userManager;
             _configuration = configuration;
             _context = context;
-            _resend = resend;
         }
 
         /// <summary>

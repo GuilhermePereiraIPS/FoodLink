@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using FoodLink.Server.Controllers;
 using FoodLink.Server.Models;
 using FoodLink.Server.Data;
+using Microsoft.AspNetCore.Identity;
+using Moq;
 
 namespace FoodLink.Tests.Controllers
 {
@@ -28,11 +30,19 @@ namespace FoodLink.Tests.Controllers
             return context;
         }
 
+        private static Mock<UserManager<ApplicationUser>> GetMockUserManager()
+        {
+            var store = new Mock<IUserStore<ApplicationUser>>();
+            return new Mock<UserManager<ApplicationUser>>(
+                store.Object, null, null, null, null, null, null, null, null);
+        }
+
         [Fact]
         public async Task GetUserRecipeBooks_ReturnsBooksForUser()
         {
             using var context = GetContextWithSeedData();
-            var controller = new RecipeBookController(context);
+            var userManagerMock = GetMockUserManager();
+            var controller = new RecipeBookController(context, userManagerMock.Object);
 
             var actionResult = await controller.GetUserRecipeBooks("user1");
             var result = Assert.IsType<OkObjectResult>(actionResult);
@@ -49,8 +59,9 @@ namespace FoodLink.Tests.Controllers
                 .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                 .Options;
 
-            using var context = new FoodLinkContext(options);
-            var controller = new RecipeBookController(context);
+            using var context = GetContextWithSeedData();
+            var userManagerMock = GetMockUserManager();
+            var controller = new RecipeBookController(context, userManagerMock.Object);
             var newBook = new RecipeBook { RecipeBookTitle = "New Book", UserId = "user3" };
 
             var actionResult = await controller.CreateRecipeBook(newBook);
@@ -66,7 +77,8 @@ namespace FoodLink.Tests.Controllers
         public async Task UpdateRecipeBook_ChangesBookTitle()
         {
             using var context = GetContextWithSeedData();
-            var controller = new RecipeBookController(context);
+            var userManagerMock = GetMockUserManager();
+            var controller = new RecipeBookController(context, userManagerMock.Object);
             var updated = new RecipeBook { Id = 1, RecipeBookTitle = "Updated", UserId = "user1" };
 
             var actionResult = await controller.UpdateRecipeBook(1, updated);
@@ -80,7 +92,8 @@ namespace FoodLink.Tests.Controllers
         public async Task UpdateRecipeBook_ReturnsBadRequest_WhenIdMismatch()
         {
             using var context = GetContextWithSeedData();
-            var controller = new RecipeBookController(context);
+            var userManagerMock = GetMockUserManager();
+            var controller = new RecipeBookController(context, userManagerMock.Object);
             var updated = new RecipeBook { Id = 999, RecipeBookTitle = "Invalid", UserId = "user1" };
 
             var result = await controller.UpdateRecipeBook(1, updated);
@@ -93,7 +106,8 @@ namespace FoodLink.Tests.Controllers
         public async Task UpdateRecipeBook_ReturnsNotFound_WhenBookDoesNotExist()
         {
             using var context = GetContextWithSeedData();
-            var controller = new RecipeBookController(context);
+            var userManagerMock = GetMockUserManager();
+            var controller = new RecipeBookController(context, userManagerMock.Object);
             var updated = new RecipeBook { Id = 999, RecipeBookTitle = "Missing", UserId = "user1" };
 
             var result = await controller.UpdateRecipeBook(999, updated);
@@ -106,7 +120,8 @@ namespace FoodLink.Tests.Controllers
         public async Task DeleteRecipeBook_RemovesBook()
         {
             using var context = GetContextWithSeedData();
-            var controller = new RecipeBookController(context);
+            var userManagerMock = GetMockUserManager();
+            var controller = new RecipeBookController(context, userManagerMock.Object);
 
             var actionResult = await controller.DeleteRecipeBook(2);
             var result = Assert.IsType<OkObjectResult>(actionResult);
@@ -120,7 +135,8 @@ namespace FoodLink.Tests.Controllers
         public async Task DeleteRecipeBook_ReturnsNotFound_WhenBookDoesNotExist()
         {
             using var context = GetContextWithSeedData();
-            var controller = new RecipeBookController(context);
+            var userManagerMock = GetMockUserManager();
+            var controller = new RecipeBookController(context, userManagerMock.Object);
 
             var result = await controller.DeleteRecipeBook(999);
 
@@ -148,7 +164,8 @@ namespace FoodLink.Tests.Controllers
             context.RecipeToRB.Add(new RecipeToRB { IdRecipeBook = 1, IdRecipe = 1 });
             context.SaveChanges();
 
-            var controller = new RecipeBookController(context);
+            var userManagerMock = GetMockUserManager();
+            var controller = new RecipeBookController(context, userManagerMock.Object);
 
             var actionResult = controller.GetRecipesByBook(1);
             var result = Assert.IsType<OkObjectResult>(actionResult);
