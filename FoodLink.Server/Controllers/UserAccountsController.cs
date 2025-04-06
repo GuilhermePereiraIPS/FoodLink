@@ -50,6 +50,9 @@ namespace FoodLink.Server.Controllers
         [HttpPost("api/signup")]
         public async Task<IActionResult> Register([FromBody] UserRegistrationModel model)
         {
+            if(!System.Text.RegularExpressions.Regex.IsMatch(model.Name, @"^[a-zA-Z0-9._-]+$"))
+                return BadRequest(new { message = "Username contains invalid characters. Only letters and numbers with no spaces are allowed." });
+
             var emailExists = await _userManager.FindByEmailAsync(model.Email);
             if (emailExists != null)
                 return BadRequest(new { message = "Email is already in use." });

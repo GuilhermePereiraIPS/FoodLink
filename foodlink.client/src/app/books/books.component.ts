@@ -32,11 +32,9 @@ export class BooksComponent {
   getUserId() {
     this.accountsService.getCurrentUser().subscribe(
       (result) => {
-        console.log('User fetched:', result);
         var user = result;
         this.currentUserId = user.id;
         this.loadRecipeBooks();
-        console.log(user)
       },
       (error) => {
         console.error(error);

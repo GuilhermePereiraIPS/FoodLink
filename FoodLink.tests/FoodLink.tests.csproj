@@ -10,6 +10,7 @@
     <CoverletOutputFormat>opencover</CoverletOutputFormat>
     <CoverletOutput>./coverage/</CoverletOutput>
     <ExcludeByFile>**/Program.cs;**/Migrations/*;**/*Model.cs</ExcludeByFile>
+    <UserSecretsId>96908061-12a0-4b6a-bc00-7815c73cadfd</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

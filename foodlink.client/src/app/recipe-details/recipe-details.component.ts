@@ -41,7 +41,6 @@ export class RecipeDetailsComponent implements OnInit {
   ngOnInit(): void {
     this.accountsService.currentUser$.subscribe(
       (user) => {
-        console.log('Current user updated:', user);
         this.currentUser = user;
         if (this.currentUser) this.getUserRecipeBooks(this.currentUser.id);
       },
@@ -86,7 +85,6 @@ export class RecipeDetailsComponent implements OnInit {
   getUser(id: string): void {
     this.accountsService.getUserInfo(undefined, id).subscribe(
       (result: User) => {
-        console.log('User fetched:', result);
         this.user = result;
       },
       (error) => {

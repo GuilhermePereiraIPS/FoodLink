@@ -107,7 +107,6 @@ export class AccountsService {
   getAllUsers(): Observable<{ id: string; username: string }[]> {
     return this.http.get<{ id: string; username: string }[]>('api/users').pipe(
       map(users => {
-       // console.log("Users fetched:", users);
         return users;
       }),
       catchError(error => {
@@ -120,9 +119,7 @@ export class AccountsService {
   getUserById(userId: string): Observable<string> {
     return this.getAllUsers().pipe(
       map(users => {
-        //console.log(`Searching for userId: ${userId}`);
         const user = users.find(u => u.id === userId);
-        //console.log(user?.username);
         return user ? user.username : "Unknown User";
       }),
       catchError(error => {
