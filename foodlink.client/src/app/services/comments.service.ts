@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface Comment {
-  idComment?: number;
+  id?: number;
   commentText: string;
   recipeId: number;
   userId: string;
@@ -18,17 +18,22 @@ export class CommentsService {
 
   constructor(private http: HttpClient) { }
 
-  //Obter comentários de uma receita
+  //Get comments of a recipe
   getComments(recipeId: number): Observable<Comment[]> {
-    return this.http.get<Comment[]>(`${this.apiUrl}/${recipeId}`);
+    return this.http.get<Comment[]>(`${this.apiUrl}/comments/${recipeId}`);
   }
 
-  //Adicionar um novo comentário
+  //Get comment
+  getComment(commentId: number): Observable<Comment> {
+    return this.http.get<Comment>(`${this.apiUrl}/${commentId}`);
+  }
+
+  //Add a new comment
   addComment(comment: Comment): Observable<Comment> {
     return this.http.post<Comment>(this.apiUrl, comment);
   }
 
-  //Delete comentário
+  //Delete a comment
   deleteComment(commentId: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${commentId}`);
   }

@@ -4,9 +4,10 @@ import { Observable } from 'rxjs';
 import { Recipe } from './recipes.service';
 
 export interface RecipeBook {
-  idRecipeBook?: number;
+  id?: number;
   recipeBookTitle: string;
   userId: string;
+  recipeAmount?: number;
 }
 
 @Injectable({
@@ -28,7 +29,7 @@ export class RecipeBooksService {
   }
 
   updateRecipeBook(recipeBook: RecipeBook): Observable<void> {
-    return this.http.put<void>(`${this.apiUrl}/${recipeBook.idRecipeBook}`, recipeBook);
+    return this.http.put<void>(`${this.apiUrl}/${recipeBook.id}`, recipeBook);
   }
 
   deleteRecipeBook(id: number): Observable<void> {

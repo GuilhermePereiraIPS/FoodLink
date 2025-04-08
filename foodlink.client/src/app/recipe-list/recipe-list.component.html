@@ -1,38 +1,49 @@
-<div class="recipe-list-container">
-  
-  <!-- Título da Página -->
-  <h2 class="recipe-page-title">Find a great recipe</h2>
+<div>
 
-  <!-- Search Bar -->
-  <div class="search-bar">
-    <input type="text"
-           [(ngModel)]="searchTerm"
-           placeholder="Search recipes..."
-           class="search-input" />
-    <button (click)="getRecipesSearch()" class="search-button">Search</button>
+  <div id="search-container">
+    
+    <!-- Search Bar -->
+    <div class="search-bar">
+      <input type="text"
+             [(ngModel)]="searchTerm"
+             placeholder="Search recipes..."
+             class="search-input"
+             (keyup.enter)="getRecipesSearch()"/> <!--on enter search-->
+      <button (click)="getRecipesSearch()" class="search-button">Search</button>
+    </div>
   </div>
 
-  <!-- Botão para ordenar -->
-  <button (click)="toggleOrderRecent()" class="order-button">
-    Order by: {{ orderRecent ? 'Recent' : 'None' }}
-  </button>
+  <!-- Botões para ordenar -->
+  <ul id="order-list">
+    <li (click)="setOrderNewest()">
+      <input id="latest" checked="checked" type="radio" name="order"/>
+      <label for="latest">Latest</label>
+    </li>
+    <li (click)="setOrderOldest()">
+      <input id="brated"  type="radio" name="order"/>
+      <label for="brated">Oldest</label>
+    </li>
+  </ul>
 
   <!-- Grid de receitas -->
   <div class="recipe-grid" *ngIf="recipes">
-    <div *ngFor="let recipe of recipes" class="recipe-card">
-
-      <!-- Informações da Receita -->
-      <div class="recipe-info">
-        <h3>{{ recipe.title }}</h3>
-        <p class="recipe-date">Created: {{ recipe.createDate | date:'short' }}</p>
-      </div>
+    <div *ngFor="let recipe of recipes">
+        <app-recipe-card [id]="recipe.id"
+                         [title]="recipe.title"
+                         [description]="recipe.description"
+                         [date]="recipe.createDate | date:'shortDate'"
+                         [userId]="recipe.userId"
+                         [imageUrl]="recipe.imageUrl"
+                         >
+        </app-recipe-card>
+      
 
       <!-- Botões de ação -->
-      <div class="recipe-actions">
+      <!--<div class="recipe-actions">
         <a [routerLink]="['/recipes', recipe.id]" class="view-recipe">View Recipe</a>
         <a [routerLink]="['/recipes/edit', recipe.id]" class="view-recipe">Edit</a>
         <a href="/recipes" (click)="deleteRecipe(recipe.id)" class="delete-recipe">Delete</a>
-      </div>
+      </div>-->
     </div>
   </div>
 </div>

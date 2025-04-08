@@ -21,6 +21,8 @@ import { ProfileViewComponent } from './profile-view/profile-view.component';
 import { ProfileEditComponent } from './profile-edit/profile-edit.component';
 import { BooksComponent } from './books/books.component';
 import { RecipeBookDetailsComponent } from './recipe-book-details/recipe-book-details.component';
+import { RecipeCardComponent } from './recipe-card/recipe-card.component';
+import { ActivateComponent } from './activate/activate.component';
 
 
 @NgModule({
@@ -36,6 +38,8 @@ import { RecipeBookDetailsComponent } from './recipe-book-details/recipe-book-de
     ProfileEditComponent,
     BooksComponent,
     RecipeBookDetailsComponent,
+    RecipeCardComponent,
+    ActivateComponent,
   ],
   imports: [
     BrowserModule, HttpClientModule,

@@ -1,12 +1,12 @@
 using FoodLink.Server.Data;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using FoodLink.Server.Models;
+using FoodLink.Server.Services;
+using Resend;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +17,18 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<FoodLinkContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("FoodLinkContext") ?? throw new InvalidOperationException("Connection string 'FoodLinkContext' not found.")));
 
+//Add resend
+builder.Services.AddOptions();
+builder.Services.AddHttpClient<ResendClient>();
+builder.Services.Configure<ResendClientOptions>(o =>
+{
+    o.ApiToken = "re_D3FYcTyj_M7YzJuhZbLksvz2WZGVb12SE";
+});
+builder.Services.AddTransient<IResend, ResendClient>();
+
+//Add pixabay
+builder.Services.Configure<PixabaySettings>(builder.Configuration.GetSection("Pixabay"));
+builder.Services.AddHttpClient<IPixabayService, PixabayService>();
 
 // Add Identity  
 builder.Services
@@ -105,6 +117,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseAuthentication();
+app.UseRouting();
+
 app.UseAuthorization();
 
 app.MapControllers();
@@ -113,8 +127,7 @@ app
     .MapGroup("/api")
     .MapIdentityApi<ApplicationUser>();
 
-app.MapFallbackToFile("/index.html");
-
+app.MapFallbackToFile("index.html");
 
 using (var scope = app.Services.CreateScope())
 {
@@ -152,3 +165,4 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.Run();
+

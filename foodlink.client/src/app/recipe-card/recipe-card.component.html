@@ -1,0 +1,36 @@
+
+<div id="recipe-container">
+  <a [routerLink]="['/recipes', id]">
+    <div id="recipe-image">
+
+      <img *ngIf="!imageUrl" src="../../assets/background.png" />
+      <img *ngIf="imageUrl" [src]="imageUrl"/>
+
+      <div id="recipe-short-description">
+
+        <div>
+          <p id="recipe-description-text">{{ description }}</p>
+        </div>
+
+        <div *ngIf="onClickRemove" (click)="onRemoveClick()" class="delete-recipe">
+          <i class=" icon-outline fa-solid fa-x"></i>
+        </div>
+      </div>
+    </div>
+  </a>
+  <div id="recipe-details">
+    <div>
+      <a [routerLink]="['/recipes', id]">
+        <p id="recipe-title">{{ title }}</p>
+      </a>
+    </div>
+    <div>
+      <a *ngIf="username" [routerLink]="['/profile', username]">
+        <p>{{ username }}</p>
+      </a>
+      <p *ngIf="!username">loading..</p>
+      <p>•</p>
+      <p>{{ date }}</p>
+    </div>
+  </div>
+</div>

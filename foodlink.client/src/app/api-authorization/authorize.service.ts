@@ -34,7 +34,13 @@ export class AuthorizeService {
 
   // Login baseado em JWT
   public signIn(email: string, password: string): Observable<boolean> {
-    return this.http.post<{ token: string }>('/api/signin', { email, password }).pipe(
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+
+    return this.http.post<{ token: string }>(
+      '/api/signin',
+      { Email: email, Password: password },
+      { headers }
+    ).pipe(
       map((response) => {
         if (response && response.token) {
           this.saveToken(response.token);
@@ -42,18 +48,24 @@ export class AuthorizeService {
           return true;
         }
         return false;
-      }),
-      catchError(() => {
-        return of(false);
       })
     );
   }
 
+
   // Registro de novo utilizador
   public register(name: string, email: string, password: string): Observable<boolean> {
-    return this.http.post('api/signup', { name, email, password }, { observe: 'response' }).pipe(
-      map((res) => res.ok),
-      catchError(() => of(false))
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+
+    return this.http.post('api/signup',
+      {
+        Name: name,
+        Email: email,
+        Password: password
+      },
+      { headers, observe: 'response' }
+    ).pipe(
+      map((res) => res.ok)
     );
   }
 

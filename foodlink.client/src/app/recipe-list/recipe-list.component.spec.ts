@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RecipeListComponent } from './recipe-list.component';
+
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RecipesService } from '../services/recipes.service';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -14,8 +15,12 @@ describe('RecipeListComponent', () => {
   let router: Router;
 
   const mockRecipes: Recipe[] = [
-    { id: 1, title: 'Recipe 1' },
-    { id: 2, title: 'Recipe 2' },
+    {
+      id: 1, title: 'Recipe 1', description: 'teste', ingredients: 'teste', instructions: 'teste', createDate:  new Date()
+    },
+    {
+      id: 2, title: 'Recipe 2', description: '', ingredients: '', instructions: '', createDate: new Date()
+    },
   ];
 
   beforeEach(async () => {

@@ -5,8 +5,6 @@
   gap: 1vh;
 }
 
-
-
 #confirm {
   display: flex;
   flex-direction: column;
@@ -23,21 +21,24 @@ input, textarea, button {
   height: 4vh;
 }
 
-
 input {
   width: 40vh;
+  padding-left: 5px;
 }
 
 textarea {
   width: 70%;
   height: 20vh;
+  padding-left: 5px;
 }
 
 button {
   width: auto;
   height:auto;
-  padding: 5px 10px;
+  padding: 0.5em 1em;
+  font-size: 1.2rem;
   transition: background-color 0.3s ease, color 0.3s ease;
+  border: none;
 }
 
 button:disabled {

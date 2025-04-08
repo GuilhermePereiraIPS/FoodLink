@@ -1,5 +1,13 @@
 /* You can add global styles to this file, and also import other style files */
 
+p{
+    white-space: pre-wrap;
+}
+
+h1, h2, h3, h4, h5, h6, p, ul, li {
+  color: #082109 !important
+}
+
 th, td {
   padding-left: 1rem;
   padding-right: 1rem;
@@ -9,7 +17,75 @@ table {
   margin: 0 auto;
 }
 
-.main-content {
-  margin: 5vh 10%
+.icon-outline {
+  -webkit-text-stroke: 1px black;
 }
+
+.text-input{
+    width: 100%;
+    padding: 5px;
+    font-size: 18px;
+    border-radius: 4px;
+    text-align: left;
+    border: 1px solid #082109;
+}
+
+.no-border{
+    border:none !important
+}
+
+.action-btn {
+  background-color: #E4E4E4;
+  color: #082109;
+  padding: 10px 8px;
+  border: 1px solid black;
+  border-radius: 3px;
+  font-size: 20px;
+  font-weight: 600;
+  width: 150px;
+  text-align: center;
+  cursor: pointer;
+  transition: 150ms background-color ease, 150ms color ease
+}
+
+  .action-btn:enabled:hover {
+    background-color: #C4C4C4; 
+    color: #041704; 
+  }
+
+  .action-btn:disabled {
+    color: gray;
+    background-color: #CDCDCD;
+    cursor: auto;
+  }
+
+
+
+.action-small-btn {
+  width: 100px;
+  font-size: 16px;
+  padding: 6px 10px;
+}
+
+.action-confirm-btn {
+  background-color: #39bf39;
+  color: #082109;
+}
+
+  .action-confirm-btn:enabled:hover {
+    background-color: #07a807 !important;
+    color: #082109 !important;
+  }
+
+.recipe-grid {
+  display: flex;
+  text-align:left;
+  flex-wrap: wrap;
+  gap: 40px;
+}
+
+
+
+
+
 

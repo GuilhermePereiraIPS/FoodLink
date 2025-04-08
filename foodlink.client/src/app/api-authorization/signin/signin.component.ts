@@ -29,8 +29,9 @@ export class SignInComponent implements OnInit {
   }
 
   public signIn(event: Event): void {
-    event.preventDefault(); // Previne o comportamento padrão do formulário
+    event.preventDefault();
     if (!this.loginForm.valid) {
+      alert('Please fill the email and password fields');
       return;
     }
 
@@ -40,12 +41,19 @@ export class SignInComponent implements OnInit {
     this.authService.signIn(email, password).subscribe({
       next: (response) => {
         if (response) {
-          this.router.navigateByUrl("/recipes"); // Redireciona para a página inicial
+          alert('Login sucessful!');
+          this.router.navigateByUrl("/recipes");
         }
       },
-      error: () => {
-        this.authFailed = true; // Mostra mensagem de erro se falhar
+      error: (err) => {
+        this.authFailed = true;
+        console.error('Erro no login:', err);
+
+        const backendMessage = err?.error?.message;
+        alert(backendMessage);
       }
     });
   }
+
+
 }

@@ -1,61 +1,71 @@
-<div class="recipe-books-container">
-  <h2>My Recipe Books</h2>
-
-  <!-- Botão para adicionar um novo Recipe Book -->
-  <button class="add-recipe-book-btn" (click)="toggleForm()">+ Add Recipe Book</button>
-
-  <!-- Formulário para criar um novo Recipe Book -->
-  <div *ngIf="showForm" class="recipe-book-form">
-    <input type="text" [(ngModel)]="newRecipeBookTitle" placeholder="Enter Recipe Book Title" class="recipe-book-input" />
-
-    <!-- Exibir mensagem de erro -->
-    <p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p>
-
-    <button (click)="createRecipeBook()" class="save-recipe-book-btn">Save</button>
-    <button (click)="toggleForm()" class="cancel-recipe-book-btn">Cancel</button>
+<div *ngIf="showModalBackdrop" class="modal-backdrop" (click)="toggleModalBackdrop()">
+  <div *ngIf="!isEditing" class="modal-create-book" (click)="$event.stopPropagation()">
+    <h4>New recipe book</h4>
+    <hr />
+    <input class="text-input" type="text" placeholder="Enter recipe book title" [(ngModel)]="newRecipeBookTitle" />
+    <div class="modal-action-buttons">
+      <button class=" no-border action-btn action-small-btn" (click)="toggleModalBackdrop()">Cancel</button>
+      <button [disabled]="!newRecipeBookTitle || newRecipeBookTitle.length < 1"
+              class="no-border action-btn action-confirm-btn action-small-btn"
+              (click)="createRecipeBook()">
+        Save
+      </button>
+    </div>
   </div>
 
-  <!-- Exibir a lista de Recipe Books -->
-  <div *ngIf="recipeBooks.length > 0; else noBooks">
-    <ul class="recipe-books-list">
-      <li *ngFor="let book of recipeBooks" class="recipe-book-item">
-
-        <!-- Exibir input se estiver no modo de edição -->
-        <div *ngIf="editingBookId === book.idRecipeBook; else normalView">
-          <input type="text" [(ngModel)]="editedTitle" class="edit-input" />
-          <button (click)="saveEditedBook()" class="save-btn">✔ Save</button>
-          <button (click)="cancelEditing()" class="cancel-btn">✖ Cancel</button>
-        </div>
-
-        <!-- Visão normal com três pontinhos -->
-        <ng-template #normalView>
-          <!-- O link ocupa toda a área do RecipeBook -->
-          <a [routerLink]="['/recipe-books', book.idRecipeBook]" class="recipe-book-link">
-            <span>{{ book.recipeBookTitle }}</span>
-          </a>
-
-          <!-- Container do menu -->
-          <div class="menu-container">
-            <button class="menu-btn" (click)="toggleMenu(book.idRecipeBook!)">⋮</button>
-
-            <!-- Dropdown do menu -->
-            <div *ngIf="activeMenu === book.idRecipeBook" class="dropdown-menu">
-              <button class="dropdown-item" (click)="startEditing(book)">✏️ Edit</button>
-              <button class="dropdown-item delete" (click)="deleteBook(book.idRecipeBook!)">🗑 Delete</button>
-            </div>
-          </div>
-        </ng-template>
-
-      </li>
-    </ul>
+  <div *ngIf="isEditing" class="modal-create-book" (click)="$event.stopPropagation()">
+    <h4>Edit recipe book</h4>
+    <hr />
+    <input class="text-input" type="text" placeholder="Enter recipe book title" [(ngModel)]="editedTitle" />
+    <div class="modal-action-buttons">
+      <button class=" no-border action-btn action-small-btn" (click)="toggleModalBackdrop()">Cancel</button>
+      <button [disabled]="!editedTitle || editedTitle.length < 1"
+              class="no-border action-btn action-confirm-btn action-small-btn"
+              (click)="saveEditedBook()">
+        Save
+      </button>
+    </div>
   </div>
-
-  <!-- Caso o usuário não tenha Recipe Books -->
-  <ng-template #noBooks>
-    <p class="no-books-message">No Recipe Books found. Create one!</p>
-  </ng-template>
 </div>
 
-<br />
-<br />
-<br />
+
+<div class="action-buttons">
+  <button class="action-btn" (click)="startAdding()">+ Add a book</button>
+</div>
+
+<div class="recipe-grid">
+  <div *ngFor="let book of recipeBooks">
+    <div class="book-container">
+      <div class="book-image">
+        <a [routerLink]="['/recipe-books', book.id]">
+          <img src="../../assets/background.png" />
+        </a>
+
+        <div (click)="startEditing(book)" class="edit-recipe">
+          <i class=" icon-outline fa-solid fa-pen"></i>
+        </div>
+
+        <div (click)="deleteBook(book.id!)" class="delete-recipe">
+          <i class=" icon-outline fa-solid fa-x"></i>
+        </div>
+
+        <div class="recipe-count">
+          <i class="fa-solid fa-list"></i>
+          {{ book.recipeAmount || 0 }} {{ (book.recipeAmount || 0) === 1 ? 'recipe' : 'recipes' }}
+        </div>
+      </div>
+      <div class="book-details">
+        <div>
+          <p class="book-title">{{ book.recipeBookTitle }}</p>
+        </div>
+        <!--<div>
+          <p>Private</p>
+          <p>•</p>
+          <p>Updated today</p>
+        </div>-->
+      </div>
+    </div>
+  </div>
+
+
+</div>

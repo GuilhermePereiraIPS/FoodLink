@@ -6,20 +6,31 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodLink.Server.Controllers
 {
+    /// <summary>
+    /// Controller responsible for managing associations between recipes and recipe books.
+    /// </summary>
     [Route("api/recipetorb")]
     [ApiController]
     public class RecipeToRBController : ControllerBase
     {
         private readonly FoodLinkContext _context;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RecipeToRBController"/> class.
+        /// </summary>
+        /// <param name="context">The database context for accessing recipe-to-recipe-book associations.</param>
         public RecipeToRBController(FoodLinkContext context)
         {
             _context = context;
         }
 
         /// <summary>
-        /// Associa uma receita a um Recipe Book
+        /// Associates a recipe with a recipe book.
         /// </summary>
+        /// <param name="recipeToRB">The association data containing recipe ID and recipe book ID.</param>
+        /// <returns>An <see cref="IActionResult"/> containing the created association or an error message.</returns>
+        /// <response code="200">Recipe associated with the recipe book successfully, returns the association data.</response>
+        /// <response code="400">Invalid data or recipe already in the recipe book.</response>
         [HttpPost]
         public async Task<IActionResult> AddRecipeToBook([FromBody] RecipeToRB recipeToRB)
         {
@@ -43,8 +54,12 @@ namespace FoodLink.Server.Controllers
         }
 
         /// <summary>
-        /// Lista todas as receitas associadas a um Recipe Book específico
+        /// Retrieves all recipes associated with a specific recipe book.
         /// </summary>
+        /// <param name="id">The ID of the recipe book.</param>
+        /// <returns>An <see cref="IActionResult"/> containing a list of recipes in the recipe book or an error message.</returns>
+        /// <response code="200">Recipes retrieved successfully, returns the list of recipes.</response>
+        /// <response code="404">No recipes found for this recipe book.</response>
         [HttpGet("{id}")]
         public async Task<IActionResult> GetRecipesByRecipeBook(int id)
         {
@@ -66,8 +81,13 @@ namespace FoodLink.Server.Controllers
         }
 
         /// <summary>
-        /// Remove uma receita de um Recipe Book
+        /// Removes a recipe from a recipe book.
         /// </summary>
+        /// <param name="idRecipe">The ID of the recipe to remove.</param>
+        /// <param name="idRecipeBook">The ID of the recipe book.</param>
+        /// <returns>An <see cref="IActionResult"/> containing a success message or an error if the association is not found.</returns>
+        /// <response code="200">Recipe removed successfully, returns a confirmation message.</response>
+        /// <response code="404">Association between recipe and recipe book not found.</response>
         [HttpDelete("{idRecipe}/{idRecipeBook}")]
         public async Task<IActionResult> RemoveRecipeFromBook(int idRecipe, int idRecipeBook)
         {

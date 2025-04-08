@@ -11,9 +11,11 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Mailjet.Api" Version="3.0.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
 		<PackageReference Include="microsoft.aspnetcore.components.quickgrid.entityframeworkadapter" Version="8.0.1" />
 		<PackageReference Include="microsoft.aspnetcore.identity.entityframeworkcore" Version="8.0.1" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.0" />
 		<PackageReference Include="microsoft.aspnetcore.spaproxy" Version="8.0.1" />
 		<PackageReference Include="microsoft.entityframeworkcore.sqlserver" Version="8.0.1" />
 		<PackageReference Include="microsoft.entityframeworkcore.tools" Version="8.0.1">
@@ -21,6 +23,7 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="microsoft.visualstudio.web.codegeneration.design" Version="8.0.0" />
+		<PackageReference Include="Resend" Version="0.1.0" />
 		<PackageReference Include="swashbuckle.aspnetcore" Version="6.5.0" />
 	</ItemGroup>
 
@@ -29,5 +32,10 @@
 			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
 		</ProjectReference>
 	</ItemGroup>
-
+	<ItemGroup>
+		<InternalsVisibleTo Include="FoodLink.tests" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Controllers\fz3-17439651351130\" />
+	</ItemGroup>
 </Project>

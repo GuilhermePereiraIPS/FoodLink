@@ -17,7 +17,6 @@ export class RegisterComponent implements OnInit {
   constructor(private authService: AuthorizeService,
     private formBuilder: FormBuilder) {
 
-    // Verificar se o utilizador já está autenticado
     this.signedIn = this.authService.isSignedIn();
   }
 
@@ -26,7 +25,6 @@ export class RegisterComponent implements OnInit {
     this.registerSucceeded = false;
     this.errors = [];
 
-    // Inicializar o formulário com validações
     this.registerForm = this.formBuilder.group(
       {
         name: ['', Validators.required],
@@ -39,7 +37,6 @@ export class RegisterComponent implements OnInit {
       }, { validators: this.passwordMatchValidator });
   }
 
-  // Validador para confirmar que password e confirmPassword coincidem
   passwordMatchValidator: ValidatorFn = (control: AbstractControl): null | object => {
     const password = control.get('password');
     const confirmPassword = control.get('confirmPassword');
@@ -51,9 +48,9 @@ export class RegisterComponent implements OnInit {
       : null;
   }
 
-  // Método chamado ao submeter o formulário
-  public register() : void {
+  public register(): void {
     if (!this.registerForm.valid) {
+      alert('Please fill al fields correctly');
       return;
     }
 
@@ -64,30 +61,28 @@ export class RegisterComponent implements OnInit {
     const email = this.registerForm.get('email')?.value;
     const password = this.registerForm.get('password')?.value;
 
-    // Chamada ao serviço de registo
-    this.authService.register(name, email, password).forEach(
-      response => {
-        if (response) {
+    this.authService.register(name, email, password).subscribe({
+      next: (success: boolean) => {
+        if (success) {
           this.registerSucceeded = true;
-        }
-      }).catch(
-        error => {
+          alert('Account created sucessfully!');
+        } else {
           this.registerFailed = true;
-          if (error.error) {
-            const errorObj = JSON.parse(error.error);
-            if (errorObj && errorObj.errors) {
-              // Processar os erros detalhados
-              const errorList = errorObj.errors;
-              for (let field in errorList) {
-                if (Object.hasOwn(errorList, field)) {
-                  let list: string[] = errorList[field];
-                  for (let idx = 0; idx < list.length; idx += 1) {
-                    this.errors.push(`${field}: ${list[idx]}`);
-                  }
-                }
-              }
-            }
-          }
-        });
+          alert('Error creating account. Verify fields.');
+        }
+      },
+      error: (error) => {
+        this.registerFailed = true;
+        console.error('Erro no registo:', error);
+
+        const backendMessage = error?.error?.message;
+
+        alert(backendMessage);
+
+        
+      }
+    });
   }
+
+
 }

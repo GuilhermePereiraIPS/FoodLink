@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router'; // Add Router for navigation
 import { Recipe, RecipesService } from '../services/recipes.service';
 import { CommentsService, Comment } from '../services/comments.service';
-import { AccountsService } from '../services/accounts.service';
-import { RecipeBooksService } from '../services/recipe-books.service';
+import { AccountsService, User } from '../services/accounts.service';
+import { RecipeBook, RecipeBooksService } from '../services/recipe-books.service';
 import { RecipeToRBService, RecipeToRB } from '../services/recipe-to-rb.service';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-recipe-details',
@@ -14,22 +13,24 @@ import { Observable } from 'rxjs';
   styleUrls: ['./recipe-details.component.css']
 })
 export class RecipeDetailsComponent implements OnInit {
-  public recipe: Recipe | undefined;
-  public id: number | undefined;
+  public currentUser: User | null = null;
+  public user: User | null = null;
+  public recipeId: number | undefined;
+  public recipe!: Recipe;
+
   public comments: Comment[] = [];
   public newComment: string = '';
-  public currentUserId: string = '';
   public userNames: Map<string, string> = new Map();
 
-  public userRecipeBooks: any[] = [];
+  public userRecipeBooks: RecipeBook[] = [];
   public selectedRecipeBook: number | null = null;
-  public showRecipeBookList = false; // Controla a exibição da lista de Recipe Books
-
+  public showRecipeBookList = false;
   public showModal = false;
   private commentToDelete: number | undefined;
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router, // Add Router
     private recipeService: RecipesService,
     private commentsService: CommentsService,
     private accountsService: AccountsService,
@@ -38,106 +39,117 @@ export class RecipeDetailsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.accountsService.currentUser$.subscribe(
+      (user) => {
+        this.currentUser = user;
+        if (this.currentUser) this.getUserRecipeBooks(this.currentUser.id);
+      },
+      (error) => {
+        console.error('Error in current user subscription:', error);
+      }
+    );
+
     this.route.params.subscribe(params => {
-      this.id = +params['id']; // Convertendo para número
+      this.recipeId = +params['id'];
       this.getRecipe();
       this.getComments();
-      this.getUserId();
-      this.accountsService.getCurrentUser().subscribe(
-        (result) => {
-          this.currentUserId = result.id;
-          this.getUserRecipeBooks(this.currentUserId);
-        },
-        (error) => {
-          console.error("Error fetching user:", error);
-        }
-      );
     });
   }
 
-  // 🔹 Busca os detalhes da receita
-  getRecipe(): void {
-    if (this.id === undefined) return;
+  scrollToRecipe(event: Event): void {
+    event.preventDefault(); // Prevent Angular routing from interfering
+    const element = document.getElementById('recipe-section');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
 
-    this.recipeService.getRecipe(this.id).subscribe(
+  getRecipe(): void {
+    if (this.recipeId === undefined) return;
+
+    this.recipeService.getRecipe(this.recipeId).subscribe(
       (result) => {
         this.recipe = result;
+        if (this.recipe.userId) {
+          this.getUser(this.recipe.userId);
+        } else {
+          console.warn('Recipe has no userId:', this.recipe);
+        }
       },
       (error) => {
-        console.log(error);
+        console.error('Error fetching recipe:', error);
       }
     );
   }
 
-  // 🔹 Busca os comentários da receita
-  getComments(): void {
-    if (this.id === undefined) return;
+  getUser(id: string): void {
+    this.accountsService.getUserInfo(undefined, id).subscribe(
+      (result: User) => {
+        this.user = result;
+      },
+      (error) => {
+        console.error('Error fetching user:', error);
+        this.user = null;
+      }
+    );
+  }
 
-    this.commentsService.getComments(this.id).subscribe(
+  getComments(): void {
+    if (this.recipeId === undefined) return;
+
+    this.commentsService.getComments(this.recipeId).subscribe(
       (comments) => {
         this.comments = comments;
         this.loadUserNames();
       },
       (error) => {
-        console.log(error);
+        console.log('Error fetching comments:', error.status, error.message, error);
       }
     );
   }
 
-  // 🔹 Obtém o nome do usuário e armazena no mapa para evitar chamadas repetidas
   loadUserNames(): void {
-    this.comments.forEach(async (comment) => {
+    this.comments.forEach(comment => {
       if (comment.userId && !this.userNames.has(comment.userId)) {
-        const username = await this.fetchUserName(comment.userId);
-        this.userNames.set(comment.userId, username);
+        this.accountsService.getUserById(comment.userId).subscribe(
+          username => {
+            this.userNames.set(comment.userId, username);
+          },
+          error => {
+            console.error(`Error fetching username for userId: ${comment.userId}`, error);
+            this.userNames.set(comment.userId, 'Unknown User');
+          }
+        );
       }
     });
   }
 
-  async fetchUserName(userId: string | undefined): Promise<string> {
-    if (!userId) {
-      return "Unknown User";
-    }
+  getUserName(userId: string | undefined): string {
+    if (!userId) return 'Unknown User';
 
-    if (this.userNames.has(userId)) {
-      return this.userNames.get(userId)!;
-    }
+    const cachedUsername = this.userNames.get(userId);
+    if (cachedUsername) return cachedUsername;
 
-    try {
-      const username = await this.accountsService.getUserById(userId).toPromise() ?? "Unknown User";
-      this.userNames.set(userId, username);
-      return username;
-    } catch (error) {
-      console.log(`Error fetching username for userId: ${userId}`, error);
-      return "Unknown User";
-    }
-  }
-
-  getUserId() {
-    this.accountsService.getCurrentUser().subscribe(
-      (result) => {
-        console.log('User fetched:', result);
-        var user = result;
-        this.currentUserId = user.id;
+    this.accountsService.getUserById(userId).subscribe(
+      username => {
+        this.userNames.set(userId, username);
       },
-      (error) => {
-        console.error(error);
+      error => {
+        console.error(`Error fetching username for userId: ${userId}`, error);
+        this.userNames.set(userId, 'Unknown User');
       }
     );
+
+    return 'Loading...';
   }
 
-  getUserName(userId: string): string {
-    return this.userNames.get(userId) || "Loading...";
-  }
-
-  // 🔹 Adiciona um novo comentário
   addComment(): void {
-    if (!this.id || !this.newComment.trim() || !this.currentUserId) return;
+    if (!this.recipeId || !this.newComment.trim() || !this.currentUser?.id) return;
 
     const newCommentData: Comment = {
       commentText: this.newComment,
-      recipeId: this.id,
-      userId: this.currentUserId
+      recipeId: this.recipeId,
+      userId: this.currentUser.id
     };
 
     this.commentsService.addComment(newCommentData).subscribe(
@@ -151,19 +163,17 @@ export class RecipeDetailsComponent implements OnInit {
     );
   }
 
-  // 🔹 Exibe o modal antes de deletar um comentário
   openDeleteModal(commentId: number): void {
     this.commentToDelete = commentId;
     this.showModal = true;
   }
 
-  // 🔹 Confirma a exclusão do comentário
   confirmDelete(): void {
     if (!this.commentToDelete) return;
 
     this.commentsService.deleteComment(this.commentToDelete).subscribe(
       () => {
-        this.comments = this.comments.filter(comment => comment.idComment !== this.commentToDelete);
+        this.comments = this.comments.filter(comment => comment.id !== this.commentToDelete);
         console.log(`Comment with ID ${this.commentToDelete} deleted successfully.`);
         this.showModal = false;
       },
@@ -173,10 +183,18 @@ export class RecipeDetailsComponent implements OnInit {
     );
   }
 
-  // 🔹 Cancela a exclusão do comentário
   cancelDelete(): void {
     this.showModal = false;
     this.commentToDelete = undefined;
+  }
+
+  canDeleteComment(commentId: number | undefined): boolean {
+    if (!commentId) return false;
+
+    if (this.currentUser?.role === "Admin") return true;
+
+    const comment = this.comments.find(c => c.id === commentId);
+    return (comment?.userId === this.currentUser?.id || this.currentUser?.id == this.recipe.userId) || false; // if comment user id is same as current user, can delete
   }
 
   deleteComment(commentId: number | undefined): void {
@@ -187,7 +205,7 @@ export class RecipeDetailsComponent implements OnInit {
 
     this.commentsService.deleteComment(commentId).subscribe(
       () => {
-        this.comments = this.comments.filter(comment => comment.idComment !== commentId);
+        this.comments = this.comments.filter(comment => comment.id !== commentId);
         console.log(`Comment with ID ${commentId} deleted successfully.`);
       },
       (error) => {
@@ -196,41 +214,73 @@ export class RecipeDetailsComponent implements OnInit {
     );
   }
 
-  // Buscar os Recipe Books do usuário
   getUserRecipeBooks(userId: string): void {
     this.recipeBooksService.getUserRecipeBooks(userId).subscribe(
       (books) => {
         this.userRecipeBooks = books;
       },
       (error) => {
-        console.error("Error loading user recipe books:", error);
+        console.error('Error loading user recipe books:', error);
       }
     );
   }
 
-  // Alternar a exibição da lista de Recipe Books
   toggleRecipeBookList(): void {
     this.showRecipeBookList = !this.showRecipeBookList;
   }
 
-  // Adicionar a receita ao Recipe Book selecionado
   addToRecipeBook(): void {
-    if (!this.id || !this.selectedRecipeBook) {
-      alert("Please select a Recipe Book.");
+    if (!this.recipeId || !this.selectedRecipeBook) {
+      alert('Please select a Recipe Book.');
       return;
     }
 
     const newAssociation: RecipeToRB = {
-      idRecipe: this.id,
+      idRecipe: this.recipeId,
       idRecipeBook: this.selectedRecipeBook
     };
 
     this.recipeToRBService.addRecipeToBook(newAssociation).subscribe(
       () => {
-        alert("Recipe added to Recipe Book!");
+        alert('Recipe added to Recipe Book!');
         this.showRecipeBookList = false;
       },
       error => console.log(error)
     );
+  }
+
+  // Permission checks
+  canDeleteRecipe(): boolean {
+    if (!this.currentUser) return false;
+    return this.currentUser &&
+      (this.currentUser.id === this.recipe.userId || this.currentUser.role === 'Admin');
+  }
+
+  canEditRecipe(): boolean {
+    if (!this.currentUser) return false;
+    return this.currentUser && this.currentUser.id === this.recipe.userId;
+  }
+
+  // Delete recipe action
+  deleteRecipe(): void {
+    if (!this.recipeId || !this.canDeleteRecipe()) return;
+
+    if (confirm('Are you sure you want to delete this recipe?')) {
+      this.recipeService.deleteRecipe(this.recipeId).subscribe(
+        () => {
+          console.log(`Recipe with ID ${this.recipeId} deleted successfully.`);
+          this.router.navigate(['/recipes']); // Redirect after deletion
+        },
+        (error) => {
+          console.error('Error deleting recipe:', error);
+        }
+      );
+    }
+  }
+
+  // Edit recipe action (placeholder - redirect to edit page)
+  editRecipe(): void {
+    if (!this.recipeId || !this.canEditRecipe()) return;
+    this.router.navigate(['/recipes/edit', this.recipeId]); // Assuming an edit route exists
   }
 }

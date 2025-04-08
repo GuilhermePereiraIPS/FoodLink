@@ -1,95 +1,94 @@
 <div class="recipe-detail-container" *ngIf="recipe">
-    <!-- Título da Receita (Sem fundo verde, integrado na navbar) -->
-    <h1 class="recipe-title">{{ recipe.title }} by User</h1>
+  <h1 class="recipe-title">{{ recipe.title }}</h1>  <!--by {{ user?.username || 'Unknown' }}-->
 
-    <!-- Informações do usuário -->
-    <div class="recipe-user">
-      <!-- Informações do usuário -->
-      <div class="user-info">
+  <div class="recipe-header">
+
+    <div class="user-info">
+      <a *ngIf="user" [routerLink]="['/profile', user.username]">
         <img src="assets/user-avatar.png" class="user-avatar">
-        <div>
-          <p>By User</p>
-          <p class="recipe-date">Created: {{ recipe.createDate | date:'longDate' }}</p>
-        </div>
-      </div>
-
-      <!-- Botões de ação (empilhados verticalmente) -->
-      <div class="recipe-actions">
-        <button class="add-btn" (click)="toggleRecipeBookList()">Add to book</button>
-
-        <!-- Lista de Recipe Books (Dropdown) -->
-        <div *ngIf="showRecipeBookList" class="recipe-book-dropdown">
-          <label for="selectBook">Select a Recipe Book:</label>
-          <select [(ngModel)]="selectedRecipeBook" id="selectBook">
-            <option *ngFor="let book of userRecipeBooks" [value]="book.idRecipeBook">
-              {{ book.recipeBookTitle }}
-            </option>
-          </select>
-          <button class="confirm-add-btn" (click)="addToRecipeBook()">Add</button>
-        </div>
+      </a>
+      <div>
+        <a *ngIf="user" [routerLink]="['/profile', user.username]">
+          <p *ngIf="user">By {{ user.username }}</p>
+        </a>
+        <p class="recipe-date">Created: {{ recipe.createDate | date:'longDate' }}</p>
       </div>
     </div>
-    <hr />
-    <!-- Imagem da receita (placeholder, pois não há imagens no BD) -->
-    <div class="recipe-image">
-        <img src="assets/placeholder-image.png" alt="Recipe Image">
+
+    <div class="recipe-actions">
+      <button class="action-btn" (click)="scrollToRecipe($event)" >Skip to recipe</button>
+      <button class="action-btn action-small-btn" (click)="toggleRecipeBookList()">Add to book</button>
+      <div *ngIf="showRecipeBookList" class="recipe-book-dropdown">
+        <label for="selectBook">Select a Recipe Book:</label>
+        <select [(ngModel)]="selectedRecipeBook" id="selectBook">
+          <option *ngFor="let book of userRecipeBooks" [value]="book.id">
+            {{ book.recipeBookTitle }}
+          </option>
+        </select>
+        <button class="confirm-add-btn" (click)="addToRecipeBook()">Add</button>
+      </div>
+      <!-- Show Delete button if currentUser is the creator or an Admin -->
+      <button class="action-btn action-small-btn" *ngIf="canDeleteRecipe()" (click)="deleteRecipe()">Delete</button>
+      <!-- Show Edit button only if currentUser is the creator -->
+      <button class="action-btn action-small-btn" *ngIf="canEditRecipe()" (click)="editRecipe()">Edit</button>
     </div>
 
-    <!-- Descrição -->
+  </div>
+
+  <hr />
+
+  <div class="recipe-section">
     <p class="recipe-description">{{ recipe.description }}</p>
+  </div>
 
-    <hr />
-    <!-- Seção de Ingredientes -->
+  <hr />
+  <section id="recipe-section">
     <h2>Recipe</h2>
     <div class="recipe-section">
-        <h3>Ingredients</h3>
-        <p>{{ recipe.ingredients }}</p> <!-- 🔥 Agora tratado como texto, não lista -->
+      <h3>Ingredients</h3>
+      <p>{{ recipe.ingredients }}</p>
     </div>
 
-    <!-- Seção de Instruções -->
     <div class="recipe-section">
-        <h3>Preparation</h3>
-        <p>{{ recipe.instructions }}</p>
+      <h3>Preparation</h3>
+      <p>{{ recipe.instructions }}</p>
     </div>
+  </section>
+    <hr />
 
-    <!-- Seção de Comentários -->
-    <div class="recipe-comments">
-        <h3>Comments</h3>
-
-        <!-- Caixa de comentário -->
-        <textarea [(ngModel)]="newComment" placeholder="Leave a comment"></textarea>
-        <button class="comment-btn" (click)="addComment()">Comment</button>
-
-        <!-- Lista de Comentários -->
-        <div class="comment-list" *ngIf="comments.length > 0">
-            <div class="comment-item" *ngFor="let comment of comments">
-                <p class="comment-text">{{ comment.commentText }}</p>
-
-                <!-- 🔹 Obtém o username dinamicamente -->
-                <p class="comment-date">
-                    Posted by <strong>{{ getUserName(comment.userId) }}</strong>
-                </p>
-
-                <!-- Botão de deletar -->
-                <button class="delete-btn" (click)="deleteComment(comment.idComment)">
-                    🗑
-                </button>
-            </div>
+  <div class="recipe-comments">
+    <h3>Comments</h3>
+    <div class="comment-box">
+      <img src="assets/user-avatar.png" class="user-avatar user-avatar-small">
+      <textarea [(ngModel)]="newComment" placeholder="Leave a comment"></textarea>
+    </div>
+    <button class="comment-btn" (click)="addComment()">Comment</button>
+    
+    <div class="comment-list" *ngIf="comments.length > 0">
+      <div class="comment-item" *ngFor="let comment of comments">
+        <img src="assets/user-avatar.png" class="user-avatar user-avatar-small">
+        <div class="comment-body">
+          <a [routerLink]="['/profile', getUserName(comment.userId)]">
+            <p class="comment-username"><strong>{{ getUserName(comment.userId) }}</strong></p>
+          </a>
+          <p class="comment-text">{{ comment.commentText }}</p>
         </div>
-
-        <!-- Caso não haja comentários -->
-        <p *ngIf="comments.length === 0" class="no-comments">No comments yet. Be the first to comment!</p>
+        
+        <button *ngIf="canDeleteComment(comment.id)" class="delete-btn" (click)="deleteComment(comment.id)">🗑</button>
+      </div>
     </div>
 
-    <!-- Modal de Confirmação -->
-    <div class="modal-overlay" *ngIf="showModal">
-        <div class="modal-content">
-            <h3>Are you sure?</h3>
-            <p>Do you really want to delete this comment?</p>
-            <div class="modal-buttons">
-                <button class="confirm-btn" (click)="confirmDelete()">Delete</button>
-                <button class="cancel-btn" (click)="cancelDelete()">Cancel</button>
-            </div>
-        </div>
+    <p *ngIf="comments.length === 0" class="no-comments">No comments yet. Be the first to comment!</p>
+  </div>
+
+  <div class="modal-overlay" *ngIf="showModal">
+    <div class="modal-content">
+      <h3>Are you sure?</h3>
+      <p>Do you really want to delete this comment?</p>
+      <div class="modal-buttons">
+        <button class="confirm-btn" (click)="confirmDelete()">Delete</button>
+        <button class="cancel-btn" (click)="cancelDelete()">Cancel</button>
+      </div>
     </div>
+  </div>
 </div>

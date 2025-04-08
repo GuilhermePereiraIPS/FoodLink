@@ -1,44 +1,29 @@
 <div class="main-content">
   <!--Profile image here-->
   <div>
-    <img class="user-avatar" src="../../assets/background.png" />
+    <img class="user-avatar" src="assets/user-avatar.png" />
     <h3>{{ user.username }}</h3>
   </div>
   <div>
     <h4>About me</h4>
-    <p> {{ user.aboutMe }} </p>
+    <p *ngIf="!user.aboutMe">We don't know much about {{ user.username }} but we're sure they're a good person!</p>
+    <p *ngIf="user.aboutMe"> {{ user.aboutMe }} </p>
   </div>
   <hr />
   <div>
     <h4>Recipes</h4>
     <!--recipes-->
-    <div class="recipes-container">
-      <div class="recipe-container">
-        <div class="recipe-image">
-          <img src="../../assets/background.png" />
-          <div class="recipe-short-description">
-            <div class="recipe-tags">
-              <p>Tags</p>
-            </div>
-            <div>
-              <p class="recipe-description-text" >Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin neque massa, lobortis ut arcu sed, lobortis facilisis lacus. Ut at suscipit enim, et euismod justo. Praesent accumsan aliquam enim, id auctor tortor bibendum sit amet. Nulla aliquet odio at diam cursus, ut finibus justo elementum. Aliquam porttitor ligula sed laoreet suscipit. Sed est arcu, placerat maximus rhoncus at, hendrerit at tellus. Mauris ut quam iaculis, rutrum elit a, congue velit. Maecenas vitae lacinia lectus, eget varius lorem. Curabitur metus ligula, aliquet quis convallis in, viverra vitae nibh. Etiam dignissim lacus a mollis volutpat. Morbi a lectus vitae sem laoreet porttitor eu vitae augue.</p>
-            </div>
-          </div>
-        </div>
-        <div class="recipe-details">
-          <div>
-            <p class="recipe-title">Hamburger</p>
-          </div>
-          <div>
-            <p>username</p>
-            <p>•</p>
-            <p>8 days ago</p>
-          </div>
-          <div>
-            <p>2kratings</p>
-            <p>•</p>
-          </div>
-        </div>
+    <div class="recipe-grid">
+      <div *ngFor="let recipe of recipes" class="recipe-card">
+          <app-recipe-card
+                           [id]="recipe.id"
+                           [title]="recipe.title"
+                           [description]="recipe.description"
+                           [date]="recipe.createDate | date:'shortDate'"
+                           [userId]="recipe.userId"
+                           [imageUrl]="recipe.imageUrl"
+                           >
+          </app-recipe-card>
       </div>
     </div>
   </div>
@@ -46,5 +31,29 @@
   <div>
     <h4>Recipe Books</h4>
     <!--recipe books-->
+    <div class="recipe-grid">
+      <div *ngFor="let book of recipeBooks">
+
+
+        <div class="book-container">
+          <div class="book-image">
+            <a [routerLink]="['/recipe-books', book.id]">
+              <img src="../../assets/background.png" />
+            </a>
+
+            <div class="recipe-count">
+              <i class="fa-solid fa-list"></i>
+              {{ book.recipeAmount || 0 }} {{ (book.recipeAmount || 0) === 1 ? 'recipe' : 'recipes' }}
+            </div>
+          </div>
+          <div class="book-details">
+            <div>
+              <p class="book-title">{{ book.recipeBookTitle }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
   </div>
 </div>

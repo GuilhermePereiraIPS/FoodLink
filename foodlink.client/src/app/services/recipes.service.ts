@@ -4,11 +4,13 @@ import { Observable } from 'rxjs';
 
 export interface Recipe {
   id: number;
+  userId: string;
   title: string;
   description: string;
   ingredients: string;
   instructions: string;
   createDate: Date;
+  imageUrl?: string; 
 }
 
 @Injectable({

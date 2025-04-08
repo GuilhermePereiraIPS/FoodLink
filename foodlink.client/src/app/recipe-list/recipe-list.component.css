@@ -5,25 +5,19 @@
   box-sizing: border-box;
 }
 
-/* Container principal */
-.recipe-list-container {
-  width: 90%;
-  max-width: 1200px;
-  min-height: 80vh;
-  margin: auto;
+#search-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
-/* Título da Página (agora alinhado com a search bar) */
 .recipe-page-title {
-  font-size: 26px;
-  font-weight: bold;
-  margin: 20px 0;
-  color: #000;
-  text-align: left; /* 🔥 Alinha o título à esquerda */
-  width: 600px; /* 🔥 Mesmo tamanho da search bar */
-  margin-left: auto;
-  margin-right: auto;
+  color: #082109;
+  padding-left: 9%;
+  font-weight: 500;
+  text-align: left
 }
+
 
 /* Search Bar */
 .search-bar {
@@ -32,9 +26,9 @@
   margin-bottom: 20px;
   max-width: 1000px;
   width: 100%;
-  border: 2px solid #000; /* 🔥 Borda preta */
-  border-radius: 15px; /* 🔥 Mantém a curva nas laterais */
-  overflow: hidden; /* 🔥 Garante que os cantos fiquem uniformes */
+  border: 4px solid #727ED0;
+  border-radius: 25px;
+  overflow: hidden;
   background: #f8f8f8;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   margin-left: auto;
@@ -55,19 +49,53 @@
 /* Botão de Pesquisa */
 .search-button {
   padding: 12px 18px;
-  background-color: #007BFF;
-  color: white;
+  background-color: #95BEDC;
+  color: #082109;
+
   border: none;
-  font-size: 18px;
+  font-size: 20px;
+  font-weight: 500;
   cursor: pointer;
   border-radius: 0;
   white-space: nowrap;
 }
 
   .search-button:hover {
-    background-color: #0056b3;
+    background-color: #62a9de;
   }
 
+
+#order-list {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display:flex;
+  gap: 5px;
+}
+
+  #order-list li {
+    padding: 0;
+    
+  }
+
+    #order-list li label {
+      background: #CDCDCD;
+      padding: 6px;
+      display: inline-block;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #order-list li input[type="radio"] {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+      #order-list li input[type="radio"]:checked ~ label {
+        background: #141414;
+        color: white;
+      }
 
 /* Botão de Ordenação */
 .order-button {
@@ -88,27 +116,8 @@
 
 /* Grid de receitas */
 .recipe-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 15px;
   margin-top: 20px;
 }
-
-/* Card da Receita */
-.recipe-card {
-  background-color: white;
-  border: 2px solid #333; /* 🔥 Adiciona um contorno */
-  padding: 15px;
-  border-radius: 8px; /* 🔥 Bordas arredondadas */
-  text-align: center;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease-in-out;
-}
-
-  .recipe-card:hover {
-    transform: scale(1.05);
-    border-color: #007BFF; /* 🔥 Muda a cor da borda ao passar o mouse */
-  }
 
 /* Informações da Receita */
 .recipe-info h3 {
